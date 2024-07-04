@@ -7,16 +7,22 @@ function Register() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) {
+      setErrors({ password: ["Passwords do not match"] });
+      return;
+    }
     try {
       const response = await axios.post('http://localhost:8000/api/register', {
         name,
         email,
         password,
+        password_confirmation: confirmPassword,
       });
       localStorage.setItem('token', response.data.access_token);
       setErrors({});
@@ -53,6 +59,14 @@ function Register() {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Password"
+          className="border p-2 w-full mt-2"
+        />
+        {errors.password && <p className="text-red-600">{errors.password[0]}</p>}
+        <input
+          type="password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Confirm Password"
           className="border p-2 w-full mt-2"
         />
         {errors.password && <p className="text-red-600">{errors.password[0]}</p>}

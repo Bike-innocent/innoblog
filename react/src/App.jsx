@@ -3,8 +3,10 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
-import GuestLayout from './pages/layouts/GuestLayout';
-import MainLayout from './pages/layouts/MainLayout';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
+import GuestLayout from './layouts/GuestLayout';
+import MainLayout from './layouts/MainLayout';
 
 const router = createBrowserRouter([
   {
@@ -13,6 +15,8 @@ const router = createBrowserRouter([
     children: [
       { path: 'register', element: <Register /> },
       { path: 'login', element: <Login /> },
+      { path: 'forgot-password', element: <ForgotPassword /> },
+      { path: 'reset-password', element: <ResetPassword /> },
     ],
   },
   {
