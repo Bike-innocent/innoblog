@@ -23,12 +23,25 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // $avatars = [
+        //     '1718486207.jpg', 
+        //     '1718483390.jpg',
+        //     '1718491950.jpg',
+        //     '1718494763.jpg',
+        //     '1718636339.jpg',
+        //     '1718636705.jpg',
+        //     '1718636825.png',
+        //     '1718636969.jpg',
+        //     '1718637073.jpg'
+        // ];
+
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            // 'avatar' => fake()->randomElement($avatars),
         ];
     }
 
