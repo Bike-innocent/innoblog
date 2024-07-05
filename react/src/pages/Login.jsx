@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import axiosInstance from '../axiosInstance'; // Use the axios instance
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -13,7 +12,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/login', {
+      const response = await axiosInstance.post('/login', {
         email,
         password,
       });
@@ -55,19 +54,10 @@ function Login() {
           className="border p-2 mt-2 w-full"
         />
         {errors.password && <p className="text-red-600">{errors.password[0]}</p>}
-        <p className="mt-4">
-        <Link to="/forgot-password" className='text-blue-700'> forget password</Link>
-        </p>
-        {/* <p className="mt-4">
-        <Link to="/reset-password" className='text-blue-700'> reset password</Link>
-        </p> */}
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-600">
           Login
         </button>
         {generalError && <p className="text-red-600 mt-2">{generalError}</p>}
-        <p className="mt-4">
-          don't have an account <Link to="/register" className='text-blue-700'> Register</Link>
-        </p>
       </form>
     </div>
   );

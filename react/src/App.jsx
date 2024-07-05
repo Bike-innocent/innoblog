@@ -7,6 +7,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import GuestLayout from './layouts/GuestLayout';
 import MainLayout from './layouts/MainLayout';
+import UsersList from './components/UsersList';
 
 const router = createBrowserRouter([
   {
@@ -29,7 +30,13 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <RouterProvider router={router} />
+
+    </>
+  );
+
 }
 
 export default App;

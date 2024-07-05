@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import axiosInstance from '../axiosInstance'; // Import the axios instance
 
 function Register() {
   const [name, setName] = useState('');
@@ -18,7 +18,7 @@ function Register() {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:8000/api/register', {
+      const response = await axiosInstance.post('/register', {
         name,
         email,
         password,
@@ -73,7 +73,9 @@ function Register() {
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-600">
           Register
         </button>
-        <p>already have an account <Link to="/login" className='text-blue-700'> login</Link></p>
+        <p className="mt-4">
+          Already have an account? <Link to="/login" className='text-blue-700'>Login</Link>
+        </p>
       </form>
     </div>
   );
