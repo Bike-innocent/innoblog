@@ -7,7 +7,9 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import GuestLayout from './layouts/GuestLayout';
 import MainLayout from './layouts/MainLayout';
-import UsersList from './components/UsersList';
+import About from './pages/About';
+import Category from './pages/Category';
+import Blog from './pages/Blog';
 
 const router = createBrowserRouter([
   {
@@ -25,6 +27,9 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { path: 'dashboard', element: <Dashboard /> },
+      { path: 'about', element: <About/> },
+      { path: 'category', element: <Category/> },
+      { path: 'blog', element: <Blog/> },
     ],
   },
 ]);
