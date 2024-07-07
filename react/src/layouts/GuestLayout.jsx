@@ -1,21 +1,19 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 
-import Auth from '../components/navbars/Auth';
+import AuthNavbar from '../components/navbars/AuthNavbar';
+import Footer from '../components/Footer';
 
 
 function GuestLayout() {
   return (
     <div className="min-h-screen flex flex-col justify-between">
-   <Auth/>
+   <AuthNavbar/>
       <main className="w-full max-w-md p-6 bg-white rounded shadow-md mx-auto">
         <Outlet />
      
       </main>
-
-      <footer className="bg-gray-800 text-white p-4 text-center">
-        © 2024 Your Company
-      </footer>
+      <Footer/>
     </div>
   );
 }

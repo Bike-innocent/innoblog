@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { AiOutlineMenu, AiOutlineSun, AiOutlineMoon } from 'react-icons/ai';
 
-function Auth() {
+function AuthNavbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [theme, setTheme] = useState('dark'); // Default to dark theme
@@ -85,7 +85,7 @@ function Auth() {
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
                 <NavLink
-                  to="/dashboard"
+                  to="/dashboard/home"
                   className={({ isActive }) => isActive ? "bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"}
                 >
                   Dashboard
@@ -240,4 +240,4 @@ function Auth() {
   );
 }
 
-export default Auth;
+export default AuthNavbar;

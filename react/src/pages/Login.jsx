@@ -19,7 +19,7 @@ function Login() {
       localStorage.setItem('token', response.data.access_token);
       setErrors({});
       setGeneralError('');
-      navigate('/dashboard');
+      navigate('/dashboard/home');
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors);
@@ -54,10 +54,20 @@ function Login() {
           className="border p-2 mt-2 w-full"
         />
         {errors.password && <p className="text-red-600">{errors.password[0]}</p>}
+        <p className="mt-4">
+        <Link to="/forgot-password" className='text-blue-700'> forget password</Link>
+        </p>
+        {/* <p className="mt-4">
+        <Link to="/reset-password" className='text-blue-700'> reset password</Link>
+        </p> */}
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-600">
           Login
         </button>
+        
         {generalError && <p className="text-red-600 mt-2">{generalError}</p>}
+        <p className="mt-4">
+          don't have an account <Link to="/register" className='text-blue-700'> Register</Link>
+        </p>
       </form>
     </div>
   );

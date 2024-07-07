@@ -1,7 +1,8 @@
 import React from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 
-import Auth from '../components/navbars/Auth';
+import AuthNavbar from '../components/navbars/AuthNavbar';
+import Footer from '../components/Footer';
 
 function MainLayout() {
   const navigate = useNavigate();
@@ -13,13 +14,11 @@ function MainLayout() {
 
   return (
     <div className="min-h-screen flex flex-col justify-between">
-     <Auth/>
+      <AuthNavbar/>
       <main className="flex-1 ">
         <Outlet />
       </main>
-      <footer className="bg-gray-800 text-white p-4 text-center">
-        © 2024 Your Company
-      </footer>
+     <Footer/>
     </div>
   );
 }
