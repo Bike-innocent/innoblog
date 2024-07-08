@@ -1,5 +1,5 @@
 import React from 'react'
-import PostsList from '../../components/PostsList'
+// import PostsList from '../../components/PostsList'
 
 
 function Home() {
@@ -7,7 +7,7 @@ function Home() {
     <div>
       <h1 className="text-2xl font-bold mb-4">Home Page</h1>
       <p>Welcome to the Home page!</p>
-   <PostsList/>
+   {/* <PostsList/> */}
 
     </div>
   )

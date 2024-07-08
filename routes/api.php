@@ -5,8 +5,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\PostController;
+
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\MyPostController;
 
 
 /*
@@ -30,9 +31,15 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/users', [UserController::class, 'index']);
-    Route::get('/posts', [PostController::class, 'index']);
+    // Route::get('/posts', [PostController::class, 'index']);
 });
 
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
+
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/posts', [MyPostController::class, 'index']);
+    Route::post('/posts', [MyPostController::class, 'store']);
+});

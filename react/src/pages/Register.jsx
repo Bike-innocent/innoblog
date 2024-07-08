@@ -26,7 +26,7 @@ function Register() {
       });
       localStorage.setItem('token', response.data.access_token);
       setErrors({});
-      navigate('/dashboard');
+      navigate('/dashboard/home');
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors);

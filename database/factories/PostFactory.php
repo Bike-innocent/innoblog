@@ -27,15 +27,15 @@ class PostFactory extends Factory
         ];
         $randomImage = $images[array_rand($images)];
 
-        $categories = [
-            'Sports', 
-            'Education',
-            'Business',
-            'Culture',
-            'Technology',
-            'Lifestyle'
-        ];
-        $randomCategory = $categories[array_rand($categories)];
+        // $categories = [
+        //     'Sports', 
+        //     'Education',
+        //     'Business',
+        //     'Culture',
+        //     'Technology',
+        //     'Lifestyle'
+        // ];
+        // $randomCategory = $categories[array_rand($categories)];
 
         // Check if there are any users
         $user = User::inRandomOrder()->first();
@@ -44,7 +44,7 @@ class PostFactory extends Factory
             'title' => $faker->sentence,
             'description' => $faker->paragraph,
             'image' => $randomImage,
-            'category' => $randomCategory,
+            // 'category' => $randomCategory,
             'status' => 1,
             'user_id' => $user ? $user->id : null, // Assign user_id if user exists
         ];

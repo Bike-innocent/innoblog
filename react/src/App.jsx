@@ -16,6 +16,7 @@ import CreatePost from './pages/dashboard/CreatePost';
 import AllPosts from './pages/dashboard/AllPosts';
 import AllUsers from './pages/dashboard/AllUsers';
 import Settings from './pages/dashboard/Settings';
+import MyPost from './pages/dashboard/MyPost';
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
       { path: 'all-posts', element: <AllPosts/> },
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },
+      { path: 'my-post', element: <MyPost /> },
     ],
   },
 ]);
