@@ -47,9 +47,9 @@ class User extends Authenticatable
 
     // app/Models/User.php
 
-public function comments()
-{
-    return $this->hasMany(Comment::class);
-}
+// public function comments()
+// {
+//     return $this->hasMany(Comment::class);
+// }
 
 }

@@ -1,15 +1,13 @@
 <?php
-
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
-    public function index()
+    public function getUser()
     {
-        $users = User::get(); // Fetch user with the associated user
-        return response()->json($users);
+        return response()->json(Auth::user());
     }
 }

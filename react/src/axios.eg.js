@@ -35,25 +35,14 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Setup response interceptor to handle 401 and 403 errors
+// Setup response interceptor to handle 401 errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response) {
-      if (error.response.status === 401) {
-        // Redirect to login page for 401 Unauthorized
-        history.push('/login');
-        window.location.reload(); // Ensure the page reloads to apply the navigation
-      } else if (error.response.status === 403) {
-        // Redirect to unauthorized page for 403 Forbidden
-        history.push('/unauthorized');
-        window.location.reload(); // Ensure the page reloads to apply the navigation
-      }
-      else if (error.response.status === 404) {
-        // Redirect to not found
-        history.push('/not-found');
-        window.location.reload(); // Ensure the page reloads to apply the navigation
-      }
+    if (error.response && error.response.status === 401) {
+      // Redirect to login page
+      history.push('/login');
+      window.location.reload(); // Ensure the page reloads to apply the navigation
     }
     return Promise.reject(error);
   }

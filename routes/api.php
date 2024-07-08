@@ -8,6 +8,9 @@ use App\Http\Controllers\ResetPasswordController;
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\MyPostController;
+use App\Http\Controllers\AllPostController;
+
+use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 
 /*
@@ -30,11 +33,10 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/users', [UserController::class, 'index']);
-    // Route::get('/posts', [PostController::class, 'index']);
+    Route::get('/user', [UserController::class, 'getUser']);
 });
 
-use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
+
 
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
@@ -42,4 +44,10 @@ Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/posts', [MyPostController::class, 'index']);
     Route::post('/posts', [MyPostController::class, 'store']);
+});
+
+
+Route::middleware(['auth:sanctum', 'admin'])->group(function () {
+    Route::get('all-posts', [AllPostController::class, 'index']);
+    Route::delete('all-posts/{id}', [AllPostController::class, 'delete']);
 });

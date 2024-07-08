@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../axiosInstance';
 import { Link, useLocation } from 'react-router-dom';
 import SuccessMessage from '../../components/SuccessMessage';
+import Loader from '../../components/Loader';
 
 const MyPosts = () => {
     const [posts, setPosts] = useState([]);
@@ -44,7 +45,7 @@ const MyPosts = () => {
             <h1 className="text-2xl font-bold">My Posts</h1>
             <SuccessMessage message={successMessage} onClose={() => setSuccessMessage('')} />
             {loading ? (
-                <p>Loading...</p>
+                <Loader />
             ) : (
                 <>
                     {posts.length === 0 ? (
