@@ -8,7 +8,7 @@ class AllPostController extends Controller
 {
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::orderBy('created_at', 'desc')->get();
 
          // Include full path for image URL
          foreach ($posts as $post) {

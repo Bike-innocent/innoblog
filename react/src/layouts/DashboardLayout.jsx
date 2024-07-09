@@ -16,6 +16,7 @@ function DashboardLayout() {
             try {
                 const response = await axiosInstance.get('/user');
                 setUser(response.data);
+                console.log('Fetched user data:', response.data); // Debug log
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
@@ -45,32 +46,32 @@ function DashboardLayout() {
                     </div>
                     <div className="flex flex-col flex-1 mt-2 overflow-y-auto">
                         <nav className="flex-1 mt-4 space-y-2">
-                            <NavLink to="/dashboard/home" className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
+                            <NavLink to="/dashboard/home" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
                                 <AiOutlineHome className="mr-2" size={20} /> Dashboard
                             </NavLink>
-                            <NavLink to="/dashboard/profile" className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
+                            <NavLink to="/dashboard/profile" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
                                 <AiOutlineUser className="mr-2" size={20} /> Profile
                             </NavLink>
-                            <NavLink to="/dashboard/my-post" className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
+                            <NavLink to="/dashboard/my-post" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
                                 <AiOutlineUser className="mr-2" size={20} /> My Post
                             </NavLink>
-                            <NavLink to="/dashboard/create-post" className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
+                            <NavLink to="/dashboard/create-post" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
                                 <BsPencilSquare className="mr-2" size={20} /> Create Post
                             </NavLink>
-                            {user && user.roles && user.roles.some(role => role.name === 'admin') && (
+                            {user && user.roles && user.roles.includes('admin') && (
                                 <>
-                                    <NavLink to="/dashboard/all-posts" className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
+                                    <NavLink to="/dashboard/all-posts" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
                                         <BsJournalText className="mr-2" size={20} /> All Posts
                                     </NavLink>
-                                    <NavLink to="/dashboard/all-users" className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
+                                    <NavLink to="/dashboard/all-users" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
                                         <BsPeople className="mr-2" size={20} /> All Users
                                     </NavLink>
                                 </>
                             )}
-                            <NavLink to="/dashboard/settings" className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
+                            <NavLink to="/dashboard/settings" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
                                 <BsGear className="mr-2" size={20} /> Settings
                             </NavLink>
-                            <button onClick={handleLogout} className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white w-full">
+                            <button onClick={() => { handleLogout(); toggleSidebar(); }} className="flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white w-full">
                                 <BsBoxArrowRight className="mr-2" size={20} /> Logout
                             </button>
                         </nav>

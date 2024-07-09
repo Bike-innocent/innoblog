@@ -1,17 +1,14 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AllPostController;
+use App\Http\Controllers\AllUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\ResetPasswordController;
-
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\MyPostController;
-use App\Http\Controllers\AllPostController;
-
+use App\Http\Controllers\ResetPasswordController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -36,18 +33,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', [UserController::class, 'getUser']);
 });
 
-
-
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
-
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/posts', [MyPostController::class, 'index']);
     Route::post('/posts', [MyPostController::class, 'store']);
 });
 
-
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {
     Route::get('all-posts', [AllPostController::class, 'index']);
     Route::delete('all-posts/{id}', [AllPostController::class, 'delete']);
+    // routes/api.php or routes/web.php
+
+    Route::get('/all-users', [AllUserController::class, 'index']);
+
 });

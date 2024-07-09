@@ -210,25 +210,25 @@ function AuthNavbar() {
         >
           <div className="px-2 pt-2 pb-3 space-y-1">
             <NavLink
-              to="/dashboard/home"
+              to="/dashboard/home"  onClick={toggleMobileMenu}
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
             >
               Dashboard
             </NavLink>
             <NavLink
-              to="/blog"
+              to="/blog"  onClick={toggleMobileMenu}
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
             >
               Blog
             </NavLink>
             <NavLink
-              to="/category"
+              to="/category"  onClick={toggleMobileMenu}
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
             >
               Category
             </NavLink>
             <NavLink
-              to="/about"
+              to="/about"  onClick={toggleMobileMenu}
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
             >
               About
