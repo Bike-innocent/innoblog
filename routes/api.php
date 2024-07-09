@@ -5,6 +5,8 @@ use App\Http\Controllers\AllUserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\MyPostController;
+use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ResetPasswordController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -38,6 +40,15 @@ Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/posts', [MyPostController::class, 'index']);
     Route::post('/posts', [MyPostController::class, 'store']);
+
+    //profile
+    Route::patch('/profile/update', [ProfileController::class, 'update']);
+
+    Route::delete('/profile/delete', [ProfileController::class, 'destroy']);
+
+    Route::put('/password/update', [PasswordController::class, 'update']);
+
+   
 });
 
 Route::middleware(['auth:sanctum', 'admin'])->group(function () {

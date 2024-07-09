@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
-use Illuminate\Support\Facades\Storage; // Add this line
+use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\ProfileUpdateRequest;
 
 class ProfileController extends Controller
 {
@@ -25,56 +25,55 @@ class ProfileController extends Controller
     /**
      * Update the user's profile information.
      */
-    public function update(ProfileUpdateRequest $request): RedirectResponse
-    { 
-          $user = $request->user();
-        $user->fill($request->validated());
+    public function update(ProfileUpdateRequest $request)
+    {
+        $user = Auth::user();
 
-        if ($request->file('avatar')) {
-            $avatarPath = $request->file('avatar')->store('avatars', 'public');
-            $user->avatar = $avatarPath;
-        }
+        // Validate the request
+        $request->validated();
 
-        if ($user->isDirty('email')) {
-            $user->email_verified_at = null;
-        }
-
+        // Update user's profile information
+        $user->name = $request->name;
+        $user->email = $request->email;
         $user->save();
 
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
-    }
-
-    public function deleteAvatar(Request $request): RedirectResponse
-    {
-        $user = $request->user();
-
-        if ($user->avatar) {
-            Storage::disk('public')->delete($user->avatar);
-            $user->avatar = null;
-            $user->save();
-        }
-
-        return Redirect::route('profile.edit')->with('status', 'avatar-deleted');
+        return response()->json(['message' => 'Profile updated successfully.'], 200);
     }
 
     /**
-     * Delete the user's account.
+     * Delete user's avatar.
      */
-    public function destroy(Request $request): RedirectResponse
+    // public function deleteAvatar(Request $request): RedirectResponse
+    // {
+    //     $user = $request->user();
+
+    //     if ($user->avatar) {
+    //         Storage::disk('public')->delete($user->avatar);
+    //         $user->avatar = null;
+    //         $user->save();
+    //     }
+
+    //     return Redirect::route('profile.edit')->with('status', 'avatar-deleted');
+    // }
+
+    /**
+     * Delete user's account.
+     */
+    public function destroy(Request $request)
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        $request->validate([
+            'password' => 'required',
         ]);
 
-        $user = $request->user();
+        $user = Auth::user();
 
-        Auth::logout();
+        if (!Hash::check($request->password, $user->password)) {
+            return response()->json(['errors' => ['password' => 'The provided password does not match our records.']], 422);
+        }
 
+        // Delete the user
         $user->delete();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        return response()->json(['message' => 'Account deleted successfully.'], 200);
     }
 }

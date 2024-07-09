@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Post;
@@ -8,14 +7,15 @@ class AllPostController extends Controller
 {
     public function index()
     {
-        $posts = Post::orderBy('created_at', 'desc')->get();
+        // Use pagination with 10 posts per page
+        $posts = Post::orderBy('created_at', 'desc')->paginate(30);
 
-         // Include full path for image URL
-         foreach ($posts as $post) {
+        // Include full path for image URL
+        foreach ($posts as $post) {
             $post->image = url('post-images/'.$post->image);
         }
 
-        return response()->json(['posts' => $posts]);
+        return response()->json($posts);
     }
 
     public function delete($id)

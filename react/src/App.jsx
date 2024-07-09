@@ -11,7 +11,7 @@ import About from './pages/About';
 import Category from './pages/Category';
 import Blog from './pages/Blog';
 import Home from './pages/dashboard/Home';
-import Profile from './pages/dashboard/Profile';
+// import Profile from './pages/dashboard/Profile';
 import CreatePost from './pages/dashboard/CreatePost';
 import AllPosts from './pages/dashboard/AllPosts';
 import AllUsers from './pages/dashboard/AllUsers';
@@ -19,6 +19,7 @@ import Settings from './pages/dashboard/Settings';
 import MyPost from './pages/dashboard/MyPost';
 import Unauthorized from './pages/Unauthorized';
 import NotFound from './pages/NotFound';
+import EditProfile from './pages/profile/EditProfile';
 
 const router = createBrowserRouter([
   {
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
       { path: 'blog', element: <Blog /> },
       { path: 'unauthorized', element: <Unauthorized /> },
       { path: 'not-found', element: <NotFound /> },
-      { path:"*", element: <NotFound /> },
+      // { path:"*", element: <NotFound /> },
     ],
   },
   {
@@ -49,7 +50,7 @@ const router = createBrowserRouter([
     element: <DashboardLayout />,
     children: [
       { path: 'home', element: <Home /> },
-      { path: 'profile', element: <Profile /> },
+      { path: 'profile', element: <EditProfile /> },
       { path: 'create-post', element: <CreatePost /> },
       { path: 'all-posts', element: <AllPosts/> },
       { path: 'all-users', element: <AllUsers /> },

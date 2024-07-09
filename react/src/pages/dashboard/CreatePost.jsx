@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import axiosInstance from '../../axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import Processing from '../../components/Processing';
 
 const CreatePost = () => {
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
     const [image, setImage] = useState(null);
     const [errors, setErrors] = useState({});
+    const [processing, setProcessing] = useState(false);
     const navigate = useNavigate();
 
     const handleInputChange = (e) => {
@@ -21,6 +23,7 @@ const CreatePost = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setProcessing(true);
         const formData = new FormData();
         formData.append('title', title);
         formData.append('description', description);
@@ -37,6 +40,8 @@ const CreatePost = () => {
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setProcessing(false);
         }
     };
 
@@ -53,7 +58,7 @@ const CreatePost = () => {
                         name="title"
                         value={title}
                         onChange={handleInputChange}
-                        required
+                        
                     />
                     {errors.title && <span className="text-red-500 text-sm mt-1">{errors.title[0]}</span>}
                 </div>
@@ -66,7 +71,7 @@ const CreatePost = () => {
                         rows="4"
                         value={description}
                         onChange={handleInputChange}
-                        required
+                      
                     ></textarea>
                     {errors.description && <span className="text-red-500 text-sm mt-1">{errors.description[0]}</span>}
                 </div>
@@ -78,13 +83,17 @@ const CreatePost = () => {
                         id="image"
                         name="image"
                         onChange={handleImageChange}
-                        required
+                        
                     />
                     {errors.image && <span className="text-red-500 text-sm mt-1">{errors.image[0]}</span>}
                 </div>
                 <div className="flex items-center justify-between">
-                    <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                        Create Post
+                    <button
+                        type="submit"
+                        className="bg-blue-500 hover:bg-blue-600 text-white  py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                        disabled={processing}
+                    >
+                        {processing ? <Processing text="Creating post..." /> : 'Create Post'}
                     </button>
                 </div>
             </form>
