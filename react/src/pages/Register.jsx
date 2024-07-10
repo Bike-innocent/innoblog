@@ -30,6 +30,8 @@ function Register() {
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors);
+      } else {
+        setErrors({ general: "An unexpected error occurred. Please try again later." });
       }
     }
   };
@@ -46,6 +48,7 @@ function Register() {
           className="border p-2 w-full"
         />
         {errors.name && <p className="text-red-600">{errors.name[0]}</p>}
+        
         <input
           type="email"
           value={email}
@@ -54,6 +57,7 @@ function Register() {
           className="border p-2 w-full mt-2"
         />
         {errors.email && <p className="text-red-600">{errors.email[0]}</p>}
+        
         <input
           type="password"
           value={password}
@@ -61,7 +65,10 @@ function Register() {
           placeholder="Password"
           className="border p-2 w-full mt-2"
         />
-        {errors.password && <p className="text-red-600">{errors.password[0]}</p>}
+        {errors.password && !errors.password.includes("Passwords do not match") && (
+          <p className="text-red-600">{errors.password[0]}</p>
+        )}
+        
         <input
           type="password"
           value={confirmPassword}
@@ -69,12 +76,18 @@ function Register() {
           placeholder="Confirm Password"
           className="border p-2 w-full mt-2"
         />
-        {errors.password && <p className="text-red-600">{errors.password[0]}</p>}
+        {errors.password && errors.password.includes("Passwords do not match") && (
+          <p className="text-red-600">Passwords do not match</p>
+        )}
+
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-600">
           Register
         </button>
+        
+        {errors.general && <p className="text-red-600 mt-2">{errors.general}</p>}
+        
         <p className="mt-4">
-          Already have an account? <Link to="/login" className='text-blue-700'>Login</Link>
+          Already have an account? <Link to="/login" className="text-blue-700">Login</Link>
         </p>
       </form>
     </div>

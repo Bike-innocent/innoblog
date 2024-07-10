@@ -13,12 +13,11 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
     useEffect(() => {
-        // Fetch user's current profile information here
         async function fetchUserProfile() {
             try {
                 const response = await axiosInstance.get('/user'); // Adjust the endpoint to fetch user profile data
-                const { name, email } = response.data; // Assuming response.data contains user's name and email
-                setData({ name, email });
+                const { user } = response.data; // Access the user object from the response
+                setData({ name: user.name || '', email: user.email || '' }); // Ensure default values are set
             } catch (error) {
                 console.error('Error fetching user profile:', error);
             }
@@ -94,7 +93,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
                 </div>
 
-                {mustVerifyEmail && user.email_verified_at === null && (
+                {mustVerifyEmail && data.email && !data.email_verified_at && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">
                             Your email address is unverified.

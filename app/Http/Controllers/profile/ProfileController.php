@@ -8,9 +8,23 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 class ProfileController extends Controller
 {
-  
+    public function index()
+    {
+        $user = Auth::user();
+        $user->load('roles', 'permissions');
+        
+        if ($user->avatar) {
+            $user->avatar = url('avatars/' . $user->avatar);
+        }
+    
+        return response()->json(['user' => $user], 200);
+    }
+    
+    
+
     public function update(ProfileUpdateRequest $request)
     {
         $user = Auth::user();

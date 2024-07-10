@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate,Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import axiosInstance from '../axiosInstance'; // Use the axios instance
 
 function Login() {
@@ -8,6 +8,7 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [generalError, setGeneralError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +20,10 @@ function Login() {
       localStorage.setItem('token', response.data.access_token);
       setErrors({});
       setGeneralError('');
-      navigate('/dashboard/home');
+
+      // Redirect to the previous page or the home page if there's no previous page
+      const previousPath = location.state?.from || '/dashboard/home';
+      navigate(previousPath);
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors);
@@ -55,18 +59,15 @@ function Login() {
         />
         {errors.password && <p className="text-red-600">{errors.password[0]}</p>}
         <p className="mt-4">
-        <Link to="/forgot-password" className='text-blue-700'> forget password</Link>
+          <Link to="/forgot-password" className="text-blue-700">Forget password</Link>
         </p>
-        {/* <p className="mt-4">
-        <Link to="/reset-password" className='text-blue-700'> reset password</Link>
-        </p> */}
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-600">
           Login
         </button>
         
         {generalError && <p className="text-red-600 mt-2">{generalError}</p>}
         <p className="mt-4">
-          don't have an account <Link to="/register" className='text-blue-700'> Register</Link>
+          Don't have an account? <Link to="/register" className="text-blue-700">Register</Link>
         </p>
       </form>
     </div>

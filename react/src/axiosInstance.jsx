@@ -40,16 +40,17 @@ axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response) {
+      const previousPath = window.location.pathname; // Get the current path
+
       if (error.response.status === 401) {
         // Redirect to login page for 401 Unauthorized
-        history.push('/login');
+        history.push('/login', { state: { from: previousPath } });
         window.location.reload(); // Ensure the page reloads to apply the navigation
       } else if (error.response.status === 403) {
         // Redirect to unauthorized page for 403 Forbidden
         history.push('/unauthorized');
         window.location.reload(); // Ensure the page reloads to apply the navigation
-      }
-      else if (error.response.status === 404) {
+      } else if (error.response.status === 404) {
         // Redirect to not found
         history.push('/not-found');
         window.location.reload(); // Ensure the page reloads to apply the navigation

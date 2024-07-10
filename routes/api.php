@@ -30,19 +30,18 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 
-// Protected routes
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/user', [UserController::class, 'getUser']);
-});
 
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    
     Route::get('/posts', [MyPostController::class, 'index']);
     Route::post('/posts', [MyPostController::class, 'store']);
 
     //profile
+    Route::get('/user', [ProfileController::class, 'index']);
     Route::patch('/profile/update', [ProfileController::class, 'update']);
     Route::delete('/profile/delete', [ProfileController::class, 'destroy']);
 

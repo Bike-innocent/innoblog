@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axiosInstance from '../axiosInstance'; // Import your axios instance
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -16,7 +16,7 @@ function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/reset-password', {
+      const response = await axiosInstance.post('/reset-password', {
         email: query.get('email'),
         token: query.get('token'),
         password,
@@ -29,7 +29,11 @@ function ResetPassword() {
         }, 3000); // Redirect to login page after 3 seconds
       }
     } catch (error) {
-      setMessage(error.response.data.message);
+      if (error.response && error.response.data.message) {
+        setMessage(error.response.data.message);
+      } else {
+        setMessage('Something went wrong. Please try again.');
+      }
     }
   };
 

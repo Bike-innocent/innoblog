@@ -1,12 +1,27 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { AiOutlineMenu, AiOutlineSun, AiOutlineMoon } from 'react-icons/ai';
+import axiosInstance from '../../axiosInstance'; // Adjust the path as needed
 
 function AuthNavbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [theme, setTheme] = useState('dark'); // Default to dark theme
+  const [user, setUser] = useState(null); // State to store user data
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Fetch user data when component mounts
+    const fetchUserData = async () => {
+      try {
+        const response = await axiosInstance.get('/user');
+        setUser(response.data.user); // Adjust according to your API response structure
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -21,29 +36,16 @@ function AuthNavbar() {
     navigate('/login');
   };
 
-  const toggleTheme = () => {
-    const newTheme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(newTheme);
-    document.documentElement.classList.toggle('dark', newTheme === 'dark');
+  const getUserInitial = (name) => {
+    return name ? name.charAt(0).toUpperCase() : '';
   };
-
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
 
   return (
     <div>
       <nav className="bg-gray-800 dark:bg-gray-900">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
-
-          {/*togle button for mobile menu*/}
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
-              {/* Mobile menu button */}
               <button
                 type="button"
                 className="inline-flex items-center justify-center rounded p-2 text-gray-400 hover:bg-gray-700 hover:text-white focus:outline-none"
@@ -80,11 +82,8 @@ function AuthNavbar() {
                 </svg>
               </button>
             </div>
-              {/* end togle button for mobile menu*/}
-
             <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
               <div className="flex-shrink-0">
-                {/* Your Company logo or name */}
                 <p className="text-white font-bold text-2xl">Innoblog</p>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-4">
@@ -114,41 +113,8 @@ function AuthNavbar() {
                 </NavLink>
               </div>
             </div>
+
             <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-              {/* Theme toggle button */}
-              <button
-                type="button"
-                className="bg-gray-800 dark:bg-gray-900 text-gray-100 p-1 rounded-full hover:text-white focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-800 dark:focus:ring-offset-gray-900"
-                onClick={toggleTheme}
-              >
-                {theme === 'dark' ? (
-                  <AiOutlineSun className="h-6 w-6" />
-                ) : (
-                  <AiOutlineMoon className="h-6 w-6" />
-                )}
-              </button>
-
-              {/* Notification button */}
-              <button
-                type="button"
-                className="relative bg-gray-800 dark:bg-gray-900 text-gray-100 p-1 rounded-full hover:text-white focus:outline-none focus:ring-offset-2 focus:ring-offset-gray-800 dark:focus:ring-offset-gray-900"
-              >
-                <span className="sr-only">View notifications</span>
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 5a3 3 0 11-6 0 3 3 0 016 0zM5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>
-              </button>
-
               {/* Profile dropdown */}
               <div className="ml-3 relative">
                 <div>
@@ -160,15 +126,20 @@ function AuthNavbar() {
                     onClick={toggleDropdown}
                   >
                     <span className="sr-only">Open user menu</span>
-                    <img
-                      className="h-8 w-8 rounded-full"
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      alt="User profile"
-                    />
+                    {user?.avatar ? (
+                      <img
+                        className="h-8 w-8 rounded-full"
+                        src={user.avatar}
+                        alt={user.name}
+                      />
+                    ) : (
+                      <div className="h-8 w-8 rounded-full bg-gray-500 flex items-center justify-center text-white">
+                        {getUserInitial(user?.name)}
+                      </div>
+                    )}
                   </button>
                 </div>
-
-                {/* Dropdown menu, show/hide based on dropdown state */}
+                {/* Dropdown menu */}
                 {isDropdownOpen && (
                   <div
                     className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none"
@@ -177,22 +148,22 @@ function AuthNavbar() {
                     aria-labelledby="user-menu-button"
                     tabIndex="-1"
                   >
-                    <a
-                      href="#"
+                    <NavLink
+                      to="/profile"
                       className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       role="menuitem"
                       onClick={toggleDropdown}
                     >
                       Your Profile
-                    </a>
-                    <a
-                      href="#"
+                    </NavLink>
+                    <NavLink
+                      to="/settings"
                       className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       role="menuitem"
                       onClick={toggleDropdown}
                     >
                       Settings
-                    </a>
+                    </NavLink>
                     <p
                       className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       role="menuitem"
@@ -207,33 +178,37 @@ function AuthNavbar() {
           </div>
         </div>
 
-        {/* Mobile menu, toggle classes based on menu state */}
+        {/* Mobile menu */}
         <div
           className={`${isMobileMenuOpen ? 'block' : 'hidden'} sm:hidden`}
           id="mobile-menu"
         >
-          <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="space-y-1 px-2 pt-2 pb-3">
             <NavLink
-              to="/dashboard/home"  onClick={toggleMobileMenu}
+              to="/dashboard/home"
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
+              onClick={toggleMobileMenu}
             >
               Dashboard
             </NavLink>
             <NavLink
-              to="/blog"  onClick={toggleMobileMenu}
+              to="/blog"
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
+              onClick={toggleMobileMenu}
             >
               Blog
             </NavLink>
             <NavLink
-              to="/category"  onClick={toggleMobileMenu}
+              to="/category"
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
+              onClick={toggleMobileMenu}
             >
               Category
             </NavLink>
             <NavLink
-              to="/about"  onClick={toggleMobileMenu}
+              to="/about"
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
+              onClick={toggleMobileMenu}
             >
               About
             </NavLink>
