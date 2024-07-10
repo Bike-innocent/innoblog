@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\profile;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
-class PasswordController extends Controller
+class UpdatePasswordController extends Controller
 {
     public function update(Request $request)
     {

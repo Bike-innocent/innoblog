@@ -1,6 +1,6 @@
 <?php
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\posts;
+use App\Http\Controllers\Controller;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

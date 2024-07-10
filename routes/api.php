@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\AllPostController;
-use App\Http\Controllers\AllUserController;
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ForgotPasswordController;
-use App\Http\Controllers\MyPostController;
-use App\Http\Controllers\PasswordController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ResetPasswordController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\admin\AllPostController;
+use App\Http\Controllers\admin\AllUserController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\posts\MyPostController;
+use App\Http\Controllers\profile\ProfileController;
+use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\profile\AvatarController;
+use App\Http\Controllers\profile\UpdatePasswordController;
+use App\Http\Controllers\profile\UserController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
@@ -43,10 +44,14 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //profile
     Route::patch('/profile/update', [ProfileController::class, 'update']);
-
     Route::delete('/profile/delete', [ProfileController::class, 'destroy']);
 
-    Route::put('/password/update', [PasswordController::class, 'update']);
+
+    Route::post('/profile/avatar', [AvatarController::class, 'update']);
+    Route::delete('/profile/avatar', [AvatarController::class, 'destroy']);
+    Route::get('/profile/avatar', [AvatarController::class, 'index']);
+    
+    Route::put('/password/update', [UpdatePasswordController::class, 'update']);
 
    
 });

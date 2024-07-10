@@ -1,6 +1,6 @@
 <?php
-namespace App\Http\Controllers;
-
+namespace App\Http\Controllers\profile;
+use App\Http\Controllers\Controller; // Make sure to import the base Controller
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 

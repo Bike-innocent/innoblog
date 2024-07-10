@@ -33,6 +33,7 @@ const DeleteUserForm = ({ className = '' }) => {
                 setErrors(error.response.data.errors);
             } else {
                 console.error('Error deleting user:', error);
+                setErrors({ general: 'An unexpected error occurred.' });
             }
             passwordInput.current.focus();
         } finally {
@@ -90,6 +91,7 @@ const DeleteUserForm = ({ className = '' }) => {
                             {processing ? <Processing text="Deleting..." /> : 'Delete Account'}
                         </button>
                     </div>
+                    {errors.general && <p className="mt-2 text-sm text-red-600">{errors.general}</p>}
                 </form>
             </Modal>
         </section>

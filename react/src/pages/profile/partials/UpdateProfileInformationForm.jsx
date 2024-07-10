@@ -51,6 +51,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                 setErrors(error.response.data.errors);
             } else {
                 console.error('Error updating profile:', error);
+                setErrors({ general: 'An unexpected error occurred.' });
             }
         } finally {
             setProcessing(false);
@@ -75,7 +76,6 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         type="text"
                         value={data.name}
                         onChange={handleChange}
-                        required
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
                     {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name}</p>}
@@ -89,13 +89,12 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         type="email"
                         value={data.email}
                         onChange={handleChange}
-                        required
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
                     {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
                 </div>
 
-                {mustVerifyEmail && !data.email_verified_at && (
+                {mustVerifyEmail && user.email_verified_at === null && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">
                             Your email address is unverified.
@@ -124,6 +123,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         {processing ? <Processing text="Updating..." /> : recentlySuccessful ? 'Saved.' : 'Save'}
                     </button>
                 </div>
+                {errors.general && <p className="mt-2 text-sm text-red-600">{errors.general}</p>}
             </form>
         </section>
     );
