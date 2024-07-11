@@ -28,7 +28,7 @@ export default function UpdatePasswordForm({ className = '' }) {
         setProcessing(true);
 
         try {
-            const response = await axiosInstance.put('/password/update', data);
+            const response = await axiosInstance.put('/profile/password/update', data);
 
             if (response.status === 200) {
                 setData({

@@ -1,11 +1,11 @@
 import React from 'react'
 
-function Blog() {
+function SinglePostTabs() {
   return (
     <div>
-      blog
+      
     </div>
   )
 }
 
-export default Blog
+export default SinglePostTabs

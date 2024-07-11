@@ -17,7 +17,7 @@ const AllUsers = () => {
     const fetchUsers = async (page) => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get(`/all-users?page=${page}`);
+            const response = await axiosInstance.get(`/admin/all-users?page=${page}`);
             console.log('Response data:', response.data); // Debugging line
             setUsers(response.data.data || []);
             setCurrentPage(response.data.current_page);

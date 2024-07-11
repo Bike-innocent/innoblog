@@ -16,9 +16,8 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   async (config) => {
     try {
-      // Check if CSRF token is already set
+      // Retrieve the CSRF token if not already present
       if (!document.cookie.includes('XSRF-TOKEN')) {
-        // Retrieve the CSRF token
         await axios.get('http://localhost:8000/sanctum/csrf-cookie', {
           headers: {
             'Accept': 'application/json',
@@ -45,15 +44,12 @@ axiosInstance.interceptors.response.use(
       if (error.response.status === 401) {
         // Redirect to login page for 401 Unauthorized
         history.push('/login', { state: { from: previousPath } });
-        window.location.reload(); // Ensure the page reloads to apply the navigation
       } else if (error.response.status === 403) {
         // Redirect to unauthorized page for 403 Forbidden
         history.push('/unauthorized');
-        window.location.reload(); // Ensure the page reloads to apply the navigation
       } else if (error.response.status === 404) {
-        // Redirect to not found
+        // Redirect to not found page for 404 Not Found
         history.push('/not-found');
-        window.location.reload(); // Ensure the page reloads to apply the navigation
       }
     }
     return Promise.reject(error);

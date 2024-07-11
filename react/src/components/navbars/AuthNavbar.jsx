@@ -13,7 +13,7 @@ function AuthNavbar() {
     // Fetch user data when component mounts
     const fetchUserData = async () => {
       try {
-        const response = await axiosInstance.get('/user');
+        const response = await axiosInstance.get('/profile/user');
         setUser(response.data.user); // Adjust according to your API response structure
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -41,8 +41,8 @@ function AuthNavbar() {
   };
 
   return (
-    <div>
-      <nav className="bg-gray-800 dark:bg-gray-900">
+    <div className=''>
+      <nav className="bg-gray-800 dark:bg-gray-900 ">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="relative flex h-16 items-center justify-between">
             <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">

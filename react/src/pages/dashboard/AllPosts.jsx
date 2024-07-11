@@ -18,7 +18,7 @@ const AllPosts = () => {
     const fetchPosts = async (page) => {
         setLoading(true);
         try {
-            const response = await axiosInstance.get(`/all-posts?page=${page}`);
+            const response = await axiosInstance.get(`/admin/all-posts?page=${page}`);
             console.log('Response data:', response.data); // Debugging line
             setPosts(response.data.data);
             setLastPage(response.data.last_page);
@@ -31,7 +31,7 @@ const AllPosts = () => {
 
     const handleDelete = async (id) => {
         try {
-            await axiosInstance.delete(`/all-posts/${id}`);
+            await axiosInstance.delete(`/admin/all-posts/${id}`);
             setPosts(posts.filter(post => post.id !== id));
             setSuccessMessage('Post deleted successfully');
         } catch (error) {

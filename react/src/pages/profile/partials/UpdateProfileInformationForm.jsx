@@ -15,7 +15,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
     useEffect(() => {
         async function fetchUserProfile() {
             try {
-                const response = await axiosInstance.get('/user'); // Adjust the endpoint to fetch user profile data
+                const response = await axiosInstance.get('/profile/user'); // Adjust the endpoint to fetch user profile data
                 const { user } = response.data; // Access the user object from the response
                 setData({ name: user.name || '', email: user.email || '' }); // Ensure default values are set
             } catch (error) {

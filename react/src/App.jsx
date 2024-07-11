@@ -9,7 +9,7 @@ import MainLayout from './layouts/MainLayout';
 import DashboardLayout from './layouts/DashboardLayout';
 import About from './pages/About';
 import Category from './pages/Category';
-import Blog from './pages/Blog';
+
 import Home from './pages/dashboard/Home';
 // import Profile from './pages/dashboard/Profile';
 import CreatePost from './pages/dashboard/CreatePost';
@@ -20,6 +20,9 @@ import MyPost from './pages/dashboard/MyPost';
 import Unauthorized from './pages/Unauthorized';
 import NotFound from './pages/NotFound';
 import EditProfile from './pages/profile/EditProfile';
+import Index from './pages/blog/Index';
+
+import SinglePost from './pages/singlePost/SinglePost';
 
 const router = createBrowserRouter([
   {
@@ -39,7 +42,8 @@ const router = createBrowserRouter([
       { path: 'dashboard', element: <DashboardLayout /> },
       { path: 'about', element: <About /> },
       { path: 'category', element: <Category /> },
-      { path: 'blog', element: <Blog /> },
+      { path: 'blog', element: <Index/> },
+      { path: '/posts/:id', element: <SinglePost/> },
       { path: 'unauthorized', element: <Unauthorized /> },
       { path: 'not-found', element: <NotFound /> },
       // { path:"*", element: <NotFound /> },
