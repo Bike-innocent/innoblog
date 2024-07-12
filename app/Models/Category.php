@@ -24,7 +24,7 @@ class Category extends Model
     {
         return $this->hasMany(SubCategory::class);
     }
-
+ 
     public function posts()
     {
         return $this->hasMany(Post::class);

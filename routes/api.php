@@ -13,6 +13,7 @@ use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\UpdatePasswordController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
+use App\Http\Controllers\Category\ManageCategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -64,6 +65,18 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/posts/{id}', [PostController::class, 'show']);
     });
 
+
+   
+
+    Route::prefix('manage-category')->group(function () {
+        Route::get('/', [ManageCategoryController::class, 'index']);
+        Route::post('/category', [ManageCategoryController::class, 'storeCategory']);
+        Route::put('/category/{category}', [ManageCategoryController::class, 'updateCategory']);
+        Route::delete('/category/{category}', [ManageCategoryController::class, 'destroyCategory']);
+        
+        // Define similar routes for sub-categories and tags
+    });
+    
     //end middle ware
 });
 

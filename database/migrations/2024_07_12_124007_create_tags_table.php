@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('slug')->unique(); // Slug column for URL-friendly names
+            $table->foreignId('sub_category_id')->constrained('sub_categories')->onDelete('cascade'); // Add this line
             $table->timestamps();
         });
     }

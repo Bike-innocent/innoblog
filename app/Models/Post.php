@@ -26,16 +26,18 @@ class Post extends Model
         return $this->belongsTo(Category::class);
     }
 
+   
+
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
     }
 
+  
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Tag::class, 'post_tag');
     }
-
     public function comments()
     {
         return $this->hasMany(Comment::class);
