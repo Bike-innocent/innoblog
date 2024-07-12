@@ -23,6 +23,7 @@ import EditProfile from './pages/profile/EditProfile';
 import Index from './pages/blog/Index';
 
 import SinglePost from './pages/singlePost/SinglePost';
+import ManageCategory from './pages/dashboard/ManageCategory';
 
 const router = createBrowserRouter([
   {
@@ -60,6 +61,7 @@ const router = createBrowserRouter([
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },
       { path: 'my-post', element: <MyPost /> },
+      { path: 'manage-category', element: <ManageCategory /> },
     ],
   },
 ]);

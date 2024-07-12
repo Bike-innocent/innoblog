@@ -4,6 +4,9 @@ namespace Database\Factories;
 
 use App\Models\Post;
 use App\Models\User;
+use App\Models\Category;
+use App\Models\SubCategory;
+use App\Models\Tag;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PostFactory extends Factory
@@ -27,26 +30,27 @@ class PostFactory extends Factory
         ];
         $randomImage = $images[array_rand($images)];
 
-        // $categories = [
-        //     'Sports', 
-        //     'Education',
-        //     'Business',
-        //     'Culture',
-        //     'Technology',
-        //     'Lifestyle'
-        // ];
-        // $randomCategory = $categories[array_rand($categories)];
-
-        // Check if there are any users
         $user = User::inRandomOrder()->first();
+        $category = Category::inRandomOrder()->first();
+        $subCategory = SubCategory::where('category_id', $category->id)->inRandomOrder()->first();
+        $tags = Tag::inRandomOrder()->take(rand(1, 3))->pluck('id'); // Randomly pick 1-3 tags
 
         return [
             'title' => $faker->sentence,
-            'description' => $faker->paragraph,
+            'content' => $faker->paragraph,
             'image' => $randomImage,
-            // 'category' => $randomCategory,
             'status' => 1,
-            'user_id' => $user ? $user->id : null, // Assign user_id if user exists
+            'user_id' => $user ? $user->id : null,
+            'category_id' => $category ? $category->id : null,
+            'sub_category_id' => $subCategory ? $subCategory->id : null,
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Post $post) {
+            $tags = Tag::inRandomOrder()->take(rand(1, 3))->pluck('id'); // Randomly pick 1-3 tags
+            $post->tags()->attach($tags);
+        });
     }
 }

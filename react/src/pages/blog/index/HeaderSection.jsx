@@ -64,9 +64,9 @@ const HeaderSection = () => {
                               : post.title}
                           </h2>
                           <p className="mt-2 hidden md:block">
-                            {post.description.length > 70
-                              ? post.description.substring(0, 70) + '...'
-                              : post.description}
+                            {post.content.length > 70
+                              ? post.content.substring(0, 70) + '...'
+                              : post.content}
                           </p>
                         </div>
                       </Link>

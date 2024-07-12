@@ -1,16 +1,32 @@
 <?php
+namespace App\Models;
 
-// namespace App\Models;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
-// use Illuminate\Database\Eloquent\Factories\HasFactory;
-// use Illuminate\Database\Eloquent\Model;
+class Category extends Model
+{
+    use HasFactory;
 
-// class Category extends Model
-// {
-//     use HasFactory;
+    protected $guarded = [];
+    
+    public static function boot()
+    {
+        parent::boot();
 
-//     public function posts()
-//     {
-//         return $this->hasMany(Post::class);
-//     }
-// }
+        static::creating(function ($category) {
+            $category->slug = Str::slug($category->name);
+        });
+    }
+
+    public function subCategories()
+    {
+        return $this->hasMany(SubCategory::class);
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+}

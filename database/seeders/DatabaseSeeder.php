@@ -11,16 +11,18 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         $this->call([
             UsersTableSeeder::class,
-              PostSeeder::class,
-              RolesAndPermissionsSeeder::class,
-              AdminSeeder::class,
-              AboutUsSeeder::class,
-              CommentsTableSeeder::class,
-
+            RolesAndPermissionsSeeder::class,
+            AdminSeeder::class,
+            CategorySeeder::class,
+            SubCategorySeeder::class,
+            TagSeeder::class,
+            PostSeeder::class,
+            AboutUsSeeder::class,
+            // CommentsTableSeeder::class,
         ]);
     }
 }

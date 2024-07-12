@@ -67,6 +67,10 @@ function DashboardLayout() {
                                     <NavLink to="/dashboard/all-users" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
                                         <BsPeople className="mr-2" size={20} /> All Users
                                     </NavLink>
+
+                                    <NavLink to="/dashboard/manage-category" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>
+                                        <BsPeople className="mr-2" size={20} /> Manage Category
+                                    </NavLink>
                                 </>
                             )}
                             <NavLink to="/dashboard/settings" onClick={toggleSidebar} className={({ isActive }) => isActive ? 'flex items-center px-4 py-2 bg-blue-500 text-white' : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'}>

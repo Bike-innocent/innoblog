@@ -10,18 +10,18 @@ return new class extends Migration
      */
     public function up(): void
     {
+       
         Schema::create('posts', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->text('description');
-            $table->string('image');
-           
+            $table->text('content');
+            $table->string('image')->nullable();
             $table->boolean('status')->default(0);
+            $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
+            $table->foreignId('sub_category_id')->nullable()->constrained('sub_categories')->onDelete('cascade');
             $table->unsignedBigInteger('user_id'); // Add user_id column
-            $table->timestamps();
-
-            // Add foreign key constraint for user_id
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->timestamps();
         });
     }
 
