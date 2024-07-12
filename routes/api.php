@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\posts\MyPostController;
 use App\Http\Controllers\posts\PostController;
+use App\Http\Controllers\posts\SinglePostController;
 use App\Http\Controllers\profile\AvatarController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\UpdatePasswordController;
@@ -40,6 +41,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('posts')->group(function () {
         Route::get('/', [MyPostController::class, 'index']);
         Route::post('/', [MyPostController::class, 'store']);
+
+        Route::get('/latest', [SinglePostController::class, 'latest']);
+        Route::get('/popular', [SinglePostController::class, 'popular']);
+
     });
 
     // Profile routes
