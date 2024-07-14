@@ -23,7 +23,8 @@ import EditProfile from './pages/profile/EditProfile';
 import Index from './pages/blog/Index';
 
 import SinglePost from './pages/singlePost/SinglePost';
-import ManageCategory from './pages/dashboard/ManageCategory';
+import IndexCategory from './pages/dashboard/categories/IndexCategory';
+import EditPost from './pages/dashboard/EditPost';
 
 const router = createBrowserRouter([
   {
@@ -43,8 +44,8 @@ const router = createBrowserRouter([
       { path: 'dashboard', element: <DashboardLayout /> },
       { path: 'about', element: <About /> },
       { path: 'category', element: <Category /> },
-      { path: 'blog', element: <Index/> },
-      { path: '/posts/:id', element: <SinglePost/> },
+      { path: 'blog', element: <Index /> },
+      { path: '/posts/:id', element: <SinglePost /> },
       { path: 'unauthorized', element: <Unauthorized /> },
       { path: 'not-found', element: <NotFound /> },
       // { path:"*", element: <NotFound /> },
@@ -57,11 +58,12 @@ const router = createBrowserRouter([
       { path: 'home', element: <Home /> },
       { path: 'profile', element: <EditProfile /> },
       { path: 'create-post', element: <CreatePost /> },
-      { path: 'all-posts', element: <AllPosts/> },
+      { path: 'all-posts', element: <AllPosts /> },
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },
       { path: 'my-post', element: <MyPost /> },
-      { path: 'manage-category', element: <ManageCategory /> },
+      { path: 'edit-post/:id', element: <EditPost/> },
+      { path: 'manage-category', element: <IndexCategory /> },
     ],
   },
 ]);

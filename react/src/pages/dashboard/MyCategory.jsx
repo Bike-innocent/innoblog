@@ -1,9 +1,8 @@
-// src/pages/dashboard/ManageCategory.jsx
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../axiosInstance';
+import axiosInstance from '../../axiosInstance'; // Ensure the path is correct
 import { Dialog, Transition } from '@headlessui/react';
 
-function ManageCategory() {
+const MyCategory = () => {
   const [categories, setCategories] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
   const [categoryName, setCategoryName] = useState('');
@@ -137,4 +136,4 @@ function ManageCategory() {
   );
 }
 
-export default ManageCategory;
+export default MyCategory;

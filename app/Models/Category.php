@@ -11,22 +11,16 @@ class Category extends Model
 
     protected $guarded = [];
     
-    public static function boot()
-    {
-        parent::boot();
-
-        static::creating(function ($category) {
-            $category->slug = Str::slug($category->name);
-        });
-    }
+   
 
     public function subCategories()
     {
-        return $this->hasMany(SubCategory::class);
+        return $this->hasMany(SubCategory::class, 'category_id'); // Ensure the foreign key is correct
     }
- 
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
+
+    
 }

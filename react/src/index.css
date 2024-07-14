@@ -7,15 +7,13 @@
     position: sticky;
     height: 90vh;
 }
+.tab-container {
+  display: flex;
+  flex-wrap: wrap;
+}
 
-.carousel-indicators li {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: #000;
-  }
-  
-  .carousel-indicators .active {
-    background-color: #fff;
-  }
-  
+.tab-item {
+  flex: 1 1 auto;
+  min-width: 0; /* Allows the tab item to shrink */
+  overflow-wrap: break-word;
+}

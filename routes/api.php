@@ -5,6 +5,8 @@ use App\Http\Controllers\admin\AllUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\Category\CategoryController;
+use App\Http\Controllers\Category\ManageCategoryController;
 use App\Http\Controllers\posts\MyPostController;
 use App\Http\Controllers\posts\PostController;
 use App\Http\Controllers\posts\SinglePostController;
@@ -13,7 +15,9 @@ use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\UpdatePasswordController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
-use App\Http\Controllers\Category\ManageCategoryController;
+use App\Http\Controllers\category\SubCategoryController;
+
+use App\Http\Controllers\Category\TagController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,13 +44,16 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Posts routes
     Route::prefix('posts')->group(function () {
+        Route::get('/form-data', [MyPostController::class, 'formData']);
         Route::get('/', [MyPostController::class, 'index']);
         Route::post('/', [MyPostController::class, 'store']);
-
+        Route::get('/{id}', [MyPostController::class, 'show']);
+        Route::put('/{id}', [MyPostController::class, 'update']);
+        Route::delete('/{id}', [MyPostController::class, 'destroy']);
         Route::get('/latest', [SinglePostController::class, 'latest']);
         Route::get('/popular', [SinglePostController::class, 'popular']);
-
     });
+    
 
     // Profile routes
     Route::prefix('profile')->group(function () {
@@ -65,18 +72,30 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/show/posts/{id}', [PostController::class, 'show']);
     });
 
+    // Route::prefix('manage-category')->group(function () {
+    //     Route::get('/', [ManageCategoryController::class, 'index']);
+    //     Route::post('/category', [ManageCategoryController::class, 'storeCategory']);
+    //     Route::put('/category/{category}', [ManageCategoryController::class, 'updateCategory']);
+    //     Route::delete('/category/{category}', [ManageCategoryController::class, 'destroyCategory']);
 
+    //     // Define similar routes for sub-categories and tags
+    // });
    
-
-    Route::prefix('manage-category')->group(function () {
-        Route::get('/', [ManageCategoryController::class, 'index']);
-        Route::post('/category', [ManageCategoryController::class, 'storeCategory']);
-        Route::put('/category/{category}', [ManageCategoryController::class, 'updateCategory']);
-        Route::delete('/category/{category}', [ManageCategoryController::class, 'destroyCategory']);
-        
-        // Define similar routes for sub-categories and tags
-    });
+  
     
+    Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('subcategories', SubCategoryController::class);
+
+// // API Routes for SubCategories
+// Route::middleware(['auth:sanctum'])->group(function () {
+//     Route::get('/subcategories', [SubCategoryController::class, 'index']);
+//     Route::post('/subcategories', [SubCategoryController::class, 'store']);
+//     Route::get('/subcategories/{id}', [SubCategoryController::class, 'show']);
+//     Route::put('/subcategories/{id}', [SubCategoryController::class, 'update']);
+//     Route::delete('/subcategories/{id}', [SubCategoryController::class, 'destroy']);
+// });
+
+
     //end middle ware
 });
 

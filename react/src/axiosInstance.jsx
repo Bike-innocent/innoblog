@@ -8,11 +8,11 @@ const axiosInstance = axios.create({
   baseURL: 'http://localhost:8000/api',
   withCredentials: true, // Ensure credentials (cookies) are included with requests
   headers: {
+    'Content-Type': 'application/json',
     'Accept': 'application/json',
-  }
+  },
 });
 
-// Setup CSRF token retrieval
 axiosInstance.interceptors.request.use(
   async (config) => {
     try {
@@ -23,6 +23,11 @@ axiosInstance.interceptors.request.use(
             'Accept': 'application/json',
           }
         });
+      }
+
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
       }
     } catch (error) {
       return Promise.reject(error);

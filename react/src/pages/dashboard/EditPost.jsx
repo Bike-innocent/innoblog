@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../axiosInstance';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Processing from '../../components/Processing';
 
-const CreatePost = () => {
+const EditPost = () => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState(null);
@@ -15,31 +15,36 @@ const CreatePost = () => {
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(false);
     const navigate = useNavigate();
+    const { id } = useParams();
 
     useEffect(() => {
         const fetchFormData = async () => {
             try {
-                const response = await axiosInstance.get('posts/form-data');
+                const response = await axiosInstance.get('/posts/form-data');
                 setCategories(response.data.categories);
                 setSubCategories(response.data.subCategories);
-
-                // Set default category and subcategory
-                if (response.data.categories.length > 0) {
-                    const defaultCategory = response.data.categories[0].id;
-                    setCategory(defaultCategory);
-                    const filtered = response.data.subCategories.filter(sub => sub.category_id === defaultCategory);
-                    setFilteredSubCategories(filtered);
-                    if (filtered.length > 0) {
-                        setSubCategory(filtered[0].id);
-                    }
-                }
             } catch (error) {
                 console.error('Error fetching form data:', error);
             }
         };
 
+        const fetchPostData = async () => {
+            try {
+                const response = await axiosInstance.get(`/posts/${id}`);
+                const post = response.data.post;
+                setTitle(post.title);
+                setContent(post.content);
+                setCategory(post.category_id);
+                setSubCategory(post.sub_category_id);
+                setImage(post.image);
+            } catch (error) {
+                console.error('Error fetching post data:', error);
+            }
+        };
+
         fetchFormData();
-    }, []);
+        fetchPostData();
+    }, [id]);
 
     useEffect(() => {
         if (category) {
@@ -69,18 +74,26 @@ const CreatePost = () => {
         const formData = new FormData();
         formData.append('title', title);
         formData.append('content', content);
-        formData.append('image', image);
+        if (image) {
+            formData.append('image', image);
+        }
         formData.append('category_id', category);
         formData.append('sub_category_id', subCategory);
-
+    
+        // Log the form data
+        for (let pair of formData.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+    
         try {
-            await axiosInstance.post('/posts', formData, {
+            await axiosInstance.put(`/posts/${id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            navigate('/dashboard/my-post', { state: { success: 'Post created successfully.' } });
+            navigate('/dashboard/my-post', { state: { success: 'Post updated successfully.' } });
         } catch (error) {
+            console.error('Error response:', error.response);
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors);
             }
@@ -91,7 +104,7 @@ const CreatePost = () => {
 
     return (
         <div className="rounded-lg">
-            <h1 className="text-2xl font-semibold mb-4">Create a New Post</h1>
+            <h1 className="text-2xl font-semibold mb-4">Edit Post</h1>
             <form onSubmit={handleSubmit}>
                 <div className="mb-4">
                     <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">Title</label>
@@ -172,7 +185,7 @@ const CreatePost = () => {
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                         disabled={processing}
                     >
-                        {processing ? <Processing text='creating...' /> : 'Create Post'}
+                        {processing ? <Processing text='Updating...' /> : 'Update Post'}
                     </button>
                 </div>
             </form>
@@ -180,4 +193,4 @@ const CreatePost = () => {
     );
 };
 
-export default CreatePost;
+export default EditPost;
