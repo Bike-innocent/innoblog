@@ -50,8 +50,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{id}', [MyPostController::class, 'show']);
         Route::put('/{id}', [MyPostController::class, 'update']);
         Route::delete('/{id}', [MyPostController::class, 'destroy']);
-        Route::get('/latest', [SinglePostController::class, 'latest']);
-        Route::get('/popular', [SinglePostController::class, 'popular']);
+       
     });
     
 
@@ -70,6 +69,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('blog')->group(function () {
         Route::get('/posts', [PostController::class, 'index']);
         Route::get('/show/posts/{id}', [PostController::class, 'show']);
+        Route::get('/latest', [SinglePostController::class, 'latest']);
+        Route::get('/popular', [SinglePostController::class, 'popular']);
     });
 
     // Route::prefix('manage-category')->group(function () {

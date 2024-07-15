@@ -68,32 +68,36 @@ const MyPosts = () => {
                         <p>No posts found.</p>
                     ) : (
                         <table className="table-auto w-full">
-                            <thead>
-                                <tr>
-                                    <th>S/N</th>
-                                    <th>Image</th>
-                                    <th>Title</th>
-                                    <th>Date</th>
-                                    <th>Actions</th>
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Image</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Sub Category</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {posts.map((post, index) => (
+                                <tr key={post.id}>
+                                    <td>{index + 1}</td>
+                                    <td>
+                                        <img src={post.image} alt={post.title} className="w-16 h-16 object-cover" />
+                                    </td>
+                                    <td>{post.title}</td>
+                                    <td>{post.category ? post.category.name : 'N/A'}</td>
+                                    <td>{post.sub_category ? post.sub_category.name : 'N/A'}</td>
+                                    <td>{new Date(post.created_at).toLocaleDateString()}</td>
+                                    <td>
+                                        <Link to={`/dashboard/edit-post/${post.id}`} className="btn btn-warning mr-2">Edit</Link>
+                                        <button onClick={() => openDeleteDialog(post.id)} className="btn btn-danger">Delete</button>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                {posts.map((post, index) => (
-                                    <tr key={post.id}>
-                                        <td>{index + 1}</td>
-                                        <td>
-                                            <img src={post.image} alt={post.title} className="w-16 h-16 object-cover" />
-                                        </td>
-                                        <td>{post.title}</td>
-                                        <td>{new Date(post.created_at).toLocaleDateString()}</td>
-                                        <td>
-                                            <Link to={`/dashboard/edit-post/${post.id}`} className="btn btn-warning mr-2">Edit</Link>
-                                            <button onClick={() => openDeleteDialog(post.id)} className="btn btn-danger">Delete</button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                            ))}
+                        </tbody>
+                    </table>
                     )}
                 </>
             )}

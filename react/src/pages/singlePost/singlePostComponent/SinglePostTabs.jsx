@@ -10,10 +10,10 @@ function SinglePostTabs() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const latestResponse = await axiosInstance.get('/posts/latest');
+        const latestResponse = await axiosInstance.get('blog/latest');
         setLatestPosts(latestResponse.data.latestpost || []); // Ensure latestpost is defined
 
-        const popularResponse = await axiosInstance.get('/posts/popular');
+        const popularResponse = await axiosInstance.get('blog/popular');
         setPopularPosts(popularResponse.data.popularpost || []); // Ensure popularpost is defined
       } catch (error) {
         console.error('Error fetching posts:', error);
