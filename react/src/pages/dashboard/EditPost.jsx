@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../axiosInstance';
 import { useNavigate, useParams } from 'react-router-dom';
 import Processing from '../../components/Processing';
-import Loader from '../../components/Loader'; 
-
+import Loader from '../../components/Loader';
 
 const EditPost = () => {
     const { id } = useParams();
@@ -29,11 +28,10 @@ const EditPost = () => {
                 setContent(post.content);
                 setCategory(post.category_id);
                 setSubCategory(post.sub_category_id);
-                // Image is not being edited directly; hence not setting image state.
             } catch (error) {
                 console.error('Error fetching post data:', error);
             } finally {
-                setLoading(false); // Set loading to false after fetching
+                setLoading(false);
             }
         };
 
@@ -45,7 +43,7 @@ const EditPost = () => {
             } catch (error) {
                 console.error('Error fetching form data:', error);
             } finally {
-                setLoading(false); // Set loading to false after fetching
+                setLoading(false);
             }
         };
 
@@ -57,13 +55,11 @@ const EditPost = () => {
         if (category) {
             const filtered = subCategories.filter(sub => sub.category_id === parseInt(category));
             setFilteredSubCategories(filtered);
-            if (filtered.length > 0) {
-                setSubCategory(filtered[0].id);
-            } else {
-                setSubCategory('');
+            if (!filtered.some(sub => sub.id === parseInt(subCategory))) {
+                setSubCategory(filtered.length > 0 ? filtered[0].id : '');
             }
         }
-    }, [category, subCategories]);
+    }, [category, subCategories, subCategory]);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -107,7 +103,7 @@ const EditPost = () => {
     return (
         <div className="rounded-lg">
             {loading ? (
-                <Loader /> // Render the Loader component while loading
+                <Loader /> 
             ) : (
                 <>
                     <h1 className="text-2xl font-semibold mb-4">Edit Post</h1>
@@ -191,13 +187,15 @@ const EditPost = () => {
                                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                                 disabled={processing}
                             >
-                                {processing ? <Processing text='updating...' /> : 'Update Post'}
+                                {processing ? <Processing text='Updating...' /> : 'Update Post'}
                             </button>
                         </div>
                     </form>
                 </>
             )}
+            
         </div>
+        
     );
 };
 

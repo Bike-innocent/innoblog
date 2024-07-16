@@ -1,5 +1,7 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 import Register from './pages/Register';
 import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
@@ -25,6 +27,7 @@ import Index from './pages/blog/Index';
 import SinglePost from './pages/singlePost/SinglePost';
 import IndexCategory from './pages/dashboard/categories/IndexCategory';
 import EditPost from './pages/dashboard/EditPost';
+import ViewPost from './pages/dashboard/ViewPost';
 
 const router = createBrowserRouter([
   {
@@ -63,13 +66,21 @@ const router = createBrowserRouter([
       { path: 'settings', element: <Settings /> },
       { path: 'my-post', element: <MyPost /> },
       { path: 'edit-post/:id', element: <EditPost/> },
+      { path: 'view-post/:id', element: <ViewPost/> },
       { path: 'manage-category', element: <IndexCategory /> },
     ],
   },
 ]);
 
+
+const queryClient = new QueryClient();
+
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+  );
 }
 
 export default App;

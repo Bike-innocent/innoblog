@@ -1,89 +1,96 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import axiosInstance from '../../../axiosInstance';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog } from '@headlessui/react';
 import { FaCamera } from 'react-icons/fa';
 import Processing from '../../../components/Processing';
 
+const fetchAvatar = async () => {
+    const response = await axiosInstance.get('/profile/avatar');
+    return response.data;
+};
+
+const uploadAvatar = async (file) => {
+    const formData = new FormData();
+    formData.append('avatar', file);
+
+    const response = await axiosInstance.post('/profile/avatar', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+
+    return response.data;
+};
+
+const deleteAvatar = async () => {
+    await axiosInstance.delete('/profile/avatar');
+};
+
 const UserAvatar = ({ currentAvatar, userName }) => {
-    const [avatar, setAvatar] = useState(currentAvatar);
-    const [name, setName] = useState(userName);
+    const queryClient = useQueryClient();
     const [showModal, setShowModal] = useState(false);
-    const [avatarProcessing, setAvatarProcessing] = useState(false);
     const [error, setError] = useState('');
 
-    useEffect(() => {
-        if (!avatar) {
-            fetchAvatar();
-        }
-    }, []);
+    const { data, isError, error: fetchError, isLoading } = useQuery({
+        queryKey: ['avatar'],
+        queryFn: fetchAvatar,
+        initialData: { avatar: currentAvatar, name: userName },
+    });
 
-    const fetchAvatar = async () => {
-        try {
-            const response = await axiosInstance.get('/profile/avatar');
-            setAvatar(response.data.avatar);
-            setName(response.data.name);
-        } catch (error) {
-            console.error('Failed to fetch avatar:', error);
-        }
-    };
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            handleUpload(file);
-        }
-    };
-
-    const handleUpload = async (file) => {
-        setAvatarProcessing(true);
-        setError('');
-
-        const formData = new FormData();
-        formData.append('avatar', file);
-
-        try {
-            const response = await axiosInstance.post('/profile/avatar', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            setAvatar(response.data.avatar);
-        } catch (error) {
+    const uploadMutation = useMutation({
+        mutationFn: uploadAvatar,
+        onSuccess: (data) => {
+            queryClient.setQueryData(['avatar'], data);
+        },
+        onError: (error) => {
             if (error.response && error.response.data && error.response.data.errors) {
                 setError('Failed to update avatar: ' + error.response.data.errors.avatar[0]);
             } else {
                 console.error('Failed to update avatar:', error);
                 setError('An unexpected error occurred.');
             }
-        } finally {
-            setAvatarProcessing(false);
-        }
-    };
+        },
+    });
 
-    const handleDelete = async () => {
-        setAvatarProcessing(true);
-        setError('');
-
-        try {
-            await axiosInstance.delete('/profile/avatar');
-            setAvatar(null);
+    const deleteMutation = useMutation({
+        mutationFn: deleteAvatar,
+        onSuccess: () => {
+            queryClient.setQueryData(['avatar'], { avatar: null, name: data.name });
             setShowModal(false);
-        } catch (error) {
+        },
+        onError: (error) => {
             console.error('Failed to delete avatar:', error);
             setError('An unexpected error occurred.');
-        } finally {
-            setAvatarProcessing(false);
+        },
+    });
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            uploadMutation.mutate(file);
         }
     };
+
+    const handleDelete = () => {
+        deleteMutation.mutate();
+    };
+
+    if (isLoading) {
+        return <Processing text="Loading avatar..." />;
+    }
+
+    if (isError) {
+        return <p className="text-red-500">Failed to load avatar: {fetchError.message}</p>;
+    }
 
     return (
         <div className="flex flex-col items-center">
             <div className="relative w-32 h-32 mb-4">
-                {avatar ? (
+                {data.avatar ? (
                     <img
-                        src={avatar}
-                        alt={name}
+                        src={data.avatar}
+                        alt={data.name}
                         className="w-full h-full rounded-full object-cover"
                     />
                 ) : (
@@ -97,7 +104,7 @@ const UserAvatar = ({ currentAvatar, userName }) => {
                 <input type="file" id="avatar" className="hidden" onChange={handleImageChange} />
             </div>
            
-            {avatar && (
+            {data.avatar && (
                 <button
                     onClick={() => setShowModal(true)}
                     className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
@@ -120,9 +127,9 @@ const UserAvatar = ({ currentAvatar, userName }) => {
                                 <button
                                     onClick={handleDelete}
                                     className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-                                    disabled={avatarProcessing}
+                                    disabled={deleteMutation.isLoading}
                                 >
-                                    {avatarProcessing ? <Processing text="Deleting..." /> : 'Yes, Delete'}
+                                    {deleteMutation.isLoading ? <Processing text="Deleting..." /> : 'Yes, Delete'}
                                 </button>
                                 <button
                                     onClick={() => setShowModal(false)}

@@ -1,30 +1,48 @@
+
+
+
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../axiosInstance';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Processing from '../../../components/Processing';
 
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
+    const queryClient = useQueryClient();
+
+    // Fetch user profile data query
+    const { data: userProfile } = useQuery({
+        queryKey: ['userProfile'],
+        queryFn: async () => {
+            const response = await axiosInstance.get('/profile/user');
+            return response.data.user;
+        },
+    });
+
+    // Mutation to update user profile data
+    const updateUserProfile = useMutation({
+        mutationFn: (newUserData) => axiosInstance.patch('/profile/update', newUserData),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['userProfile']); // Invalidate cache to refetch data
+        },
+    });
+
     const [data, setData] = useState({
         name: '',
         email: '',
     });
 
+    useEffect(() => {
+        if (userProfile) {
+            setData({
+                name: userProfile.name || '',
+                email: userProfile.email || '',
+            });
+        }
+    }, [userProfile]);
+
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(false);
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
-
-    useEffect(() => {
-        async function fetchUserProfile() {
-            try {
-                const response = await axiosInstance.get('/profile/user'); // Adjust the endpoint to fetch user profile data
-                const { user } = response.data; // Access the user object from the response
-                setData({ name: user.name || '', email: user.email || '' }); // Ensure default values are set
-            } catch (error) {
-                console.error('Error fetching user profile:', error);
-            }
-        }
-
-        fetchUserProfile();
-    }, []); // Empty dependency array ensures this effect runs only once, like componentDidMount
 
     const handleChange = (e) => {
         setData({
@@ -38,13 +56,10 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
         setProcessing(true);
 
         try {
-            const response = await axiosInstance.patch('/profile/update', data);
-
-            if (response.status === 200) {
-                setRecentlySuccessful(true);
-                setTimeout(() => setRecentlySuccessful(false), 3000);
-                setErrors({});
-            }
+            await updateUserProfile.mutateAsync(data);
+            setRecentlySuccessful(true);
+            setTimeout(() => setRecentlySuccessful(false), 3000);
+            setErrors({});
         } catch (error) {
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors);
@@ -93,7 +108,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
                 </div>
 
-                {mustVerifyEmail && data.email && !data.email_verified_at && (
+                {mustVerifyEmail && data.email && !userProfile?.email_verified_at && (
                     <div>
                         <p className="text-sm mt-2 text-gray-800">
                             Your email address is unverified.

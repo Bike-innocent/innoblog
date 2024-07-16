@@ -1,31 +1,43 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Tab } from '@headlessui/react';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../../../axiosInstance';
+import { useQuery } from '@tanstack/react-query';
+
+const fetchLatestPosts = async () => {
+  const response = await axiosInstance.get('blog/latest');
+  return response.data.latestpost || [];
+};
+
+const fetchPopularPosts = async () => {
+  const response = await axiosInstance.get('blog/popular');
+  return response.data.popularpost || [];
+};
 
 function SinglePostTabs() {
-  const [latestPosts, setLatestPosts] = useState([]);
-  const [popularPosts, setPopularPosts] = useState([]);
+  const {
+    data: latestPosts = [],
+    isLoading: latestLoading,
+    isError: latestError,
+    error: latestErrorMessage,
+  } = useQuery({
+    queryKey: ['latestPosts'],
+    queryFn: fetchLatestPosts,
+  });
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const latestResponse = await axiosInstance.get('blog/latest');
-        setLatestPosts(latestResponse.data.latestpost || []); // Ensure latestpost is defined
-
-        const popularResponse = await axiosInstance.get('blog/popular');
-        setPopularPosts(popularResponse.data.popularpost || []); // Ensure popularpost is defined
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
-    };
-
-    fetchPosts();
-  }, []);
+  const {
+    data: popularPosts = [],
+    isLoading: popularLoading,
+    isError: popularError,
+    error: popularErrorMessage,
+  } = useQuery({
+    queryKey: ['popularPosts'],
+    queryFn: fetchPopularPosts,
+  });
 
   return (
     <Tab.Group>
-      <Tab.List className="flex p-1 space-x-1 ">
+      <Tab.List className="flex p-1 space-x-1">
         <Tab
           key="latest"
           className={({ selected }) =>
@@ -41,7 +53,7 @@ function SinglePostTabs() {
           className={({ selected }) =>
             selected
               ? 'w-full py-2.5 text-sm leading-5 font-medium border-b-2 border-blue-500'
-              : 'w-full py-2.5 text-sm leading-5 font-medium border-b-2 '
+              : 'w-full py-2.5 text-sm leading-5 font-medium border-b-2'
           }
         >
           Popular
@@ -49,7 +61,9 @@ function SinglePostTabs() {
       </Tab.List>
       <Tab.Panels className="mt-2">
         <Tab.Panel key="latest" className="bg-white rounded-xl p-3">
-          {latestPosts.map((post) => (
+          {latestLoading && <div>Loading...</div>}
+          {latestError && <div>Error fetching latest posts: {latestErrorMessage.message}</div>}
+          {!latestLoading && !latestError && latestPosts.map((post) => (
             <Link to={`/posts/${post.id}`} key={post.id} className="block border-b pb-4 mb-4">
               <div className="flex items-center">
                 <div className="flex-1">
@@ -71,7 +85,9 @@ function SinglePostTabs() {
           ))}
         </Tab.Panel>
         <Tab.Panel key="popular" className="bg-white rounded-xl p-3">
-          {popularPosts.map((post) => (
+          {popularLoading && <div>Loading...</div>}
+          {popularError && <div>Error fetching popular posts: {popularErrorMessage.message}</div>}
+          {!popularLoading && !popularError && popularPosts.map((post) => (
             <Link to={`/posts/${post.id}`} key={post.id} className="block border-b pb-4 mb-4">
               <div className="flex items-center">
                 <div className="flex-1">
