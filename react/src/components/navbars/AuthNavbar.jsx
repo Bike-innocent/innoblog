@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../../axiosInstance'; // Adjust the path as needed
+import Loader from '../Loader';
 
 function AuthNavbar() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -14,7 +15,7 @@ function AuthNavbar() {
     return response.data.user;
   };
 
-  const { data: user, error, isLoading } = useQuery({
+  const { data: user, error, } = useQuery({
     queryKey: ['user'],
     queryFn: fetchUserData,
   });
@@ -36,13 +37,13 @@ function AuthNavbar() {
     return name ? name.charAt(0).toUpperCase() : '';
   };
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  // if (isLoading) {
+  //   return <div><Loader/></div>;
+  // }
 
   if (error) {
     console.error('Error fetching user data:', error);
-    return <div>Error loading user data</div>;
+    
   }
 
 

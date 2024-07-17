@@ -33,7 +33,7 @@ const INITIAL_VISIBLE_COLUMNS = ["title", "image", "category", "subcategory", "s
 
 // Define columns
 const columns = [
-  { name: "ID", uid: "id", sortable: true },
+  // { name: "ID", uid: "id", sortable: true },
   { name: "TITLE", uid: "title", sortable: true },
   { name: "IMAGE", uid: "image" },
   { name: "CATEGORY", uid: "category", sortable: true },
@@ -66,18 +66,14 @@ export default function Mypost() {
   useEffect(() => {
     axiosInstance.get('/posts')
       .then(response => {
-        console.log('Fetched posts:', response.data); // Log the fetched posts
-        setPosts(Array.isArray(response.data) ? response.data : []);
+        console.log('API Response:', response.data); // Debugging log
+        setPosts(response.data.posts || []); // Extract posts from the response object
       })
       .catch(error => {
         console.error('Error fetching posts:', error);
         setPosts([]); // Ensure posts is always an array even if the request fails
       });
   }, []);
-
-  useEffect(() => {
-    console.log('Posts state:', posts); // Log the posts state to verify
-  }, [posts]);
 
   const pages = Math.ceil(posts.length / rowsPerPage);
   const hasSearchFilter = Boolean(filterValue);
@@ -130,7 +126,7 @@ export default function Mypost() {
       case "category":
         return <span>{post.category.name}</span>;
       case "subcategory":
-        return <span>{post.subcategory ? post.subcategory.name : 'N/A'}</span>;
+        return <span>{post.sub_category ? post.sub_category.name : 'N/A'}</span>;
       case "status":
         return (
           <Chip
@@ -197,76 +193,111 @@ export default function Mypost() {
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger>
-                <Button endContent={<ChevronDownIcon />}>
+                <Button endContent={<ChevronDownIcon />} size="sm" variant="flat">
                   Status
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
-                aria-label="Static Actions"
                 disallowEmptySelection
-                selectionMode="multiple"
+                closeOnSelect={false}
                 selectedKeys={statusFilter}
+                selectionMode="multiple"
                 onSelectionChange={setStatusFilter}
               >
-                {statusOptions.map((option) => (
-                  <DropdownItem key={option.uid}>{option.name}</DropdownItem>
+                {statusOptions.map((status) => (
+                  <DropdownItem key={status.uid} className="capitalize">
+                    {capitalize(status.name)}
+                  </DropdownItem>
                 ))}
               </DropdownMenu>
             </Dropdown>
-            <Button startContent={<PlusIcon />} color="primary">
-              New Post
+            <Dropdown>
+              <DropdownTrigger>
+                <Button endContent={<ChevronDownIcon />} size="sm" variant="flat">
+                  Columns
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                disallowEmptySelection
+                closeOnSelect={false}
+                selectedKeys={visibleColumns}
+                selectionMode="multiple"
+                onSelectionChange={setVisibleColumns}
+              >
+                {columns.map((column) => (
+                  <DropdownItem key={column.uid} className="capitalize">
+                    {capitalize(column.name)}
+                  </DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <Button className="bg-foreground text-background" endContent={<PlusIcon />} size="sm">
+              Add New
             </Button>
           </div>
         </div>
+        <div className="flex justify-between items-center">
+          <span className="text-default-400 text-small">Total {posts.length} posts</span>
+          <label className="flex items-center text-default-400 text-small">
+            Rows per page:
+            <select
+              className="bg-default-100 ml-2 cursor-pointer rounded-lg border border-default-200 py-1 px-2 text-small"
+              onChange={onRowsPerPageChange}
+            >
+              <option value={5}>5</option>
+              <option value={10}>10</option>
+              <option value={15}>15</option>
+            </select>
+          </label>
+        </div>
       </div>
     );
-  }, [filterValue, statusFilter, onSearchChange]);
+  }, [posts.length, filterValue, onSearchChange, onRowsPerPageChange, statusFilter, visibleColumns]);
 
   const bottomContent = React.useMemo(() => {
     return (
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-2">
-          <span>Rows per page:</span>
-          <select value={rowsPerPage} onChange={onRowsPerPageChange}>
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={15}>15</option>
-          </select>
-        </div>
+      <div className="py-2">
         <Pagination
+          isCompact
+          page={page}
+          onChange={setPage}
           total={pages}
-          initialPage={page}
-          onPageChange={setPage}
-          shadow
+          showControls
+          showShadow
         />
       </div>
     );
-  }, [rowsPerPage, onRowsPerPageChange, page, pages]);
+  }, [page, pages]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="w-full border-none shadow-none">
       <Table
-        aria-label="Example table with custom cells"
-        topContent={topContent}
+        aria-label="Posts table with sorting"
         bottomContent={bottomContent}
+        className=""
+        headerLined
+        lined
+        shadow="none"
         sortDescriptor={sortDescriptor}
+        sticked
+        topContent={topContent}
         onSortChange={setSortDescriptor}
-        selectedKeys={selectedKeys}
-        onSelectionChange={setSelectedKeys}
       >
         <TableHeader columns={headerColumns}>
           {(column) => (
-            <TableColumn key={column.uid} allowsSorting={column.sortable}>
+            <TableColumn
+              key={column.uid}
+              align={column.uid === "actions" ? "center" : "start"}
+              allowsSorting={column.sortable}
+            >
               {column.name}
             </TableColumn>
           )}
         </TableHeader>
         <TableBody items={sortedItems}>
-          {(item) => (
-            <TableRow key={item.id}>
-              {(columnKey) => (
-                <TableCell>{renderCell(item, columnKey)}</TableCell>
-              )}
+          {(post) => (
+            <TableRow key={post.id}>
+              {(columnKey) => <TableCell>{renderCell(post, columnKey)}</TableCell>}
             </TableRow>
           )}
         </TableBody>
