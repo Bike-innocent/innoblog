@@ -28,6 +28,7 @@ import SinglePost from './pages/singlePost/SinglePost';
 import IndexCategory from './pages/dashboard/categories/IndexCategory';
 import EditPost from './pages/dashboard/EditPost';
 import ViewPost from './pages/dashboard/ViewPost';
+import { UserProvider } from './context/UserContext';
 
 const router = createBrowserRouter([
   {
@@ -77,9 +78,13 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
+    <UserProvider>
     <QueryClientProvider client={queryClient}>
+       
       <RouterProvider router={router} />
+     
     </QueryClientProvider>
+    </UserProvider>
   );
 }
 

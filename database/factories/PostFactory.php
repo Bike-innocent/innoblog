@@ -6,7 +6,7 @@ use App\Models\Post;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\SubCategory;
-use App\Models\Tag;
+
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PostFactory extends Factory
@@ -33,7 +33,7 @@ class PostFactory extends Factory
         $user = User::inRandomOrder()->first();
         $category = Category::inRandomOrder()->first();
         $subCategory = SubCategory::where('category_id', $category->id)->inRandomOrder()->first();
-        $tags = Tag::inRandomOrder()->take(rand(1, 3))->pluck('id'); // Randomly pick 1-3 tags
+      
 
         return [
             'title' => $faker->sentence,
@@ -46,11 +46,5 @@ class PostFactory extends Factory
         ];
     }
 
-    public function configure()
-    {
-        return $this->afterCreating(function (Post $post) {
-            $tags = Tag::inRandomOrder()->take(rand(1, 3))->pluck('id'); // Randomly pick 1-3 tags
-            $post->tags()->attach($tags);
-        });
-    }
+    
 }

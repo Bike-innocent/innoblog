@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
 
-
 class CategorySeeder extends Seeder
 {
     public function run(): void
@@ -15,7 +14,16 @@ class CategorySeeder extends Seeder
             'Technology',
             'Health',
             'Travel',
-            'Food',
+            'News',
+            'Business',
+            'Innovation',
+            'Earth',
+            'Education',
+            'Science',
+            'Relationship',
+            'Entertainment',
+            'Culture',
+            'Politics',
         ];
 
         foreach ($categories as $category) {

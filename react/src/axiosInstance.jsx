@@ -39,7 +39,6 @@ axiosInstance.interceptors.request.use(
   }
 );
 
-// Setup response interceptor to handle 401 and 403 errors
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {

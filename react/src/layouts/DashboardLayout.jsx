@@ -6,6 +6,7 @@ import AuthNavbar from '../components/navbars/AuthNavbar';
 import Footer from '../components/Footer';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../axiosInstance';
+import axios from 'axios';
 
 function fetchUser() {
   return axiosInstance.get('/profile/user').then((response) => response.data.user);
@@ -24,13 +25,36 @@ function DashboardLayout() {
     setIsSidebarOpen(!isSidebarOpen);
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     await axiosInstance.post('/logout'); // Assuming you have a logout endpoint in your API
+  //     localStorage.removeItem('authToken');
+  //     document.cookie = 'XSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/';
+  //     navigate('/login');
+  //   } catch (error) {
+  //     console.error('Error logging out:', error);
+  //   }
+  // };
+  
 
+  const handleLogout = async () => {
+      try {
+          const response = await axios.post('http://localhost:8000/api/logout', {}, {
+              withCredentials: true,
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+          });
+          console.log('Logged out:', response.data);
+          // Handle successful logout here
+      } catch (error) {
+          console.error('Error logging out:', error);
+          // Handle logout error here
+      }
+  };
+  
   if (isLoading) {
-    return <div></div>;
+    return <div>Loading...</div>;
   }
 
   if (error) {

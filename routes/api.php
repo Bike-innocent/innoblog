@@ -18,6 +18,8 @@ use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use App\Http\Controllers\category\SubCategoryController;
 
 use App\Http\Controllers\Category\TagController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,11 +42,18 @@ Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/logout', [AuthController::class, 'logout']);
-
+    Route::post('/logout', function (Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return response()->json(['message' => 'Successfully logged out']);
+    });
+    
     // Posts routes
     Route::prefix('posts')->group(function () {
         Route::get('/form-data', [MyPostController::class, 'formData']);
+        Route::patch('/{id}/publish', [MyPostController::class, 'publish']);
+        Route::patch('/{id}/unpublish', [MyPostController::class, 'unPublish']);
         Route::get('/', [MyPostController::class, 'index']);
         Route::post('/', [MyPostController::class, 'store']);
         Route::get('/{id}', [MyPostController::class, 'show']);
@@ -99,6 +108,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //end middle ware
 });
+
+
 
 // Admin routes
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {

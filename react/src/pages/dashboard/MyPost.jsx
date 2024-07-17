@@ -1,175 +1,276 @@
-import React, { useState, Fragment, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosInstance from '../../axiosInstance';
-import { Link, useLocation } from 'react-router-dom';
-import { Dialog, Transition } from '@headlessui/react';
-import SuccessMessage from '../../components/SuccessMessage';
-import Loader from '../../components/Loader';
+import React, { useEffect } from 'react';
+import {
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Input,
+  Button,
+  DropdownTrigger,
+  Dropdown,
+  DropdownMenu,
+  DropdownItem,
+  Chip,
+  User,
+  Pagination,
+} from "@nextui-org/react";
+import { PlusIcon } from "./PlusIcon";
+import { VerticalDotsIcon } from "./VerticalDotsIcons";
+import { SearchIcon } from "./SearchIcon";
+import { ChevronDownIcon } from "./ChevronDownIcon";
+import axiosInstance from '../../axiosInstance'; // Make sure to import your axios instance
+import { capitalize } from "./utils";
 
-const fetchPosts = async () => {
-  const { data } = await axiosInstance.get('/posts');
-  return data.posts || [];
+// Define status color map and initial columns
+const statusColorMap = {
+  published: "success",
+  unpublished: "warning",
 };
 
-const deletePost = async ({ id }) => {
-  await axiosInstance.delete(`/posts/${id}`);
-};
+const INITIAL_VISIBLE_COLUMNS = ["title", "image", "category", "subcategory", "status", "date", "actions"];
 
-const MyPosts = () => {
-  const location = useLocation();
-  const queryClient = useQueryClient();
-  const [postIdToDelete, setPostIdToDelete] = useState(null);
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
+// Define columns
+const columns = [
+  { name: "ID", uid: "id", sortable: true },
+  { name: "TITLE", uid: "title", sortable: true },
+  { name: "IMAGE", uid: "image" },
+  { name: "CATEGORY", uid: "category", sortable: true },
+  { name: "SUBCATEGORY", uid: "subcategory", sortable: true },
+  { name: "STATUS", uid: "status", sortable: true },
+  { name: "DATE", uid: "date", sortable: true },
+  { name: "ACTIONS", uid: "actions" },
+];
 
-  const { data: posts, isLoading, isError } = useQuery({
-    queryKey: ['posts'],
-    queryFn: fetchPosts,
+// Define status options
+const statusOptions = [
+  { name: "Published", uid: "published" },
+  { name: "Unpublished", uid: "unpublished" },
+];
+
+export default function Mypost() {
+  const [posts, setPosts] = React.useState([]);
+  const [filterValue, setFilterValue] = React.useState("");
+  const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
+  const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [statusFilter, setStatusFilter] = React.useState("all");
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const [sortDescriptor, setSortDescriptor] = React.useState({
+    column: "date",
+    direction: "ascending",
   });
+  const [page, setPage] = React.useState(1);
 
-  const deleteMutation = useMutation({
-    mutationFn: deletePost,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['posts'] });
-      setSuccessMessage('Post deleted successfully.');
-    },
-  });
-
-  const openDeleteDialog = (id) => {
-    setPostIdToDelete(id);
-    setIsDeleteDialogOpen(true);
-  };
-
-  const closeDeleteDialog = () => {
-    setPostIdToDelete(null);
-    setIsDeleteDialogOpen(false);
-  };
-
-  const handleDelete = () => {
-    deleteMutation.mutate({ id: postIdToDelete }, {
-      onSuccess: () => {
-        closeDeleteDialog();
-      },
-    });
-  };
+  // Fetch posts data
+  useEffect(() => {
+    axiosInstance.get('/posts')
+      .then(response => {
+        console.log('Fetched posts:', response.data); // Log the fetched posts
+        setPosts(Array.isArray(response.data) ? response.data : []);
+      })
+      .catch(error => {
+        console.error('Error fetching posts:', error);
+        setPosts([]); // Ensure posts is always an array even if the request fails
+      });
+  }, []);
 
   useEffect(() => {
-    if (location.state && location.state.success) {
-      setSuccessMessage(location.state.success);
-      location.state.success = null;
+    console.log('Posts state:', posts); // Log the posts state to verify
+  }, [posts]);
+
+  const pages = Math.ceil(posts.length / rowsPerPage);
+  const hasSearchFilter = Boolean(filterValue);
+
+  const headerColumns = React.useMemo(() => {
+    if (visibleColumns === "all") return columns;
+    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+  }, [visibleColumns]);
+
+  const filteredItems = React.useMemo(() => {
+    let filteredPosts = [...posts];
+
+    if (hasSearchFilter) {
+      filteredPosts = filteredPosts.filter((post) =>
+        post.title.toLowerCase().includes(filterValue.toLowerCase()),
+      );
     }
-  }, [location.state]);
+    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+      filteredPosts = filteredPosts.filter((post) =>
+        Array.from(statusFilter).includes(post.status),
+      );
+    }
+
+    return filteredPosts;
+  }, [posts, filterValue, statusFilter]);
+
+  const items = React.useMemo(() => {
+    const start = (page - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    return filteredItems.slice(start, end);
+  }, [page, filteredItems, rowsPerPage]);
+
+  const sortedItems = React.useMemo(() => {
+    return [...items].sort((a, b) => {
+      const first = a[sortDescriptor.column];
+      const second = b[sortDescriptor.column];
+      const cmp = first < second ? -1 : first > second ? 1 : 0;
+      return sortDescriptor.direction === "descending" ? -cmp : cmp;
+    });
+  }, [sortDescriptor, items]);
+
+  const renderCell = React.useCallback((post, columnKey) => {
+    const cellValue = post[columnKey];
+
+    switch (columnKey) {
+      case "title":
+        return <span>{cellValue}</span>;
+      case "image":
+        return <img src={cellValue} alt={post.title} width="50" />;
+      case "category":
+        return <span>{post.category.name}</span>;
+      case "subcategory":
+        return <span>{post.subcategory ? post.subcategory.name : 'N/A'}</span>;
+      case "status":
+        return (
+          <Chip
+            className="capitalize"
+            color={statusColorMap[post.status]}
+            size="sm"
+            variant="dot"
+          >
+            {cellValue}
+          </Chip>
+        );
+      case "date":
+        return <span>{new Date(post.created_at).toLocaleDateString()}</span>;
+      case "actions":
+        return (
+          <div className="relative flex justify-end items-center gap-2">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button isIconOnly radius="full" size="sm" variant="light">
+                  <VerticalDotsIcon />
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu>
+                <DropdownItem>View</DropdownItem>
+                <DropdownItem>Edit</DropdownItem>
+                <DropdownItem>Delete</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          </div>
+        );
+      default:
+        return cellValue;
+    }
+  }, []);
+
+  const onRowsPerPageChange = React.useCallback((e) => {
+    setRowsPerPage(Number(e.target.value));
+    setPage(1);
+  }, []);
+
+  const onSearchChange = React.useCallback((value) => {
+    if (value) {
+      setFilterValue(value);
+      setPage(1);
+    } else {
+      setFilterValue("");
+    }
+  }, []);
+
+  const topContent = React.useMemo(() => {
+    return (
+      <div className="flex flex-col gap-4">
+        <div className="flex justify-between gap-3 items-end">
+          <Input
+            isClearable
+            placeholder="Search by title..."
+            size="sm"
+            startContent={<SearchIcon />}
+            value={filterValue}
+            variant="bordered"
+            onClear={() => setFilterValue("")}
+            onValueChange={onSearchChange}
+          />
+          <div className="flex gap-3">
+            <Dropdown>
+              <DropdownTrigger>
+                <Button endContent={<ChevronDownIcon />}>
+                  Status
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu
+                aria-label="Static Actions"
+                disallowEmptySelection
+                selectionMode="multiple"
+                selectedKeys={statusFilter}
+                onSelectionChange={setStatusFilter}
+              >
+                {statusOptions.map((option) => (
+                  <DropdownItem key={option.uid}>{option.name}</DropdownItem>
+                ))}
+              </DropdownMenu>
+            </Dropdown>
+            <Button startContent={<PlusIcon />} color="primary">
+              New Post
+            </Button>
+          </div>
+        </div>
+      </div>
+    );
+  }, [filterValue, statusFilter, onSearchChange]);
+
+  const bottomContent = React.useMemo(() => {
+    return (
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-2">
+          <span>Rows per page:</span>
+          <select value={rowsPerPage} onChange={onRowsPerPageChange}>
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={15}>15</option>
+          </select>
+        </div>
+        <Pagination
+          total={pages}
+          initialPage={page}
+          onPageChange={setPage}
+          shadow
+        />
+      </div>
+    );
+  }, [rowsPerPage, onRowsPerPageChange, page, pages]);
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold">My Posts</h1>
-      <SuccessMessage message={successMessage} onClose={() => setSuccessMessage('')} />
-      {isLoading ? (
-        <Loader />
-      ) : isError ? (
-        <p>Error fetching posts.</p>
-      ) : (
-        <>
-          {posts.length === 0 ? (
-            <p>No posts found.</p>
-          ) : (
-            <table className="table-auto w-full">
-              <thead>
-                <tr>
-                  <th>S/N</th>
-                  <th>Image</th>
-                  <th>Title</th>
-                  <th>Category</th>
-                  <th>Sub Category</th>
-                  <th>Date</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {posts.map((post, index) => (
-                  <tr key={post.id}>
-                    <td>{index + 1}</td>
-                    <td>
-                      <img src={post.image} alt={post.title} className="w-16 h-16 object-cover" />
-                    </td>
-                    <td>{post.title}</td>
-                    <td>{post.category ? post.category.name : 'N/A'}</td>
-                    <td>{post.sub_category ? post.sub_category.name : 'N/A'}</td>
-                    <td>{new Date(post.created_at).toLocaleDateString()}</td>
-                    <td>
-                      <Link to={`/dashboard/view-post/${post.id}`} className="btn btn-info mr-2">View</Link>
-                      <Link to={`/dashboard/edit-post/${post.id}`} className="btn btn-warning mr-2">Edit</Link>
-                      <button onClick={() => openDeleteDialog(post.id)} className="btn btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+      <Table
+        aria-label="Example table with custom cells"
+        topContent={topContent}
+        bottomContent={bottomContent}
+        sortDescriptor={sortDescriptor}
+        onSortChange={setSortDescriptor}
+        selectedKeys={selectedKeys}
+        onSelectionChange={setSelectedKeys}
+      >
+        <TableHeader columns={headerColumns}>
+          {(column) => (
+            <TableColumn key={column.uid} allowsSorting={column.sortable}>
+              {column.name}
+            </TableColumn>
           )}
-        </>
-      )}
-      <Transition appear show={isDeleteDialogOpen} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={closeDeleteDialog}>
-          <Transition.Child
-            as={Fragment}
-            enter="ease-out duration-300"
-            enterFrom="opacity-0"
-            enterTo="opacity-100"
-            leave="ease-in duration-200"
-            leaveFrom="opacity-100"
-            leaveTo="opacity-0"
-          >
-            <div className="fixed inset-0 bg-black bg-opacity-25" />
-          </Transition.Child>
-
-          <div className="fixed inset-0 overflow-y-auto">
-            <div className="flex min-h-full items-center justify-center p-4 text-center">
-              <Transition.Child
-                as={Fragment}
-                enter="ease-out duration-300"
-                enterFrom="opacity-0 scale-95"
-                enterTo="opacity-100 scale-100"
-                leave="ease-in duration-200"
-                leaveFrom="opacity-100 scale-100"
-                leaveTo="opacity-0 scale-95"
-              >
-                <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 text-gray-900"
-                  >
-                    Delete Post
-                  </Dialog.Title>
-                  <div className="mt-2">
-                    <p className="text-sm text-gray-500">
-                      Are you sure you want to delete this post? This action cannot be undone.
-                    </p>
-                  </div>
-
-                  <div className="mt-4">
-                    <button
-                      type="button"
-                      className="mr-2 inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
-                      onClick={handleDelete}
-                    >
-                      Delete
-                    </button>
-                    <button
-                      type="button"
-                      className="inline-flex justify-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
-                      onClick={closeDeleteDialog}
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </Dialog.Panel>
-              </Transition.Child>
-            </div>
-          </div>
-        </Dialog>
-      </Transition>
+        </TableHeader>
+        <TableBody items={sortedItems}>
+          {(item) => (
+            <TableRow key={item.id}>
+              {(columnKey) => (
+                <TableCell>{renderCell(item, columnKey)}</TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
     </div>
   );
-};
-
-export default MyPosts;
+}

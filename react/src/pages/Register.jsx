@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import axiosInstance from '../axiosInstance'; // Import the axios instance
+import axiosInstance from '../axiosInstance';
+import { UserContext } from '../context/UserContext';
 
 function Register() {
   const [name, setName] = useState('');
@@ -10,6 +11,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const { setUser } = useContext(UserContext);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,6 +28,17 @@ function Register() {
       });
       localStorage.setItem('token', response.data.access_token);
       setErrors({});
+      
+      // Fetch the user information and update the user context
+      const userResponse = await axiosInstance.get('/profile/user', {
+        headers: {
+          Authorization: `Bearer ${response.data.access_token}`,
+        },
+      });
+      setUser(userResponse.data.user);
+
+      
+      
       navigate('/dashboard/home');
     } catch (error) {
       if (error.response && error.response.data.errors) {

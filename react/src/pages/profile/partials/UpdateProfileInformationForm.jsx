@@ -1,6 +1,3 @@
-
-
-
 import React, { useState, useEffect } from 'react';
 import axiosInstance from '../../../axiosInstance';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,8 +6,7 @@ import Processing from '../../../components/Processing';
 export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
     const queryClient = useQueryClient();
 
-    // Fetch user profile data query
-    const { data: userProfile } = useQuery({
+    const { data: userProfile, error } = useQuery({
         queryKey: ['userProfile'],
         queryFn: async () => {
             const response = await axiosInstance.get('/profile/user');
@@ -18,53 +14,48 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
         },
     });
 
-    // Mutation to update user profile data
     const updateUserProfile = useMutation({
         mutationFn: (newUserData) => axiosInstance.patch('/profile/update', newUserData),
         onSuccess: () => {
-            queryClient.invalidateQueries(['userProfile']); // Invalidate cache to refetch data
+            queryClient.invalidateQueries(['userProfile']);
         },
     });
 
-    const [data, setData] = useState({
-        name: '',
-        email: '',
-    });
+    const [data, setData] = useState({ name: '', email: '' });
 
     useEffect(() => {
-        if (userProfile) {
-            setData({
-                name: userProfile.name || '',
-                email: userProfile.email || '',
-            });
+        if (error) {
+            console.error('Error fetching user profile:', error);
         }
-    }, [userProfile]);
+        if (userProfile) {
+            setData({ name: userProfile.name || '', email: userProfile.email || '' });
+        }
+    }, [userProfile, error]);
 
     const [errors, setErrors] = useState({});
     const [processing, setProcessing] = useState(false);
     const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
     const handleChange = (e) => {
-        setData({
-            ...data,
-            [e.target.name]: e.target.value,
-        });
+        setData({ ...data, [e.target.name]: e.target.value });
     };
 
     const submit = async (e) => {
         e.preventDefault();
         setProcessing(true);
+        console.log('Form data before submission:', data);
 
         try {
             await updateUserProfile.mutateAsync(data);
+            console.log('Profile updated successfully');
             setRecentlySuccessful(true);
             setTimeout(() => setRecentlySuccessful(false), 3000);
             setErrors({});
         } catch (error) {
+            console.error('Error updating profile:', error);
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors);
             } else {
-                console.error('Error updating profile:', error);
                 setErrors({ general: 'An unexpected error occurred.' });
             }
         } finally {
@@ -76,9 +67,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
         <section className={className}>
             <header>
                 <h2 className="text-lg font-medium text-gray-900">Profile Information</h2>
-                <p className="mt-1 text-sm text-gray-600">
-                    Update your account's profile information and email address.
-                </p>
+                <p className="mt-1 text-sm text-gray-600">Update your account's profile information and email address.</p>
             </header>
 
             <form onSubmit={submit} className="mt-6 space-y-6">

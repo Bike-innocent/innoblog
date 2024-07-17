@@ -1,11 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\Auth;
+
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -23,7 +24,9 @@ class AuthController extends Controller
             'password' => Hash::make($validatedData['password']),
         ]);
 
-        return response()->json(['user' => $user], 201);
+        $token = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json(['user' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
     }
 
     public function login(Request $request)
@@ -33,7 +36,7 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
