@@ -1,24 +1,25 @@
 import React from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 import AuthNavbar from '../components/navbars/AuthNavbar';
 import Footer from '../components/Footer';
 
-function MainLayout() {
-  const navigate = useNavigate();
+import CategoryNav from '../pages/CategoryNav';
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    navigate('/login');
-  };
+function MainLayout() {
+
+
+
 
   return (
     <div className="min-h-screen flex flex-col justify-between">
-      <AuthNavbar/>
+      <AuthNavbar />
+      <CategoryNav />
       <main className="flex-1 ">
         <Outlet />
       </main>
-     <Footer/>
+      {/* <CategoryNav/> */}
+      <Footer />
     </div>
   );
 }

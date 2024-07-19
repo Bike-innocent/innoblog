@@ -13,7 +13,6 @@ import About from './pages/About';
 import Category from './pages/Category';
 
 import Home from './pages/dashboard/Home';
-// import Profile from './pages/dashboard/Profile';
 import CreatePost from './pages/dashboard/CreatePost';
 import AllPosts from './pages/dashboard/AllPosts';
 import AllUsers from './pages/dashboard/AllUsers';
@@ -28,7 +27,8 @@ import SinglePost from './pages/singlePost/SinglePost';
 import IndexCategory from './pages/dashboard/categories/IndexCategory';
 import EditPost from './pages/dashboard/EditPost';
 import ViewPost from './pages/dashboard/ViewPost';
-import { UserProvider } from './context/UserContext';
+import CategoryHome from './pages/CategoryHome';
+import SubCategoryHome from './pages/SubCategoryHome';
 
 const router = createBrowserRouter([
   {
@@ -52,7 +52,8 @@ const router = createBrowserRouter([
       { path: '/posts/:id', element: <SinglePost /> },
       { path: 'unauthorized', element: <Unauthorized /> },
       { path: 'not-found', element: <NotFound /> },
-      // { path:"*", element: <NotFound /> },
+      { path: 'category/:categorySlug', element: <CategoryHome /> },
+      { path: 'category/:categorySlug/subcategory/:subcategorySlug', element: <SubCategoryHome /> },
     ],
   },
   {
@@ -73,18 +74,13 @@ const router = createBrowserRouter([
   },
 ]);
 
-
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <UserProvider>
     <QueryClientProvider client={queryClient}>
-       
       <RouterProvider router={router} />
-     
     </QueryClientProvider>
-    </UserProvider>
   );
 }
 

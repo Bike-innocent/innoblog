@@ -1,6 +1,4 @@
 <?php
-
-
 namespace App\Http\Controllers\Category;
 
 use App\Http\Controllers\Controller;
@@ -14,7 +12,7 @@ class CategoryController extends Controller
     // Display a listing of the categories
     public function index()
     {
-        $categories = Category::all();
+        $categories = Category::with('subcategories')->get();
         return response()->json($categories);
     }
 
@@ -36,6 +34,19 @@ class CategoryController extends Controller
         ]);
 
         return response()->json($category, 201);
+    }
+
+    // Display the specified category
+    public function show($identifier)
+    {
+        // Find category by ID or slug
+        $category = Category::where('id', $identifier)->orWhere('slug', $identifier)->first();
+
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        return response()->json($category);
     }
 
     // Update the specified category in storage

@@ -1,9 +1,9 @@
 <?php
-
-namespace App\Http\Controllers\category;
+namespace App\Http\Controllers\Category;
 
 use App\Http\Controllers\Controller;
 use App\Models\SubCategory;
+use App\Models\Category;
 use Illuminate\Http\Request;
 
 class SubCategoryController extends Controller
@@ -54,4 +54,35 @@ class SubCategoryController extends Controller
 
         return response()->json(null, 204);
     }
+
+    // Add this method
+    public function getSubcategoriesByCategory($categorySlug)
+    {
+        $category = Category::where('slug', $categorySlug)->first();
+
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+
+        $subcategories = $category->subcategories; // Assuming you have a subcategories relationship in your Category model
+
+        return response()->json($subcategories);
+    }
+
+    public function getPostsBySubCategory($categorySlug, $subcategorySlug)
+    {
+        $subCategory = SubCategory::where('slug', $subcategorySlug)
+            ->whereHas('category', function($query) use ($categorySlug) {
+                $query->where('slug', $categorySlug);
+            })->first();
+
+        if (!$subCategory) {
+            return response()->json(['error' => 'Subcategory not found'], 404);
+        }
+
+        $posts = $subCategory->posts; // Assuming you have a posts relationship in your SubCategory model
+
+        return response()->json($posts);
+    }
+    
 }

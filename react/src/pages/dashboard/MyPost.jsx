@@ -13,7 +13,6 @@ import {
   DropdownMenu,
   DropdownItem,
   Chip,
-  User,
   Pagination,
 } from "@nextui-org/react";
 import { PlusIcon } from "./PlusIcon";
@@ -25,15 +24,14 @@ import { capitalize } from "./utils";
 
 // Define status color map and initial columns
 const statusColorMap = {
-  published: "success",
-  unpublished: "warning",
+  1: "success",  // Published
+  0: "warning"   // Unpublished
 };
 
 const INITIAL_VISIBLE_COLUMNS = ["title", "image", "category", "subcategory", "status", "date", "actions"];
 
 // Define columns
 const columns = [
-  // { name: "ID", uid: "id", sortable: true },
   { name: "TITLE", uid: "title", sortable: true },
   { name: "IMAGE", uid: "image" },
   { name: "CATEGORY", uid: "category", sortable: true },
@@ -45,8 +43,8 @@ const columns = [
 
 // Define status options
 const statusOptions = [
-  { name: "Published", uid: "published" },
-  { name: "Unpublished", uid: "unpublished" },
+  { name: "Published", uid: "1" },
+  { name: "Unpublished", uid: "0" },
 ];
 
 export default function Mypost() {
@@ -54,7 +52,7 @@ export default function Mypost() {
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
   const [visibleColumns, setVisibleColumns] = React.useState(new Set(INITIAL_VISIBLE_COLUMNS));
-  const [statusFilter, setStatusFilter] = React.useState("all");
+  const [statusFilter, setStatusFilter] = React.useState(new Set(["all"]));
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [sortDescriptor, setSortDescriptor] = React.useState({
     column: "date",
@@ -91,9 +89,11 @@ export default function Mypost() {
         post.title.toLowerCase().includes(filterValue.toLowerCase()),
       );
     }
-    if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
+
+    // Apply status filter
+    if (!statusFilter.has("all")) {
       filteredPosts = filteredPosts.filter((post) =>
-        Array.from(statusFilter).includes(post.status),
+        Array.from(statusFilter).some(status => String(post.status) === status)
       );
     }
 
@@ -128,14 +128,16 @@ export default function Mypost() {
       case "subcategory":
         return <span>{post.sub_category ? post.sub_category.name : 'N/A'}</span>;
       case "status":
+        const statusText = post.status === 1 ? "Published" : "Unpublished";
         return (
           <Chip
             className="capitalize"
             color={statusColorMap[post.status]}
             size="sm"
             variant="dot"
+            border={statusColorMap[post.status]}
           >
-            {cellValue}
+            {statusText}
           </Chip>
         );
       case "date":
@@ -254,54 +256,48 @@ export default function Mypost() {
     );
   }, [posts.length, filterValue, onSearchChange, onRowsPerPageChange, statusFilter, visibleColumns]);
 
-  const bottomContent = React.useMemo(() => {
-    return (
-      <div className="py-2">
-        <Pagination
-          isCompact
-          page={page}
-          onChange={setPage}
-          total={pages}
-          showControls
-          showShadow
-        />
-      </div>
-    );
-  }, [page, pages]);
+  const bottomContent = (
+    <div className="py-2 px-2 flex justify-between items-center border-t border-default-100">
+      <span className="text-default-400 text-small">Page {page} of {pages}</span>
+      <Pagination
+        showControls
+        isCompact
+        page={page}
+        onChange={(page) => setPage(page)}
+        total={pages}
+      />
+    </div>
+  );
 
   return (
-    <div className="w-full border-none shadow-none">
-      <Table
-        aria-label="Posts table with sorting"
-        bottomContent={bottomContent}
-        className=""
-        headerLined
-        lined
-        shadow="none"
-        sortDescriptor={sortDescriptor}
-        sticked
-        topContent={topContent}
-        onSortChange={setSortDescriptor}
-      >
-        <TableHeader columns={headerColumns}>
-          {(column) => (
-            <TableColumn
-              key={column.uid}
-              align={column.uid === "actions" ? "center" : "start"}
-              allowsSorting={column.sortable}
-            >
-              {column.name}
-            </TableColumn>
-          )}
-        </TableHeader>
-        <TableBody items={sortedItems}>
-          {(post) => (
-            <TableRow key={post.id}>
-              {(columnKey) => <TableCell>{renderCell(post, columnKey)}</TableCell>}
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+    <Table
+      aria-label="Example table with dynamic content"
+      sortDescriptor={sortDescriptor}
+      onSortChange={setSortDescriptor}
+      topContent={topContent}
+      bottomContent={bottomContent}
+    >
+      <TableHeader columns={headerColumns}>
+        {(column) => (
+          <TableColumn
+            key={column.uid}
+            allowsSorting={column.sortable}
+            hideHeader={column.uid === "actions"}
+            className={column.uid === "actions" ? "w-px" : ""}
+          >
+            {column.name}
+          </TableColumn>
+        )}
+      </TableHeader>
+      <TableBody emptyContent={"No items found"} items={sortedItems}>
+        {(item) => (
+          <TableRow>
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
+          </TableRow>
+        )}
+      </TableBody>
+    </Table>
   );
 }
