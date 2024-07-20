@@ -53,7 +53,8 @@ const router = createBrowserRouter([
       { path: 'unauthorized', element: <Unauthorized /> },
       { path: 'not-found', element: <NotFound /> },
       { path: 'category/:categorySlug', element: <CategoryHome /> },
-      { path: 'category/:categorySlug/subcategory/:subcategorySlug', element: <SubCategoryHome /> },
+      { path: 'categories/:categorySlug/subcategories/:subcategorySlug', element :<SubCategoryHome />} ,
+       
     ],
   },
   {
