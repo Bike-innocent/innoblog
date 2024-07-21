@@ -334,18 +334,18 @@ function AuthNavbar() {
                 >
                   Home
                 </NavLink>
-                <NavLink
+                {/* <NavLink
                   to="/category"
                   className={({ isActive }) => isActive ? "bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"}
                 >
                   Category
-                </NavLink>
-                <NavLink
+                </NavLink> */}
+                {/* <NavLink
                   to="/about"
                   className={({ isActive }) => isActive ? "bg-gray-900 text-white px-3 py-2 rounded-md text-sm font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"}
                 >
                   About
-                </NavLink>
+                </NavLink> */}
               </div>
             </div>
 
@@ -433,20 +433,20 @@ function AuthNavbar() {
             >
               Home
             </NavLink>
-            <NavLink
+            {/* <NavLink
               to="/category"
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
               onClick={toggleMobileMenu}
             >
               Category
-            </NavLink>
-            <NavLink
+            </NavLink> */}
+            {/* <NavLink
               to="/about"
               className={({ isActive }) => isActive ? "bg-gray-900 text-white block px-3 py-2 rounded-md text-base font-medium" : "text-gray-300 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"}
               onClick={toggleMobileMenu}
             >
               About
-            </NavLink>
+            </NavLink> */}
           </div>
         </div>
       </nav>

@@ -8,7 +8,6 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Category\CategoryController;
 use App\Http\Controllers\Category\ManageCategoryController;
 use App\Http\Controllers\category\SubCategoryController;
-use App\Http\Controllers\posts\CategoryController2;
 use App\Http\Controllers\posts\MyPostController;
 use App\Http\Controllers\posts\PostController;
 use App\Http\Controllers\posts\SinglePostController;
@@ -92,12 +91,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('categories', CategoryController::class)->parameters(['categories' => 'identifier']);
 
     Route::apiResource('subcategories', SubCategoryController::class);
-   
 
-   
-Route::get('/categories/{categorySlug}/subcategories', [SubCategoryController::class, 'getSubcategoriesByCategory']);
-Route::get('/categories/{categorySlug}/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
-
+    Route::get('/categories/{categorySlug}/subcategories', [SubCategoryController::class, 'getSubcategoriesByCategory']);
+    Route::get('/categories/{categorySlug}/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
+    Route::get('/categories/{slug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
 });
 
 // Admin routes

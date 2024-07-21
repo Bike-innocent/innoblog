@@ -29,6 +29,8 @@ import EditPost from './pages/dashboard/EditPost';
 import ViewPost from './pages/dashboard/ViewPost';
 import CategoryHome from './pages/CategoryHome';
 import SubCategoryHome from './pages/SubCategoryHome';
+import FetchPostsComponent from './FetchPostsComponent';
+import PostsCard from './PostsCard';
 
 const router = createBrowserRouter([
   {
@@ -73,6 +75,11 @@ const router = createBrowserRouter([
       { path: 'manage-category', element: <IndexCategory /> },
     ],
   },
+
+  {
+     path: '/posts',
+     element: <PostsCard />,
+  }
 ]);
 
 const queryClient = new QueryClient();

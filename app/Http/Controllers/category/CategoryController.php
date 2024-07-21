@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Category;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Models\Post;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
@@ -84,5 +85,22 @@ class CategoryController extends Controller
 
         $category->delete();
         return response()->json(['message' => 'Category deleted successfully']);
+    }
+
+    public function getMixedPosts($categorySlug)
+    {
+        try {
+            // Find the category by slug
+            $category = Category::where('slug', $categorySlug)->firstOrFail();
+
+            // Fetch posts related to the category (this can be customized)
+            $mixedPosts = Post::where('category_id', $category->id)
+                ->orderBy('created_at', 'desc') // Customize your query as needed
+                ->get();
+
+            return response()->json(['data' => $mixedPosts], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Error fetching mixed posts', 'error' => $e->getMessage()], 500);
+        }
     }
 }

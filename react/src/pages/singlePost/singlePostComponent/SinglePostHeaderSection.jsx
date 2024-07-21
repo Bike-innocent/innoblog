@@ -48,7 +48,7 @@ const SinglePostHeaderSection = () => {
             {formatDate(post.created_at)}
           </div>
         </div>
-        <p className="text-gray-700">{post.description}</p>
+        <p className="text-gray-700">{post.content}</p>
       </div>
     </div>
   );

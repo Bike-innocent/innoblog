@@ -4,12 +4,13 @@ import { Tabs, Tab } from '@nextui-org/react';
 import axiosInstance from '../axiosInstance';
 
 const CategoryHome = () => {
-  const { categorySlug } = useParams();
+  const { categorySlug, subcategorySlug } = useParams();
   const navigate = useNavigate();
   const [subcategories, setSubcategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [activeTab, setActiveTab] = useState('home'); // Set 'home' as the default active tab
+  const [activeTab, setActiveTab] = useState(subcategorySlug || 'home');
+  const [mixedPosts, setMixedPosts] = useState([]);
 
   useEffect(() => {
     const fetchSubcategories = async () => {
@@ -31,6 +32,23 @@ const CategoryHome = () => {
 
     fetchSubcategories();
   }, [categorySlug]);
+
+  useEffect(() => {
+    const fetchMixedPosts = async () => {
+      try {
+        const response = await axiosInstance.get(`/categories/${categorySlug}/mixed-posts`);
+        console.log('Mixed posts response:', response);
+        setMixedPosts(response.data.data);
+      } catch (error) {
+        console.error('Error fetching mixed posts:', error);
+        setError('Failed to fetch mixed posts');
+      }
+    };
+
+    if (activeTab === 'home') {
+      fetchMixedPosts();
+    }
+  }, [categorySlug, activeTab]);
 
   if (loading) {
     return (
@@ -56,12 +74,15 @@ const CategoryHome = () => {
           <Tab
             key="home"
             title={
-              <button
-                onClick={() => setActiveTab('home')}
+              <div
+                onClick={() => {
+                  setActiveTab('home');
+                  navigate(`/category/${categorySlug}`);
+                }}
                 className={`text-lg font-semibold ${activeTab === 'home' ? 'text-blue-800' : 'text-blue-600 hover:text-blue-800'}`}
               >
                 Home
-              </button>
+              </div>
             }
             className={`whitespace-nowrap ${activeTab === 'home' ? 'border-b-2 border-blue-800' : ''}`}
           >
@@ -69,29 +90,42 @@ const CategoryHome = () => {
               <div>
                 {/* Content for Home tab */}
                 <p>Mixed posts from the parent category will be displayed here.</p>
-                {/* Add logic to fetch and display mixed posts */}
+                {/* Display mixed posts */}
+                <div>
+                  {mixedPosts.map(post => (
+                    <div key={post.id} className="bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <img
+                   src={post.image}
+                   alt={post.title}
+                   className="w-full h-64 md:h-96 object-cover rounded-lg mb-4"
+                 />
+                   <h3 className="text-lg font-semibold">{post.title}</h3>
+                   <p className="mt-2 text-gray-600">{post.content}</p>
+                 </div>
+                  ))}
+                </div>
               </div>
             )}
           </Tab>
-          
+
           {/* Dynamic Subcategory Tabs */}
           {subcategories.map((subcategory) => (
             <Tab
               key={subcategory.id}
               title={
-                <button
+                <div
                   onClick={() => {
-                    setActiveTab(subcategory.id);
+                    setActiveTab(subcategory.slug);
                     navigate(`/categories/${categorySlug}/subcategories/${subcategory.slug}`);
                   }}
-                  className={`text-lg font-semibold ${activeTab === subcategory.id ? 'text-blue-800' : 'text-blue-600 hover:text-blue-800'}`}
+                  className={`text-lg font-semibold ${activeTab === subcategory.slug ? 'text-blue-800' : 'text-blue-600 hover:text-blue-800'}`}
                 >
                   {subcategory.name}
-                </button>
+                </div>
               }
-              className={`whitespace-nowrap ${activeTab === subcategory.id ? 'border-b-2 border-blue-800' : ''}`}
+              className={`whitespace-nowrap ${activeTab === subcategory.slug ? 'border-b-2 border-blue-800' : ''}`}
             >
-              {activeTab === subcategory.id && (
+              {activeTab === subcategory.slug && (
                 <div>
                   {/* Content for subcategory tab */}
                   <p>Posts for {subcategory.name} will be displayed here.</p>
