@@ -25,6 +25,15 @@ const MixedCategorySection = () => {
   const additionalPosts = posts.slice(1, 10);
   const trendingPosts = posts.slice(10, 15);
 
+  // Placeholder image logic
+  const getUserAvatar = (user) => {
+    if (user.avatar) {
+      return user.avatar;
+    }
+    const firstLetter = user.name.charAt(0).toUpperCase();
+    return `https://via.placeholder.com/40?text=${firstLetter}`;
+  };
+
   return (
     <section id="posts" className="posts">
       <div className="container mx-auto my-4" data-aos="fade-up">
@@ -32,7 +41,7 @@ const MixedCategorySection = () => {
           {/* Main post */}
           <div className="lg:col-span-1">
             <div className="post-entry-1 lg relative bg-white shadow rounded overflow-hidden">
-              <Link to={`/post/${mainPost.id}`}>
+              <Link to={`/posts/${mainPost.id}`}>
                 <img src={mainPost.image} alt="" className="w-full h-60 object-cover" />
               </Link>
               <div className="p-4">
@@ -40,13 +49,13 @@ const MixedCategorySection = () => {
                   <span className="date">{mainPost.category}</span> <span className="mx-1">&bullet;</span> <span>{new Date(mainPost.created_at).toLocaleDateString()}</span>
                 </div>
                 <h2 className="text-xl font-semibold">
-                  <Link to={`/post/${mainPost.id}`}>{mainPost.title}</Link>
+                  <Link to={`/posts/${mainPost.id}`}>{mainPost.title}</Link>
                 </h2>
                 <p className="mb-4 text-gray-700">{mainPost.excerpt}</p>
                 <div className="flex items-center mt-4">
-                  <img src={mainPost.author.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
+                  <img src={getUserAvatar(mainPost.user)} alt="" className="w-10 h-10 rounded-full object-cover" />
                   <div className="ml-3">
-                    <h3 className="text-sm font-semibold">{mainPost.author.name}</h3>
+                    <h3 className="text-sm font-semibold">{mainPost.user.name}</h3>
                   </div>
                 </div>
               </div>
@@ -58,14 +67,14 @@ const MixedCategorySection = () => {
             {additionalPosts.map((post) => (
               <div className="border-l pl-4" key={post.id}>
                 <div className="post-entry-1 mb-5">
-                  <Link to={`/post/${post.id}`}>
+                  <Link to={`/posts/${post.id}`}>
                     <img src={post.image} alt="" className="w-full h-40 object-cover" />
                   </Link>
                   <div className="post-meta text-gray-500 text-sm">
                     <span className="date">{post.category}</span> <span className="mx-1">&bullet;</span> <span>{new Date(post.created_at).toLocaleDateString()}</span>
                   </div>
                   <h2 className="text-xl font-semibold">
-                    <Link to={`/post/${post.id}`}>{post.title}</Link>
+                    <Link to={`/posts/${post.id}`}>{post.title}</Link>
                   </h2>
                 </div>
               </div>
@@ -78,11 +87,11 @@ const MixedCategorySection = () => {
                 <ul className="trending-post">
                   {trendingPosts.map((post, index) => (
                     <li className="mb-4" key={post.id}>
-                      <Link to={`/post/${post.id}`} className="flex items-start">
+                      <Link to={`/posts/${post.id}`} className="flex items-start">
                         <span className="number text-2xl font-bold mr-3">{index + 1}</span>
                         <div>
                           <h3 className="text-lg font-semibold">{post.title}</h3>
-                          <span className="author text-gray-500 text-sm">{post.author.name}</span>
+                          <span className="author text-gray-500 text-sm">{post.user.name}</span>
                         </div>
                       </Link>
                     </li>
