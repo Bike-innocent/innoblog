@@ -19,6 +19,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
+
+use App\Http\Controllers\Posts\HomePageController;
+
+
+
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -40,6 +46,8 @@ Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
+
+
     Route::post('/logout', function (Request $request) {
         Auth::logout();
         $request->session()->invalidate();
@@ -95,6 +103,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/categories/{categorySlug}/subcategories', [SubCategoryController::class, 'getSubcategoriesByCategory']);
     Route::get('/categories/{categorySlug}/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
     Route::get('/categories/{slug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
+
+
+
+    Route::get('/mixedPostOnHome', [HomePageController::class, 'MixedPostOnHome']);
 });
 
 // Admin routes
