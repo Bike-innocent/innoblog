@@ -170,7 +170,7 @@ const statusOptions = [
   { name: "Unpublished", uid: "unpublished" },
 ];
 
-export default function Allpost() {
+export default function Allposts() {
   const [posts, setPosts] = React.useState([]);
   const [filterValue, setFilterValue] = React.useState("");
   const [selectedKeys, setSelectedKeys] = React.useState(new Set([]));
