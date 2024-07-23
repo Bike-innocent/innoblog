@@ -20,7 +20,7 @@ function SportSection() {
     <section className="category-section">
       <div className="container" data-aos="fade-up">
         <div className="section-header d-flex justify-content-between align-items-center mb-5">
-          <h2>Sports</h2>
+          <h2>Sportsd</h2>
           <div><a href="category.html" className="more">See All Sports</a></div>
         </div>
 
