@@ -21,6 +21,7 @@ use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 
 use App\Http\Controllers\Posts\HomePageController;
+use App\Http\Controllers\Posts\SportController;
 
 
 
@@ -107,6 +108,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/mixedPostOnHome', [HomePageController::class, 'MixedPostOnHome']);
+
+
+
+Route::get('/sports', [SportController::class, 'index']);
+
 });
 
 // Admin routes
