@@ -108,10 +108,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/mixedPostOnHome', [HomePageController::class, 'MixedPostOnHome']);
+    // Route::get('/sport', [HomePageController::class, 'sportSection']);
+    Route::get('/sport', [HomePageController::class, 'sportSection']);
+    Route::get('/business', [HomePageController::class, 'businessSection']);
 
-
-
-Route::get('/sports', [SportController::class, 'index']);
 
 });
 

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import axiosInstance from '../../../axiosInstance';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../../mycss.css'
+import '../../../myvariable.css';
 
 const MixedCategorySection = () => {
   const [posts, setPosts] = useState([]);

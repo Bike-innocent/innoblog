@@ -5,12 +5,12 @@ import '../../../mycss.css';
 import '../../../myvariable.css';
 import { Link } from 'react-router-dom';
 
-function SportSection() {
+function BusinessSection() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axiosInstance.get('/sport')
+    axiosInstance.get('/business')
       .then(response => {
         console.log('API response:', response.data);
         setPosts(response.data.slice(0, 10)); // Get only the latest 10 posts
@@ -30,12 +30,12 @@ function SportSection() {
     <section className="category-section">
       <div className="container" data-aos="fade-up">
         <div className="section-header d-flex justify-content-between align-items-center mb-5">
-          <h2>Sports</h2>
-          <div><a href="category.html" className="more">See All Sports</a></div>
+          <h2>Business</h2>
+          <div><a href="category.html" className="more">See All Buisness</a></div>
         </div>
 
         <div className="row">
-          <div className="col-md-9">
+          <div className="col-md-9 order-md-2">
             {posts.length > 0 && (
               <div className="d-lg-flex post-entry-2">
                 <Link to={`/posts/${posts[0].id}`} className="me-4 thumbnail mb-4 mb-lg-0 d-inline-block">
@@ -43,7 +43,7 @@ function SportSection() {
                 </Link>
                 <div>
                   <div className="post-meta">
-                    <span className="date">Sport</span>
+                    <span className="date">Business</span>
                     <span className="mx-1">&bullet;</span>
                     <span>{new Date(posts[0].created_at).toLocaleDateString()}</span>
                   </div>
@@ -101,4 +101,4 @@ function SportSection() {
   );
 }
 
-export default SportSection;
+export default BusinessSection;
