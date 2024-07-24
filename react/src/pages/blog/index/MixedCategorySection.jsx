@@ -1,9 +1,8 @@
-
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../../../axiosInstance';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../../mycss.css'
+import '../../../mycss.css';
 import '../../../myvariable.css';
 
 const MixedCategorySection = () => {
@@ -46,8 +45,8 @@ const MixedCategorySection = () => {
                 <img src={mainPost.image} alt="" className="img-fluid" />
               </Link>
               <div className="post-meta">
-                <span className="date">{mainPost.category}</span>
-                <span className="mx-1">.</span>
+                <span className="date">{mainPost.category.name}</span>
+                <span className="mx-1">&bullet;</span>
                 <span>{new Date(mainPost.created_at).toLocaleDateString()}</span>
               </div>
               <h2>
@@ -73,8 +72,8 @@ const MixedCategorySection = () => {
                       <img src={post.image} alt="" className="img-fluid" />
                     </Link>
                     <div className="post-meta">
-                      <span className="date">{post.category}</span>
-                      <span className="mx-1">.</span>
+                      <span className="date">{post.category.name}</span>
+                      <span className="mx-1">&bullet;</span>
                       <span>{new Date(post.created_at).toLocaleDateString()}</span>
                     </div>
                     <h2>
@@ -90,8 +89,8 @@ const MixedCategorySection = () => {
                       <img src={post.image} alt="" className="img-fluid" />
                     </Link>
                     <div className="post-meta">
-                      <span className="date">{post.category}</span>
-                      <span className="mx-1">.</span>
+                      <span className="date">{post.category.name}</span>
+                      <span className="mx-1">&bullet;</span>
                       <span>{new Date(post.created_at).toLocaleDateString()}</span>
                     </div>
                     <h2>
@@ -125,4 +124,3 @@ const MixedCategorySection = () => {
 };
 
 export default MixedCategorySection;
-
