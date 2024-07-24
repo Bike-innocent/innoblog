@@ -5,15 +5,15 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@nextui-org/react';
 
-function SportSection() {
+function SectionOne() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axiosInstance.get('/sport')
+    axiosInstance.get('/section')
       .then(response => {
         console.log('API response:', response.data);
-        setPosts(response.data.slice(0, 10)); // Get only the latest 10 posts
+        setPosts(response.data.slice(0, 10));
         setLoading(false);
       })
       .catch(error => {
@@ -51,7 +51,7 @@ function SportSection() {
       <div className="container" data-aos="fade-up">
         <div className="section-header flex justify-between items-center mb-5">
           <h2>{posts[0] && posts[0].category.name}</h2>
-          <div><a href="category.html" className="more">See All {posts[0] && posts[0].category.name}</a></div>
+          <div><a href="category.html" className="more">See Allll {posts[0] && posts[0].category.name}</a></div>
         </div>
 
         <Row>
@@ -64,7 +64,7 @@ function SportSection() {
                 <div>
                   <div className="post-meta">
                     <span className="date">{posts[0].category.name}</span>
-                    <span className="mx-1">.</span>
+                    <span className="mx-1">|</span>
                     <span>{new Date(posts[0].created_at).toLocaleDateString()}</span>
                   </div>
                   <h3><Link to={`/posts/${posts[0].id}`}>{posts[0].title}</Link></h3>
@@ -90,7 +90,7 @@ function SportSection() {
                     </Link>
                     <div className="post-meta">
                       <span className="date">{post.category.name}</span>
-                      <span className="mx-1">.</span>
+                      <span className="mx-1">|</span>
                       <span>{new Date(post.created_at).toLocaleDateString()}</span>
                     </div>
                     <h2 className="mb-2"><Link to={`/posts/${post.id}`}>{post.title}</Link></h2>
@@ -107,7 +107,7 @@ function SportSection() {
               <div key={post.id} className="post-entry-1 border-b mb-4">
                 <div className="post-meta">
                   <span className="date">{post.category.name}</span>
-                  <span className="mx-1">.</span>
+                  <span className="mx-1">|</span>
                   <span>{new Date(post.created_at).toLocaleDateString()}</span>
                 </div>
                 <h2 className="mb-2"><Link to={`/posts/${post.id}`}>{post.title}</Link></h2>
@@ -121,4 +121,4 @@ function SportSection() {
   );
 }
 
-export default SportSection;
+export default SectionOne;

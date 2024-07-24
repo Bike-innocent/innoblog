@@ -1,18 +1,18 @@
 import React from 'react'
 import HeaderSection from './index/HeaderSection'
 import MixedCategorySection from './index/MixedCategorySection'
-import SportSection from './index/SportSection'
-import BusinessSection from './index/BusinessSection'
-import TechnologySection from './index/TechnologySection'
+import SectionOne from './index/SectionOne'
+import SectionTwo from './index/SectionTwo'
+import SectionThree from './index/SectionThree'
 
 function Index() {
   return (
     <div className='m-0'>
       <HeaderSection/>
       <MixedCategorySection/>
-      <SportSection/>
-      <BusinessSection/>
-      <TechnologySection/>
+      {/* <SectionOne/> */}
+      {/* <SectionTwo/> */}
+      <SectionThree/>
     </div>
   )
 }
