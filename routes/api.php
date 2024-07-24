@@ -111,6 +111,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::get('/sport', [HomePageController::class, 'sportSection']);
     Route::get('/sport', [HomePageController::class, 'sportSection']);
     Route::get('/business', [HomePageController::class, 'businessSection']);
+    Route::get('/technolgy', [HomePageController::class, 'technologySection']);
+    Route::get('/technolgy', [HomePageController::class, 'technologySection']);
 
 
 });
