@@ -8,11 +8,10 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import GuestLayout from './layouts/GuestLayout';
 import MainLayout from './layouts/MainLayout';
-import DashboardLayout from './layouts/DashboardLayout';
 import About from './pages/About';
 import Category from './pages/Category';
 
-import Home from './pages/dashboard/Home';
+
 import CreatePost from './pages/dashboard/CreatePost';
 import AllPosts from './pages/dashboard/AllPosts';
 import AllUsers from './pages/dashboard/AllUsers';
@@ -29,8 +28,7 @@ import EditPost from './pages/dashboard/EditPost';
 import ViewPost from './pages/dashboard/ViewPost';
 import CategoryHome from './pages/CategoryHome';
 import SubCategoryHome from './pages/SubCategoryHome';
-import FetchPostsComponent from './FetchPostsComponent';
-import PostsCard from './PostsCard';
+import Dashboard from './pages/dashboard/Dasboard';
 
 const router = createBrowserRouter([
   {
@@ -47,23 +45,11 @@ const router = createBrowserRouter([
     path: '/',
     element: <MainLayout />,
     children: [
-      { path: 'dashboard', element: <DashboardLayout /> },
+      { path: 'dashboard', element: <Dashboard />  },
       { path: 'about', element: <About /> },
       { path: 'category', element: <Category /> },
-      { path: 'blog', element: <Index /> },
+      { path: 'home', element: <Index /> },
       { path: '/posts/:id', element: <SinglePost /> },
-      { path: 'unauthorized', element: <Unauthorized /> },
-      { path: 'not-found', element: <NotFound /> },
-      { path: 'category/:categorySlug', element: <CategoryHome /> },
-      { path: 'categories/:categorySlug/subcategories/:subcategorySlug', element :<SubCategoryHome />} ,
-       
-    ],
-  },
-  {
-    path: '/dashboard',
-    element: <DashboardLayout />,
-    children: [
-      { path: 'home', element: <Home /> },
       { path: 'profile', element: <EditProfile /> },
       { path: 'create-post', element: <CreatePost /> },
       { path: 'all-posts', element: <AllPosts /> },
@@ -73,13 +59,14 @@ const router = createBrowserRouter([
       { path: 'edit-post/:id', element: <EditPost/> },
       { path: 'view-post/:id', element: <ViewPost/> },
       { path: 'manage-category', element: <IndexCategory /> },
+      { path: 'unauthorized', element: <Unauthorized /> },
+      { path: 'not-found', element: <NotFound /> },
+      { path: 'category/:categorySlug', element: <CategoryHome /> },
+      { path: 'categories/:categorySlug/subcategories/:subcategorySlug', element :<SubCategoryHome />} ,
+
     ],
   },
 
-  {
-     path: '/posts',
-     element: <PostsCard />,
-  }
 ]);
 
 const queryClient = new QueryClient();

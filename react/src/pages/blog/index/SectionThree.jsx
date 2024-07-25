@@ -54,7 +54,11 @@ function SectionThree() {
           <div className="container" data-aos="fade-up">
             <div className="section-header d-flex justify-content-between align-items-center mb-5">
               <h2>{sections[categorySlug][0]?.category.name}</h2>
-              <div><a href={`/category/${categorySlug}`} className="more">See All {sections[categorySlug][0]?.category.name}</a></div>
+              <div>
+                <Link to={`/category/${categorySlug}`} className="more">
+                  See All {sections[categorySlug][0]?.category.name}
+                </Link>
+              </div>
             </div>
 
             <div className="row g-5">
@@ -69,7 +73,11 @@ function SectionThree() {
                       <span className="mx-1">.</span>
                       <span>{new Date(sections[categorySlug][0].created_at).toLocaleDateString()}</span>
                     </div>
-                    <h2><Link to={`/posts/${sections[categorySlug][0].id}`}>{sections[categorySlug][0].title}</Link></h2>
+                    <h2>
+                      <Link to={`/posts/${sections[categorySlug][0].id}`}>
+                        {sections[categorySlug][0].title}
+                      </Link>
+                    </h2>
                     <p className="mb-4 d-block">{sections[categorySlug][0].description}</p>
                     <div className="d-flex align-items-center author">
                       <div className="photo">
@@ -89,7 +97,9 @@ function SectionThree() {
                       <span className="mx-1">.</span>
                       <span>{new Date(post.created_at).toLocaleDateString()}</span>
                     </div>
-                    <h2 className="mb-2"><Link to={`/posts/${post.id}`}>{post.title}</Link></h2>
+                    <h2 className="mb-2">
+                      <Link to={`/posts/${post.id}`}>{post.title}</Link>
+                    </h2>
                     <span className="author mb-3 d-block">{post.user.name}</span>
                   </div>
                 ))}
@@ -108,7 +118,11 @@ function SectionThree() {
                           <span className="mx-1">.</span>
                           <span>{new Date(post.created_at).toLocaleDateString()}</span>
                         </div>
-                        <h2><Link to={`/posts/${post.id}`}>{post.title}</Link></h2>
+                        <h2>
+                          <Link to={`/posts/${post.id}`}>
+                            {post.title}
+                          </Link>
+                        </h2>
                       </div>
                     </div>
                   ))}
@@ -121,7 +135,9 @@ function SectionThree() {
                           <span className="mx-1">.</span>
                           <span>{new Date(post.created_at).toLocaleDateString()}</span>
                         </div>
-                        <h2 className="mb-2"><Link to={`/posts/${post.id}`}>{post.title}</Link></h2>
+                        <h2 className="mb-2">
+                          <Link to={`/posts/${post.id}`}>{post.title}</Link>
+                        </h2>
                         <span className="author mb-3 d-block">{post.user.name}</span>
                       </div>
                     ))}
