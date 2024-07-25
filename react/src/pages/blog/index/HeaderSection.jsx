@@ -63,7 +63,7 @@ const HeaderSection = () => {
                     >
                       <div className="text-left mb-4 ml-4">
                         <h2 className="text-2xl font-semibold">
-                          {post.title.length > 40 ? post.title.substring(0, 40) + '...' : post.title}
+                          {post.title.length > 40 ? post.title.substring(0, 40) + '....' : post.title}
                         </h2>
                         <p className="mt-2 hidden md:block">
                           {post.content.length > 70 ? post.content.substring(0, 70) + '...' : post.content}
