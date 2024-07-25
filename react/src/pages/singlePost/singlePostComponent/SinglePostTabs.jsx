@@ -3,6 +3,7 @@ import { Tab } from '@headlessui/react';
 import { Link, useParams } from 'react-router-dom';
 import axiosInstance from '../../../axiosInstance';
 import { useQuery } from '@tanstack/react-query';
+import { Skeleton } from '@nextui-org/react';
 
 const fetchRelatedPosts = async (postId) => {
   const response = await axiosInstance.get(`/blog/related/${postId}`);
@@ -38,8 +39,29 @@ function SinglePostTabs() {
         </Tab>
       </Tab.List>
       <Tab.Panels className="mt-2">
-        <Tab.Panel key="related" className="bg-white rounded-xl p-3">
-          {relatedLoading && <div>Loading...</div>}
+        <Tab.Panel key="related" className="bg-white rounded-xl ">
+          {relatedLoading && (
+            <>
+            <div className="bg-gray-200 h-24 border-b border rounded-lg">
+              <Skeleton height="50px" width="100%" className="mb-4" />
+             
+            </div>
+
+            <div className="bg-gray-200 h-24 mt-3 border-b border rounded-lg">
+              <Skeleton height="50px" width="100%" className="mb-4" />
+             
+            </div>
+            <div className="bg-gray-200 h-24 mt-3 border-b border rounded-lg">
+              <Skeleton height="50px" width="100%" className="mb-4" />
+             
+            </div>
+            <div className="bg-gray-200 h-24 mt-3 border-b border">
+              <Skeleton height="50px" width="100%" className="mb-4" />
+             
+            </div>
+             
+            </>
+          )}
           {relatedError && <div>Error fetching related posts: {relatedErrorMessage.message}</div>}
           {!relatedLoading && !relatedError && relatedPosts.map((post) => (
             <Link to={`/posts/${post.id}`} key={post.id} className="block border-b pb-4 mb-4">

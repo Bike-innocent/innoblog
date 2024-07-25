@@ -2,7 +2,7 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import axiosInstance from '../../../axiosInstance';
 import { useQuery } from '@tanstack/react-query';
-import { Skeleton, Container, Text } from '@nextui-org/react';
+import { Skeleton } from '@nextui-org/react';
 
 const fetchPost = async (id) => {
   const response = await axiosInstance.get(`/blog/show/posts/${id}`);
@@ -24,16 +24,12 @@ const SinglePostHeaderSection = () => {
 
   if (isLoading) {
     return (
-      <Container className="mx-auto">
-        <div className="bg-white rounded-lg p-4">
-          <Skeleton height="40px" width="70%" className="mb-4" />
-          <Skeleton height="20px" width="40%" className="mb-2" />
-          <Skeleton height="400px" className="mb-4" />
-          <Skeleton height="20px" width="90%" className="mb-2" />
-          <Skeleton height="20px" width="85%" className="mb-2" />
-          <Skeleton height="20px" width="80%" className="mb-2" />
+      <div className="mx-auto">
+        <div className="bg-gray-200 rounded-lg p-4 h-64 md:h-96 mt-5">
+          <Skeleton height="500px" width="70%" className="mb-4" />
+          
         </div>
-      </Container>
+      </div>
     );
   }
 
