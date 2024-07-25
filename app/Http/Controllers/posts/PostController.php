@@ -16,11 +16,11 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
-    public function show($id)
-    {
-        $post = Post::findOrFail($id);
-        $post->image = url('post-images/' . $post->image);
+    // public function show($id)
+    // {
+    //     $post = Post::findOrFail($id);
+    //     $post->image = url('post-images/' . $post->image);
 
-        return response()->json($post);
-    }
+    //     return response()->json($post);
+    // }
 }

@@ -83,9 +83,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Posts Index route
     Route::prefix('blog')->group(function () {
         Route::get('/posts', [PostController::class, 'index']);
-        Route::get('/show/posts/{id}', [PostController::class, 'show']);
-        Route::get('/latest', [SinglePostController::class, 'latest']);
-        Route::get('/popular', [SinglePostController::class, 'popular']);
+        Route::get('/show/posts/{id}', [SinglePostController::class, 'show']);
+        Route::get('/related/{id}', [SinglePostController::class, 'related']);
+
     });
 
     // Manage Category routes
@@ -108,7 +108,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/section', [HomePageController::class, 'sections']);
     Route::get('/mixedPostOnHome', [HomePageController::class, 'MixedPostOnHome']);
-   
+
 
 
 });

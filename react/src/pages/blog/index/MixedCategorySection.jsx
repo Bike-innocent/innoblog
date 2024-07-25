@@ -46,7 +46,7 @@ const MixedCategorySection = () => {
               </Link>
               <div className="post-meta">
                 <span className="date">{mainPost.category.name}</span>
-                <span className="mx-1">&bullet;</span>
+                <span className="mx-1">.</span>
                 <span>{new Date(mainPost.created_at).toLocaleDateString()}</span>
               </div>
               <h2>
@@ -73,7 +73,7 @@ const MixedCategorySection = () => {
                     </Link>
                     <div className="post-meta">
                       <span className="date">{post.category.name}</span>
-                      <span className="mx-1">&bullet;</span>
+                      <span className="mx-1">.</span>
                       <span>{new Date(post.created_at).toLocaleDateString()}</span>
                     </div>
                     <h2>
@@ -90,7 +90,7 @@ const MixedCategorySection = () => {
                     </Link>
                     <div className="post-meta">
                       <span className="date">{post.category.name}</span>
-                      <span className="mx-1">&bullet;</span>
+                      <span className="mx-1">.</span>
                       <span>{new Date(post.created_at).toLocaleDateString()}</span>
                     </div>
                     <h2>

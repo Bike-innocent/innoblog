@@ -98,6 +98,10 @@ class CategoryController extends Controller
                 ->orderBy('created_at', 'desc') // Customize your query as needed
                 ->get();
 
+             
+            
+
+
             return response()->json(['data' => $mixedPosts], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Error fetching mixed posts', 'error' => $e->getMessage()], 500);

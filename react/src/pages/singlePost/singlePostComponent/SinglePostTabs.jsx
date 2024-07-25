@@ -1,69 +1,47 @@
 import React from 'react';
 import { Tab } from '@headlessui/react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import axiosInstance from '../../../axiosInstance';
 import { useQuery } from '@tanstack/react-query';
 
-const fetchLatestPosts = async () => {
-  const response = await axiosInstance.get('blog/latest');
-  return response.data.latestpost || [];
-};
-
-const fetchPopularPosts = async () => {
-  const response = await axiosInstance.get('blog/popular');
-  return response.data.popularpost || [];
+const fetchRelatedPosts = async (postId) => {
+  const response = await axiosInstance.get(`/blog/related/${postId}`);
+  return response.data.relatedPosts || [];
 };
 
 function SinglePostTabs() {
-  const {
-    data: latestPosts = [],
-    isLoading: latestLoading,
-    isError: latestError,
-    error: latestErrorMessage,
-  } = useQuery({
-    queryKey: ['latestPosts'],
-    queryFn: fetchLatestPosts,
-  });
+  const { id: postId } = useParams();
 
   const {
-    data: popularPosts = [],
-    isLoading: popularLoading,
-    isError: popularError,
-    error: popularErrorMessage,
+    data: relatedPosts = [],
+    isLoading: relatedLoading,
+    isError: relatedError,
+    error: relatedErrorMessage,
   } = useQuery({
-    queryKey: ['popularPosts'],
-    queryFn: fetchPopularPosts,
+    queryKey: ['relatedPosts', postId],
+    queryFn: () => fetchRelatedPosts(postId),
+    enabled: !!postId, // Only run query if postId is not null or undefined
   });
 
   return (
     <Tab.Group>
       <Tab.List className="flex p-1 space-x-1">
         <Tab
-          key="latest"
+          key="related"
           className={({ selected }) =>
             selected
               ? 'w-full py-2.5 text-sm leading-5 font-medium border-b-2 border-blue-500'
               : 'w-full py-2.5 text-sm leading-5 font-medium border-b-2'
           }
         >
-          Latest
-        </Tab>
-        <Tab
-          key="popular"
-          className={({ selected }) =>
-            selected
-              ? 'w-full py-2.5 text-sm leading-5 font-medium border-b-2 border-blue-500'
-              : 'w-full py-2.5 text-sm leading-5 font-medium border-b-2'
-          }
-        >
-          Popular
+          Related Posts
         </Tab>
       </Tab.List>
       <Tab.Panels className="mt-2">
-        <Tab.Panel key="latest" className="bg-white rounded-xl p-3">
-          {latestLoading && <div>Loading...</div>}
-          {latestError && <div>Error fetching latest posts: {latestErrorMessage.message}</div>}
-          {!latestLoading && !latestError && latestPosts.map((post) => (
+        <Tab.Panel key="related" className="bg-white rounded-xl p-3">
+          {relatedLoading && <div>Loading...</div>}
+          {relatedError && <div>Error fetching related posts: {relatedErrorMessage.message}</div>}
+          {!relatedLoading && !relatedError && relatedPosts.map((post) => (
             <Link to={`/posts/${post.id}`} key={post.id} className="block border-b pb-4 mb-4">
               <div className="flex items-center">
                 <div className="flex-1">
@@ -75,33 +53,9 @@ function SinglePostTabs() {
                     <div className="text-gray-700 text-sm">{post.user.name}</div>
                   )}
                 </div>
-                <img 
-                  src={post.image} 
-                  alt={post.title} 
-                  className="w-24 h-16 object-cover rounded-lg ml-4"
-                />
-              </div>
-            </Link>
-          ))}
-        </Tab.Panel>
-        <Tab.Panel key="popular" className="bg-white rounded-xl p-3">
-          {popularLoading && <div>Loading...</div>}
-          {popularError && <div>Error fetching popular posts: {popularErrorMessage.message}</div>}
-          {!popularLoading && !popularError && popularPosts.map((post) => (
-            <Link to={`/posts/${post.id}`} key={post.id} className="block border-b pb-4 mb-4">
-              <div className="flex items-center">
-                <div className="flex-1">
-                  <div className="text-gray-500 text-sm">
-                    {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: '2-digit' })}
-                  </div>
-                  <h2 className="text-lg font-semibold">{post.title}</h2>
-                  {post.user && (
-                    <div className="text-gray-700 text-sm">{post.user.name}</div>
-                  )}
-                </div>
-                <img 
-                  src={post.image} 
-                  alt={post.title} 
+                <img
+                  src={post.image}
+                  alt={post.title}
                   className="w-24 h-16 object-cover rounded-lg ml-4"
                 />
               </div>

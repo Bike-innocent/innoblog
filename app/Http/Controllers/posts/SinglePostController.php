@@ -3,26 +3,32 @@
 namespace App\Http\Controllers\posts;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Post;
 
 class SinglePostController extends Controller
 {
-    public function latest()
+    public function show($id)
     {
-        $posts = Post::with('user')->orderBy('created_at', 'desc')->take(5)->get();
-        foreach ($posts as $post) {
-            $post->image = url('post-images/' . $post->image);
-        }
-        return response()->json(['latestpost' => $posts]);
+        $post = Post::with('category')->findOrFail($id);
+        $post->image = url('post-images/' . $post->image);
+
+        return response()->json($post);
     }
 
-    public function popular()
+    public function related($id)
     {
-        $posts = Post::with('user')->inRandomOrder()->take(5)->get();
-        foreach ($posts as $post) {
-            $post->image = url('post-images/' . $post->image);
+        $post = Post::findOrFail($id);
+        $relatedPosts = Post::with('user', 'category')
+                            ->where('category_id', $post->category_id)
+                            ->where('id', '!=', $id)
+                            ->take(5)
+                            ->latest()
+                            ->get();
+
+        foreach ($relatedPosts as $relatedPost) {
+            $relatedPost->image = url('post-images/' . $relatedPost->image);
         }
-        return response()->json(['popularpost' => $posts]);
+
+        return response()->json(['relatedPosts' => $relatedPosts]);
     }
 }
