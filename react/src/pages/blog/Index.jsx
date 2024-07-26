@@ -9,10 +9,10 @@ function Index() {
   return (
     <div className='m-0'>
       <HeaderSection/>
-      <MixedCategorySection/>
+      {/* <MixedCategorySection/> */}
       {/* <SectionOne/> */}
       {/* <SectionTwo/> */}
-      <SectionThree/>
+      {/* <SectionThree/> */}
     </div>
   )
 }

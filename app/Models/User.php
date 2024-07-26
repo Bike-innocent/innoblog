@@ -40,13 +40,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    
+
 
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
+    protected $appends = ['avatar_url'];
 
-   
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? url('avatars/' . $this->avatar) : null;
+    }
+
 
 }
