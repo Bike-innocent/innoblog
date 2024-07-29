@@ -124,3 +124,9 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
     // All users routes
     Route::get('/all-users', [AllUserController::class, 'index']);
 });
+
+
+// routes/api.php
+Route::get('/test', function () {
+    return response()->json(['message' => 'API is working']);
+});

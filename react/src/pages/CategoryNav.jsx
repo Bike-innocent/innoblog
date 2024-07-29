@@ -19,7 +19,7 @@ const CategoryNav = () => {
   }, []);
 
   return (
-    <div className="overflow-x-auto whitespace-nowrap">
+    <div className="overflow-x-auto whitespace-nowrap ">
       <Tabs>
         {categories.map(category => (
           <Tab

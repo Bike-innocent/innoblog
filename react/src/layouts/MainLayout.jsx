@@ -34,7 +34,7 @@ function MainLayout() {
       <AuthNavbar isSidebarOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <div className="flex bg-gray-100">
         <div
-          className={`fixed inset-y-0 left-0 z-50 w-48 bg-gray-900 shadow-lg transform ${
+          className={`fixed  inset-y-0 left-0 z-50 w-48 bg-gray-900 shadow-lg transform ${
             isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
           } transition-transform duration-300 ease-in-out md:sticky md:h-screen md:translate-x-0 md:flex md:flex-col md:w-1/5`}
         >
@@ -163,7 +163,7 @@ function MainLayout() {
         </div>
 
         <div className="flex flex-col flex-1 md:ml-1/5">
-          <main className="flex-1 overflow-y-auto p-4 min-h-screen bg-white">
+          <main className="flex-1  overflow-y-auto p-4 min-h-screen bg-white ">
             <Outlet />
           </main>
         </div>

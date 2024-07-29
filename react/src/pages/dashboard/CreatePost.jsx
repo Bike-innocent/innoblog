@@ -80,7 +80,7 @@ const CreatePost = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            navigate('/dashboard/my-post', { state: { success: 'Post created successfully.' } });
+            navigate('/my-post', { state: { success: 'Post created successfully.' } });
         } catch (error) {
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors);
