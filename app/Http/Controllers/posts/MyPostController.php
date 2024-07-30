@@ -16,14 +16,16 @@ class MyPostController extends Controller
         $user = Auth::user();
         $posts = Post::where('user_id', $user->id)
             ->with('category', 'subCategory') // Eager load category and subcategory
-            ->get();
+            ->paginate(12); // Use pagination
 
+        // Update image URLs
         foreach ($posts as $post) {
-            $post->image = url('post-images/'.$post->image);
+            $post->image = url('post-images/' . $post->image);
         }
 
-        return response()->json(['posts' => $posts]);
+        return response()->json($posts);
     }
+
 
     public function store(Request $request)
     {
@@ -35,7 +37,7 @@ class MyPostController extends Controller
             'sub_category_id' => 'nullable|exists:sub_categories,id',
         ]);
 
-        $imageName = time().'.'.$request->image->extension();
+        $imageName = time() . '.' . $request->image->extension();
         $request->image->move(public_path('post-images'), $imageName);
 
         $post = new Post();
@@ -53,11 +55,11 @@ class MyPostController extends Controller
     public function show($id)
     {
         $post = Post::with(['category', 'subCategory'])->findOrFail($id);
-        $post->image = url('post-images/'.$post->image);
-    
+        $post->image = url('post-images/' . $post->image);
+
         return response()->json(['post' => $post]);
     }
-    
+
 
     public function update(Request $request, $id)
     {
@@ -73,11 +75,11 @@ class MyPostController extends Controller
 
         if ($request->hasFile('image')) {
             // Delete old image
-            if (file_exists(public_path('post-images/'.$post->image))) {
-                unlink(public_path('post-images/'.$post->image));
+            if (file_exists(public_path('post-images/' . $post->image))) {
+                unlink(public_path('post-images/' . $post->image));
             }
 
-            $imageName = time().'.'.$request->image->extension();
+            $imageName = time() . '.' . $request->image->extension();
             $request->image->move(public_path('post-images'), $imageName);
             $post->image = $imageName;
         }

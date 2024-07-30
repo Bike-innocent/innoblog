@@ -16,7 +16,7 @@ import CreatePost from './pages/dashboard/CreatePost';
 import AllPosts from './pages/dashboard/AllPosts';
 import AllUsers from './pages/dashboard/AllUsers';
 import Settings from './pages/dashboard/Settings';
-import MyPost from './pages/dashboard/MyPost';
+import MyPost from './pages/dashboard/my-post/MyPost';
 import Unauthorized from './pages/Unauthorized';
 import NotFound from './pages/NotFound';
 import EditProfile from './pages/profile/EditProfile';

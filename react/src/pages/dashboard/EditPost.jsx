@@ -90,7 +90,7 @@ const EditPost = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            navigate('/dashboard/my-post', { state: { success: 'Post updated successfully.' } });
+            navigate('/my-post', { state: { success: 'Post updated successfully.' } });
         } catch (error) {
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors);
@@ -103,7 +103,7 @@ const EditPost = () => {
     return (
         <div className="rounded-lg">
             {loading ? (
-                <Loader /> 
+                <Loader />
             ) : (
                 <>
                     <h1 className="text-2xl font-semibold mb-4">Edit Post</h1>
@@ -193,9 +193,9 @@ const EditPost = () => {
                     </form>
                 </>
             )}
-            
+
         </div>
-        
+
     );
 };
 

@@ -8,7 +8,7 @@ class AllPostController extends Controller
     public function index()
     {
         // Use pagination with 10 posts per page
-        $posts = Post::orderBy('created_at', 'desc')->paginate(30);
+        $posts = Post::orderBy('created_at', 'desc');
 
         // Include full path for image URL
         foreach ($posts as $post) {
@@ -17,7 +17,7 @@ class AllPostController extends Controller
 
         return response()->json($posts);
     }
-
+   
     public function delete($id)
     {
         $post = Post::find($id);

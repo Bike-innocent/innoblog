@@ -4,12 +4,12 @@ import { Skeleton } from '@nextui-org/react';
 import axiosInstance from '../../../axiosInstance';
 import Post from './Post';
 
-const fetchAllPosts = async ({ pageParam = 1 }) => {
-  const response = await axiosInstance.get(`/blog/posts?page=${pageParam}&limit=12`);
+const fetchUserPosts = async ({ pageParam = 1 }) => {
+  const response = await axiosInstance.get(`/posts?page=${pageParam}&limit=12`);
   return response.data;
 };
 
-const HeaderSection = () => {
+const MyPost = () => {
   const {
     data,
     fetchNextPage,
@@ -19,8 +19,8 @@ const HeaderSection = () => {
     isError,
     error,
   } = useInfiniteQuery({
-    queryKey: ['allPosts'], // Changed query key to differentiate
-    queryFn: fetchAllPosts,
+    queryKey: ['userPosts'], // Changed query key to differentiate
+    queryFn: fetchUserPosts,
     getNextPageParam: (lastPage) => lastPage.next_page_url ? lastPage.current_page + 1 : undefined,
   });
 
@@ -112,4 +112,4 @@ const HeaderSection = () => {
   );
 };
 
-export default HeaderSection;
+export default MyPost;

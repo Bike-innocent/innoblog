@@ -33,9 +33,9 @@ const ViewPost = () => {
 
     return (
         <>
-           
+
             <div className="container mx-auto p-4">
-                
+
 
                 <div className="">
                     <span className="text-gray-700 font-bold">{post.category ? post.category.name : 'N/A'} |{post.sub_category ? post.sub_category.name : 'N/A'}| {new Date(post.created_at).toLocaleDateString()}</span>
@@ -51,7 +51,7 @@ const ViewPost = () => {
                     </div>
 
 
-                    <Link to="/dashboard/my-post" className="btn btn-secondary">Back</Link>
+                    <Link to="/my-post" className="btn btn-secondary">Back</Link>
                 </div>
             </div>
         </>
