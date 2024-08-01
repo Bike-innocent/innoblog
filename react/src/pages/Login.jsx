@@ -19,7 +19,7 @@ function Login() {
       setGeneralError('');
 
       // Redirect to the previous page or the home page if there's no previous page
-      const previousPath = location.state?.from || '/dashboard/home';
+      const previousPath = location.state?.from || '/home';
       navigate(previousPath);
     } catch (error) {
       if (error.response && error.response.data.errors) {
@@ -61,7 +61,7 @@ function Login() {
         <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded mt-2 hover:bg-blue-600">
           Login
         </button>
-        
+
         {generalError && <p className="text-red-600 mt-2">{generalError}</p>}
         <p className="mt-4">
           Don't have an account? <Link to="/register" className="text-blue-700">Register</Link>

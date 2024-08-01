@@ -10,21 +10,21 @@ const isColorLight = (color) => {
   return brightness > 155;
 };
 
-const PlaceholderImage = ({ name, avatar, placeholderColor }) => {
+const PlaceholderImage = ({ name = '', avatar, placeholderColor }) => {
   if (avatar) {
-    return <img src={avatar} alt={`${name || 'User'}'s avatar`} className="w-32 h-32 rounded-full object-cover" />;
+    return <img src={avatar} alt={`${name}'s avatar`} className="w-10 h-10 rounded-full" />;
   }
 
-  const initial = name ? name.charAt(0).toUpperCase() : '';
+  const initial = name.charAt(0).toUpperCase(); // Safe usage of charAt
   const backgroundColor = placeholderColor || ''; // Default color if none provided
   const textColor = isColorLight(backgroundColor) ? 'text-black' : 'text-white';
 
   return (
     <div
-      className={`w-32 h-32 rounded-full ${textColor} flex items-center justify-center`}
+      className={`w-10 h-10 rounded-full ${textColor} flex items-center justify-center`}
       style={{
         backgroundColor,
-        fontSize: '4rem', // Adjust this value to fit your needs
+        fontSize: '1.2rem', // Adjust this value to fit your needs
         lineHeight: '1' // Ensures initial is centered vertically
       }}
     >

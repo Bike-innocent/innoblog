@@ -12,18 +12,23 @@ use Illuminate\Support\Facades\Hash;
 class ProfileController extends Controller
 {
     public function index()
-    {
-        $user = Auth::user();
-        $user->load('roles', 'permissions');
-        
-        if ($user->avatar) {
-            $user->avatar = url('avatars/' . $user->avatar);
-        }
-    
-        return response()->json(['user' => $user], 200);
+{
+    $user = Auth::user();
+    $user->load('roles', 'permissions');
+
+    // Construct the URL for the avatar if it exists
+    if ($user->avatar) {
+        $user->avatar = url('avatars/' . $user->avatar);
     }
-    
-    
+
+    // Add placeholder color to the response
+    $user->placeholder_color = $user->placeholder_color ?? ''; // Default color if none provided
+
+    return response()->json(['user' => $user], 200);
+}
+
+
+
 
     public function update(ProfileUpdateRequest $request)
     {

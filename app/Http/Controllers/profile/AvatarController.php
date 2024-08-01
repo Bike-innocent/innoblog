@@ -19,8 +19,16 @@ class AvatarController extends Controller
         $user = Auth::user();
         $avatarPath = $user->avatar ? url('avatars/' . $user->avatar) : null;
 
-        return response()->json(['avatar' => $avatarPath, 'name' => $user->name], 200);
+        // Assuming you have a placeholder color attribute in your user model
+        $placeholderColor = $user->placeholder_color; // Adjust this if your attribute name is different
+
+        return response()->json([
+            'avatar' => $avatarPath,
+            'name' => $user->name,
+            'placeholder_color' => $placeholderColor // Add this to the response
+        ], 200);
     }
+
 
     /**
      * Show the form for creating a new resource.

@@ -91,7 +91,7 @@ const UserAvatar = ({ currentAvatar, userName, placeholderColor }) => {
                 <PlaceholderImage
                     name={data.name}
                     avatar={data.avatar}
-                    placeholderColor={data.placeholder_color}
+                    placeholderColor={data.placeholder_color} // Ensure this is being used
                 />
                 <label htmlFor="avatar" className="absolute bottom-0 right-0 p-2 bg-gray-700 text-white rounded-full cursor-pointer">
                     <FaCamera />
