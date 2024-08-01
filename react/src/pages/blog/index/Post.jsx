@@ -31,8 +31,12 @@ const Post = ({ post }) => {
           />
         </Link>
         <div className="flex pt-2">
-          <div className="w-1/5">
-            <PlaceholderImage name={post.user.name} avatar={post.user.avatar_url} />
+          <div className="w-14">
+            <PlaceholderImage
+              name={post.user.name}
+              avatar={post.user.avatar_url}
+              placeholderColor={post.user.placeholder_color} // Pass the placeholder color
+            />
           </div>
           <div className="flex-1 flex items-center justify-between">
             <Link to={`/posts/${post.id}`} className="flex-1">
@@ -48,7 +52,7 @@ const Post = ({ post }) => {
             />
           </div>
         </div>
-        <p className="text-gray-500"> {post.user.name}</p>
+        <p className="text-gray-500">{post.user.name}</p>
       </div>
     </div>
   );

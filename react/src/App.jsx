@@ -13,7 +13,7 @@ import Category from './pages/Category';
 
 
 import CreatePost from './pages/dashboard/CreatePost';
-import AllPosts from './pages/dashboard/AllPosts';
+import AllPosts from './pages/dashboard/all-posts/AllPosts';
 import AllUsers from './pages/dashboard/AllUsers';
 import Settings from './pages/dashboard/Settings';
 import MyPost from './pages/dashboard/my-post/MyPost';

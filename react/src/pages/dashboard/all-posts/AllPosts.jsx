@@ -4,12 +4,12 @@ import { Skeleton } from '@nextui-org/react';
 import axiosInstance from '../../../axiosInstance';
 import Post from './Post';
 
-const fetchUserPosts = async ({ pageParam = 1 }) => {
-  const response = await axiosInstance.get(`/posts?page=${pageParam}&limit=12`);
+const fetchAllPosts = async ({ pageParam = 1 }) => {
+  const response = await axiosInstance.get(`/blog/posts?page=${pageParam}&limit=12`);
   return response.data;
 };
 
-const MyPost = () => {
+const AllPosts = () => {
   const {
     data,
     fetchNextPage,
@@ -18,11 +18,10 @@ const MyPost = () => {
     isLoading,
     isError,
     error,
-refetch, // Add this to get refetch function
-
+    refetch,
   } = useInfiniteQuery({
-    queryKey: ['userPosts'], // Changed query key to differentiate
-    queryFn: fetchUserPosts,
+    queryKey: ['allPosts-admin'], // Changed query key to differentiate
+    queryFn: fetchAllPosts,
     getNextPageParam: (lastPage) => lastPage.next_page_url ? lastPage.current_page + 1 : undefined,
   });
 
@@ -53,7 +52,6 @@ refetch, // Add this to get refetch function
     refetch();
   };
 
-
   if (isLoading) {
     return (
       <section id="hero-slider">
@@ -64,13 +62,12 @@ refetch, // Add this to get refetch function
                 <div className="block">
                   <Skeleton className="w-full h-[180px] md:h-[250px] object-cover rounded-lg" />
                   <div className="flex pt-2">
-                    <div className="w-8">
-                      <Skeleton className="w-6 h-6 rounded-full" />
+                    <div className="w-1/5">
+                      <Skeleton className="w-10 h-10 rounded-full" />
                     </div>
-                    <div className="flex flex-col  w-full">
+                    <div className="flex flex-col pl-2 w-full">
                       <Skeleton className="h-5 w-full rounded-lg" />
                       <Skeleton className="h-4 w-3/4 mt-1 rounded-lg" />
-
                     </div>
                   </div>
                 </div>
@@ -90,25 +87,25 @@ refetch, // Add this to get refetch function
     <section>
       <div className="container mx-auto my-4" data-aos="fade-in">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 m-0">
-        {posts.map((post) => (
-            <Post key={post.id} post={post} refreshPosts={refreshPosts} />
+          {posts.map((post, index) => (
+            <Post key={index} post={post} refreshPosts={refreshPosts}  />
           ))}
+         
         </div>
         <div ref={observerRef} className="w-full h-10"></div>
         {isFetchingNextPage && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
             {[1, 2, 3].map((_, index) => (
               <div key={index} className="w-full group">
-               <div className="block">
+                <div className="block">
                   <Skeleton className="w-full h-[180px] md:h-[250px] object-cover rounded-lg" />
                   <div className="flex pt-2">
-                    <div className="w-8">
-                      <Skeleton className="w-6 h-6 rounded-full" />
+                    <div className="w-1/5">
+                      <Skeleton className="w-10 h-10 rounded-full" />
                     </div>
-                    <div className="flex flex-col  w-full">
+                    <div className="flex flex-col pl-2 w-full">
                       <Skeleton className="h-5 w-full rounded-lg" />
                       <Skeleton className="h-4 w-3/4 mt-1 rounded-lg" />
-
                     </div>
                   </div>
                 </div>
@@ -121,4 +118,4 @@ refetch, // Add this to get refetch function
   );
 };
 
-export default MyPost;
+export default AllPosts;

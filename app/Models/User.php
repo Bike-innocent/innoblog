@@ -47,9 +47,28 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
-  public function getAvatarUrlAttribute()
-  {
-      return $this->avatar ? url('avatars/' . $this->avatar) : null;
-  }
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? url('avatars/' . $this->avatar) : null;
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->placeholder_color = self::generateRandomColor();
+        });
+    }
+
+    public static function generateRandomColor()
+    {
+        $letters = '0123456789ABCDEF';
+        $color = '#';
+        for ($i = 0; $i < 6; $i++) {
+            $color .= $letters[rand(0, 15)];
+        }
+        return $color;
+    }
 
 }

@@ -342,7 +342,7 @@ const statusOptions = [
     { name: "Unpublished", uid: "0" },
 ];
 
-export default function Mypost() {
+export default function MyOLdpost() {
     const [posts, setPosts] = React.useState([]);
     const [filterValue, setFilterValue] = React.useState("");
 

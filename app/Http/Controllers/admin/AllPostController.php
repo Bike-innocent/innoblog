@@ -17,7 +17,9 @@ class AllPostController extends Controller
 
         return response()->json($posts);
     }
-   
+
+    
+
     public function delete($id)
     {
         $post = Post::find($id);

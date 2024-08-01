@@ -19,10 +19,12 @@ class PostController extends Controller
                 $post->user->avatar_url = url('avatars/' . $post->user->avatar);
             } else {
                 $post->user->avatar_url = null;
+                $post->user->placeholder_color = $post->user->placeholder_color; // Add placeholder color
             }
             return $post;
         });
 
         return response()->json($posts);
     }
+
 }
