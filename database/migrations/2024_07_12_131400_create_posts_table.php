@@ -17,7 +17,7 @@ return new class extends Migration
             $table->text('content');
             $table->string('image')->nullable();
             $table->boolean('status')->default(0);
-              $table->string('slug')->unique(); // Add slug column
+            $table->string('slug')->unique(); // Add slug column
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
             $table->foreignId('sub_category_id')->nullable()->constrained('sub_categories')->onDelete('cascade');
             $table->unsignedBigInteger('user_id');

@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -40,8 +38,6 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-
-
     public function posts()
     {
         return $this->hasMany(Post::class);
@@ -58,6 +54,7 @@ class User extends Authenticatable
 
         static::creating(function ($user) {
             $user->placeholder_color = self::generateRandomColor();
+            $user->username = self::generateUniqueUsername();
         });
     }
 
@@ -71,4 +68,12 @@ class User extends Authenticatable
         return $color;
     }
 
+    public static function generateUniqueUsername()
+    {
+        do {
+            $username = 'user' . rand(1000, 9999);
+        } while (self::where('username', $username)->exists());
+
+        return $username;
+    }
 }

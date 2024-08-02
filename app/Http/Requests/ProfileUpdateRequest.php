@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -27,6 +26,7 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
+            'username' => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore($userId)],
         ];
     }
 
@@ -43,6 +43,7 @@ class ProfileUpdateRequest extends FormRequest
             'email.email' => 'The email must be a valid email address.',
             'email.max' => 'The email may not be greater than 255 characters.',
             'email.unique' => 'The email has already been taken.',
+            'username.unique' => 'The username has already been taken.',
         ];
     }
 }

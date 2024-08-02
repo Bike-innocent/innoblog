@@ -30,7 +30,7 @@ class ProfileController extends Controller
 
 
 
-    public function update(ProfileUpdateRequest $request)
+   public function update(ProfileUpdateRequest $request)
     {
         $user = Auth::user();
 
@@ -38,6 +38,9 @@ class ProfileController extends Controller
 
         $user->name = $request->name;
         $user->email = $request->email;
+        if ($request->has('username')) {
+            $user->username = $request->username;
+        }
         $user->save();
 
         return response()->json(['message' => 'Profile updated successfully.'], 200);
