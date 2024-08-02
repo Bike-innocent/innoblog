@@ -5,25 +5,25 @@ import PostDropdown from './PostDropdown';
 
 const Post = ({ post }) => {
   const handleSave = () => {
-    console.log('Save post:', post.id);
+    console.log('Save post:', post.slug);
   };
 
   const handleShare = () => {
-    console.log('Share post:', post.id);
+    console.log('Share post:', post.slug);
   };
 
   const handleNotInterested = () => {
-    console.log('Not Interested in post:', post.id);
+    console.log('Not Interested in post:', post.slug);
   };
 
   const handleReport = () => {
-    console.log('Report post:', post.id);
+    console.log('Report post:', post.slug);
   };
 
   return (
     <div className="w-full group">
       <div className="relative">
-        <Link to={`/posts/${post.id}`} className="block">
+        <Link to={`/posts/${post.slug}`} className="block">
           <img
             src={post.image}
             alt={post.title}
@@ -39,7 +39,7 @@ const Post = ({ post }) => {
             />
           </div>
           <div className="flex-1 flex items-center justify-between">
-            <Link to={`/posts/${post.id}`} className="flex-1">
+            <Link to={`/posts/${post.slug}`} className="flex-1">
               <h2 className="text-xl font-semibold m-0 p-0 group-hover:underline">
                 {post.title.length > 40 ? post.title.substring(0, 40) + '...' : post.title}
               </h2>

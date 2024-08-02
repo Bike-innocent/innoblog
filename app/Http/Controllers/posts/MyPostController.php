@@ -52,9 +52,9 @@ class MyPostController extends Controller
         return response()->json(['message' => 'Post created successfully']);
     }
 
-    public function show($id)
+    public function show($slug)
     {
-        $post = Post::with(['category', 'subCategory'])->findOrFail($id);
+        $post = Post::with(['category', 'subCategory'])->findOrFail($slug);
         $post->image = url('post-images/' . $post->image);
 
         return response()->json(['post' => $post]);

@@ -1,3 +1,6 @@
+
+
+
 import React from 'react';
 import { Tab } from '@headlessui/react';
 import { Link, useParams } from 'react-router-dom';
@@ -5,13 +8,13 @@ import axiosInstance from '../../../axiosInstance';
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@nextui-org/react';
 
-const fetchRelatedPosts = async (postId) => {
-  const response = await axiosInstance.get(`/blog/related/${postId}`);
+const fetchRelatedPosts = async (slug) => {
+  const response = await axiosInstance.get(`/blog/related/${slug}`);
   return response.data.relatedPosts || [];
 };
 
 function SinglePostTabs() {
-  const { id: postId } = useParams();
+  const { slug } = useParams();
 
   const {
     data: relatedPosts = [],
@@ -19,9 +22,9 @@ function SinglePostTabs() {
     isError: relatedError,
     error: relatedErrorMessage,
   } = useQuery({
-    queryKey: ['relatedPosts', postId],
-    queryFn: () => fetchRelatedPosts(postId),
-    enabled: !!postId, // Only run query if postId is not null or undefined
+    queryKey: ['relatedPosts', slug],
+    queryFn: () => fetchRelatedPosts(slug),
+    enabled: !!slug, // Only run query if slug is not null or undefined
   });
 
   return (
@@ -42,29 +45,24 @@ function SinglePostTabs() {
         <Tab.Panel key="related" className="bg-white rounded-xl ">
           {relatedLoading && (
             <>
-            <div className="bg-gray-200 h-24 border-b border rounded-lg">
-              <Skeleton height="50px" width="100%" className="mb-4" />
-             
-            </div>
+              <div className="bg-gray-200 h-24 border-b border rounded-lg">
+                <Skeleton height="50px" width="100%" className="mb-4" />
+              </div>
 
-            <div className="bg-gray-200 h-24 mt-3 border-b border rounded-lg">
-              <Skeleton height="50px" width="100%" className="mb-4" />
-             
-            </div>
-            <div className="bg-gray-200 h-24 mt-3 border-b border rounded-lg">
-              <Skeleton height="50px" width="100%" className="mb-4" />
-             
-            </div>
-            <div className="bg-gray-200 h-24 mt-3 border-b border">
-              <Skeleton height="50px" width="100%" className="mb-4" />
-             
-            </div>
-             
+              <div className="bg-gray-200 h-24 mt-3 border-b border rounded-lg">
+                <Skeleton height="50px" width="100%" className="mb-4" />
+              </div>
+              <div className="bg-gray-200 h-24 mt-3 border-b border rounded-lg">
+                <Skeleton height="50px" width="100%" className="mb-4" />
+              </div>
+              <div className="bg-gray-200 h-24 mt-3 border-b border">
+                <Skeleton height="50px" width="100%" className="mb-4" />
+              </div>
             </>
           )}
           {relatedError && <div>Error fetching related posts: {relatedErrorMessage.message}</div>}
           {!relatedLoading && !relatedError && relatedPosts.map((post) => (
-            <Link to={`/posts/${post.id}`} key={post.id} className="block border-b pb-4 mb-4">
+            <Link to={`/posts/${post.slug}`} key={post.slug} className="block border-b pb-4 mb-4">
               <div className="flex items-center">
                 <div className="flex-1">
                   <div className="text-gray-500 text-sm">
@@ -78,7 +76,7 @@ function SinglePostTabs() {
                 <img
                   src={post.image}
                   alt={post.title}
-                  className="w-24 h-16 object-cover rounded-lg ml-4"
+                  className="w-24 h-16 object-cover  ml-4"
                 />
               </div>
             </Link>

@@ -5,7 +5,7 @@ import Processing from '../../components/Processing';
 import Loader from '../../components/Loader';
 
 const EditPost = () => {
-    const { id } = useParams();
+    const { slug } = useParams();
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [image, setImage] = useState(null);
@@ -22,7 +22,7 @@ const EditPost = () => {
     useEffect(() => {
         const fetchPostData = async () => {
             try {
-                const response = await axiosInstance.get(`/posts/${id}`);
+                const response = await axiosInstance.get(`/posts/${slug}`);
                 const post = response.data.post;
                 setTitle(post.title);
                 setContent(post.content);
@@ -85,7 +85,7 @@ const EditPost = () => {
         formData.append('sub_category_id', subCategory);
 
         try {
-            await axiosInstance.post(`/posts/${id}`, formData, {
+            await axiosInstance.post(`/posts/${slug}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },

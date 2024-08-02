@@ -4,14 +4,14 @@ import { useParams, Link } from 'react-router-dom';
 import Loader from '../../components/Loader';
 
 const ViewPost = () => {
-    const { id } = useParams();
+    const { slug } = useParams();
     const [post, setPost] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                const response = await axiosInstance.get(`/posts/${id}`);
+                const response = await axiosInstance.get(`/posts/${slug}`);
                 setPost(response.data.post);
             } catch (error) {
                 console.error('Error fetching post:', error);
@@ -21,7 +21,7 @@ const ViewPost = () => {
         };
 
         fetchPost();
-    }, [id]);
+    }, [slug]);
 
     if (loading) {
         return <Loader />;

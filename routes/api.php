@@ -60,13 +60,13 @@ Route::middleware('auth:sanctum')->group(function () {
     // Posts routes
     Route::prefix('posts')->group(function () {
         Route::get('/form-data', [MyPostController::class, 'formData']);
-        Route::patch('/{id}/publish', [MyPostController::class, 'publish']);
-        Route::patch('/{id}/unpublish', [MyPostController::class, 'unPublish']);
+        Route::patch('/{slug}/publish', [MyPostController::class, 'publish']);
+        Route::patch('/{slug}/unpublish', [MyPostController::class, 'unPublish']);
         Route::get('/', [MyPostController::class, 'index']);
         Route::post('/', [MyPostController::class, 'store']);
-        Route::get('/{id}', [MyPostController::class, 'show']);
-        Route::put('/{id}', [MyPostController::class, 'update']);
-        Route::delete('/{id}', [MyPostController::class, 'destroy']);
+        Route::get('/{slug}', [MyPostController::class, 'show']);
+        Route::put('/{slug}', [MyPostController::class, 'update']);
+        Route::delete('/{slug}', [MyPostController::class, 'destroy']);
     });
 
     // Profile routes
@@ -83,8 +83,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Posts Index route
     Route::prefix('blog')->group(function () {
         Route::get('/posts', [PostController::class, 'index']);
-        Route::get('/show/posts/{id}', [SinglePostController::class, 'show']);
-        Route::get('/related/{id}', [SinglePostController::class, 'related']);
+        Route::get('/show/posts/{slug}', [SinglePostController::class, 'show']);
+        Route::get('/related/{slug}', [SinglePostController::class, 'related']);
 
     });
 
