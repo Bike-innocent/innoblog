@@ -78,8 +78,22 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/avatar', [AvatarController::class, 'destroy']);
         Route::get('/avatar', [AvatarController::class, 'index']);
         Route::put('/password/update', [UpdatePasswordController::class, 'update']);
+        Route::get('/{username}', [ProfileController::class, 'showProfile']);
     });
 
+
+
+    
+
+
+
+
+
+
+
+
+
+    
     // Posts Index route
     Route::prefix('blog')->group(function () {
         Route::get('/posts', [PostController::class, 'index']);

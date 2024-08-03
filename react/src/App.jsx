@@ -29,6 +29,7 @@ import ViewPost from './pages/dashboard/ViewPost';
 import CategoryHome from './pages/CategoryHome';
 import SubCategoryHome from './pages/SubCategoryHome';
 import Dashboard from './pages/dashboard/Dasboard';
+import Profile from './pages/profile/partials/Profile';
 
 const router = createBrowserRouter([
   {
@@ -51,6 +52,7 @@ const router = createBrowserRouter([
       { path: 'home', element: <Index /> },
       { path: '/posts/:slug', element: <SinglePost /> },
       { path: 'profile', element: <EditProfile /> },
+      { path: '/profile/:username', element: <Profile /> },
       { path: 'create-post', element: <CreatePost /> },
       { path: 'all-posts', element: <AllPosts /> },
       { path: 'all-users', element: <AllUsers /> },

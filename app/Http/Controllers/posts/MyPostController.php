@@ -61,9 +61,9 @@ class MyPostController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::findOrFail($slug);
 
         $request->validate([
             'title' => 'required|max:255',
@@ -93,9 +93,9 @@ class MyPostController extends Controller
         return response()->json(['message' => 'Post updated successfully.']);
     }
 
-    public function destroy($id)
+    public function destroy($slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::findOrFail($slug);
         $post->delete();
 
         return response()->json(['message' => 'Post deleted successfully']);

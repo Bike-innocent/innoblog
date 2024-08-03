@@ -1,4 +1,6 @@
 <?php
+
+
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
@@ -26,7 +28,7 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
-            'username' => ['nullable', 'string', 'max:255', Rule::unique('users')->ignore($userId)],
+            'username' => ['required', 'string', 'max:255', Rule::unique('users')->ignore($userId)],
         ];
     }
 

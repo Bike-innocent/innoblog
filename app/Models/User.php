@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -54,7 +55,7 @@ class User extends Authenticatable
 
         static::creating(function ($user) {
             $user->placeholder_color = self::generateRandomColor();
-            $user->username = self::generateUniqueUsername();
+            $user->username = self::generateUniqueUsername($user->name);
         });
     }
 
@@ -68,10 +69,17 @@ class User extends Authenticatable
         return $color;
     }
 
-    public static function generateUniqueUsername()
+    public static function generateUniqueUsername($name)
     {
+        // Clean the name to be used as username
+        $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $name));
+
+        if (!self::where('username', $baseUsername)->exists()) {
+            return $baseUsername;
+        }
+
         do {
-            $username = 'user' . rand(1000, 9999);
+            $username = $baseUsername . rand(1000, 9999);
         } while (self::where('username', $username)->exists());
 
         return $username;

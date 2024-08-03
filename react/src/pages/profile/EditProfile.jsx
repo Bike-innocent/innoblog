@@ -1,8 +1,8 @@
 import React from 'react';
-import DeleteUserForm from './partials/DeleteUserForm';
-import UpdatePasswordForm from './partials/UpdatePasswordForm';
+
 import UpdateProfileInformation from './partials/UpdateProfileInformationForm';
 import UserAvatar from './partials/UserAvatar';
+import Profile from './partials/Profile';
 
 function EditProfile() {
   return (
@@ -15,16 +15,11 @@ function EditProfile() {
           <UpdateProfileInformation />
         </div>
       </div>
+      <div>
+        <Profile/>
+      </div>
 
-      {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="md:col-span-2">
-        <UpdatePasswordForm />
-        </div>
-        <div className="md:col-span-1">
-        <DeleteUserForm />
-        </div>
-      </div> */}
-
+    
 
     </div>
   );

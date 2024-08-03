@@ -21,14 +21,14 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
         },
     });
 
-    const [data, setData] = useState({ name: '', email: '' });
+    const [data, setData] = useState({ name: '', email: '', username: '' });
 
     useEffect(() => {
         if (error) {
             console.error('Error fetching user profile:', error);
         }
         if (userProfile) {
-            setData({ name: userProfile.name || '', email: userProfile.email || '' });
+            setData({ name: userProfile.name || '', email: userProfile.email || '', username: userProfile.username || '' });
         }
     }, [userProfile, error]);
 
@@ -84,7 +84,7 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name}</p>}
                 </div>
 
-                <div>
+                {/* <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                     <input
                         id="email"
@@ -95,10 +95,10 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                         className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                     />
                     {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
-                </div>
+                </div> */}
 
                 <div>
-                    <label htmlFor="username" className="block text-sm font-medium text-gray-700">User Name</label>
+                    <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
                     <input
                         id="username"
                         name="username"
@@ -109,8 +109,6 @@ export default function UpdateProfileInformation({ mustVerifyEmail, status, clas
                     />
                     {errors.username && <p className="mt-2 text-sm text-red-600">{errors.username}</p>}
                 </div>
-
-
 
                 <div className="flex items-center gap-4">
                     <button
