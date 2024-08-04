@@ -19,7 +19,7 @@ import Settings from './pages/dashboard/Settings';
 import MyPost from './pages/dashboard/my-post/MyPost';
 import Unauthorized from './pages/Unauthorized';
 import NotFound from './pages/NotFound';
-import EditProfile from './pages/profile/EditProfile';
+
 import Index from './pages/blog/Index';
 
 import SinglePost from './pages/singlePost/SinglePost';
@@ -30,6 +30,8 @@ import CategoryHome from './pages/CategoryHome';
 import SubCategoryHome from './pages/SubCategoryHome';
 import Dashboard from './pages/dashboard/Dasboard';
 import Profile from './pages/profile/partials/Profile';
+import ProfileUserName from './pages/profile/profileUserName/ProfileUserName';
+import EditProfile from './pages/profile/partials/EditProfile';
 
 const router = createBrowserRouter([
   {
@@ -51,9 +53,10 @@ const router = createBrowserRouter([
       { path: 'category', element: <Category /> },
       { path: 'home', element: <Index /> },
       { path: '/posts/:slug', element: <SinglePost /> },
-      { path: 'profile', element: <EditProfile /> },
-      { path: '/:username', element: <Profile /> },
-      { path: 'create-post', element:<createPost /> },
+      { path: 'profile', element: <Profile/> },
+      { path: 'profile/edit', element: <EditProfile/> },
+      { path: '/:username', element: <ProfileUserName /> },
+      { path: 'create-post', element:<CreatePost /> },
       { path: 'all-posts', element: <AllPosts /> },
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },

@@ -14,20 +14,20 @@ class AvatarController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        $user = Auth::user();
-        $avatarPath = $user->avatar ? url('avatars/' . $user->avatar) : null;
+    // public function index()
+    // {
+    //     $user = Auth::user();
+    //     $avatarPath = $user->avatar ? url('avatars/' . $user->avatar) : null;
 
-        // Assuming you have a placeholder color attribute in your user model
-        $placeholderColor = $user->placeholder_color; // Adjust this if your attribute name is different
+    //     // Assuming you have a placeholder color attribute in your user model
+    //     $placeholderColor = $user->placeholder_color; // Adjust this if your attribute name is different
 
-        return response()->json([
-            'avatar' => $avatarPath,
-            'name' => $user->name,
-            'placeholder_color' => $placeholderColor // Add this to the response
-        ], 200);
-    }
+    //     return response()->json([
+    //         'avatar' => $avatarPath,
+    //         'name' => $user->name,
+    //         'placeholder_color' => $placeholderColor // Add this to the response
+    //     ], 200);
+    // }
 
 
     /**

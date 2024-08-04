@@ -13,7 +13,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
 
   const fetchUserData = async () => {
     const response = await axiosInstance.get('/profile/user');
-    return response.data.user;
+    return response.data;
   };
 
   const { data: user, error, isLoading } = useQuery({

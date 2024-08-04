@@ -39,14 +39,16 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    /**
+     * The attributes that should be appended to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = ['avatar_url'];
+
     public function posts()
     {
         return $this->hasMany(Post::class);
-    }
-
-    public function getAvatarUrlAttribute()
-    {
-        return $this->avatar ? url('avatars/' . $this->avatar) : null;
     }
 
     protected static function boot()
@@ -84,4 +86,11 @@ class User extends Authenticatable
 
         return $username;
     }
+
+    // Accessor for the avatar URL
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? url('avatars/' . $this->avatar) : null;
+    }
+    
 }

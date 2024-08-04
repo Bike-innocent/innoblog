@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import axiosInstance from '../../../axiosInstance';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog } from '@headlessui/react';
-import { FaCamera } from 'react-icons/fa';
+import { FaCamera, FaTrash } from 'react-icons/fa';
 import Processing from '../../../components/Processing';
 import PlaceholderImage from './PlaceholderImage';
 
 const fetchAvatar = async () => {
-    const response = await axiosInstance.get('/profile/avatar');
+    const response = await axiosInstance.get('/profile/user');
     return response.data;
 };
 
@@ -41,8 +41,8 @@ const UserAvatar = ({ currentAvatar, userName, placeholderColor }) => {
 
     const uploadMutation = useMutation({
         mutationFn: uploadAvatar,
-        onSuccess: (data) => {
-            queryClient.setQueryData(['avatar'], data);
+        onSuccess: () => {
+            queryClient.invalidateQueries(['avatar']);
         },
         onError: (error) => {
             if (error.response && error.response.data && error.response.data.errors) {
@@ -57,7 +57,7 @@ const UserAvatar = ({ currentAvatar, userName, placeholderColor }) => {
     const deleteMutation = useMutation({
         mutationFn: deleteAvatar,
         onSuccess: () => {
-            queryClient.setQueryData(['avatar'], { avatar: null, name: data.name, placeholder_color: data.placeholder_color });
+            queryClient.invalidateQueries(['avatar']);
             setShowModal(false);
         },
         onError: (error) => {
@@ -87,26 +87,28 @@ const UserAvatar = ({ currentAvatar, userName, placeholderColor }) => {
 
     return (
         <div className="flex flex-col items-center">
-            <div className="relative w-32 h-32 mb-4">
+            <div className="relative w-32 h-32 mb-4 flex items-center justify-center">
+            {data.avatar && (
+                    <label
+                        
+                        className="absolute -bottom-5 -left-3 p-2 m-5 bg-red-600 text-white rounded-full cursor-pointer"
+                        onClick={() => setShowModal(true)}
+                    >
+                        <FaTrash />
+                    </label>
+                )}
                 <PlaceholderImage
                     name={data.name}
                     avatar={data.avatar}
-                    placeholderColor={data.placeholder_color} // Ensure this is being used
+                    placeholderColor={data.placeholder_color}
                 />
                 <label htmlFor="avatar" className="absolute bottom-0 right-0 p-2 bg-gray-700 text-white rounded-full cursor-pointer">
                     <FaCamera />
                 </label>
+              
                 <input type="file" id="avatar" className="hidden" onChange={handleImageChange} />
             </div>
 
-            {data.avatar && (
-                <button
-                    onClick={() => setShowModal(true)}
-                    className="mt-2 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700"
-                >
-                    Delete Avatar
-                </button>
-            )}
             {error && <p className="mt-2 text-red-500">{error}</p>}
 
             {showModal && (

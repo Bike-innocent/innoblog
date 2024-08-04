@@ -22,10 +22,7 @@ class ProfileController extends Controller
             $user->avatar = url('avatars/' . $user->avatar);
         }
 
-        // Add placeholder color to the response
-        $user->placeholder_color = $user->placeholder_color ?? ''; // Default color if none provided
-
-        return response()->json(['user' => $user], 200);
+        return response()->json($user);
     }
 
 
@@ -67,6 +64,9 @@ class ProfileController extends Controller
     public function show($username)
     {
         $user = User::where('username', $username)->first();
+        if ($user->avatar) {
+            $user->avatar = url('avatars/' . $user->avatar);
+        }
 
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);

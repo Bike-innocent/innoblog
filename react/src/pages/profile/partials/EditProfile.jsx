@@ -1,8 +1,8 @@
 import React from 'react';
 
-import UpdateProfileInformation from './partials/UpdateProfileInformationForm';
-import UserAvatar from './partials/UserAvatar';
-import Profile from './partials/Profile';
+import UpdateProfileInformation from './UpdateProfileInformationForm';
+import UserAvatar from './UserAvatar';
+// import Profile from './partials/Profile';
 
 function EditProfile() {
   return (
@@ -16,10 +16,10 @@ function EditProfile() {
         </div>
       </div>
       <div>
-        <Profile/>
+      
       </div>
 
-    
+
 
     </div>
   );

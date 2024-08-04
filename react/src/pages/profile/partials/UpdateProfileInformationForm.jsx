@@ -3,14 +3,14 @@ import axiosInstance from '../../../axiosInstance';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Processing from '../../../components/Processing';
 
-export default function UpdateProfileInformation({ mustVerifyEmail, status, className = '' }) {
+export default function UpdateProfileInformation({  className = '' }) {
     const queryClient = useQueryClient();
 
     const { data: userProfile, error } = useQuery({
         queryKey: ['userProfile'],
         queryFn: async () => {
             const response = await axiosInstance.get('/profile/user');
-            return response.data.user;
+            return response.data;
         },
     });
 

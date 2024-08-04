@@ -8,7 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../axiosInstance';
 
 function fetchUser() {
-  return axiosInstance.get('/profile/user').then((response) => response.data.user);
+  return axiosInstance.get('/profile/user').then((response) => response.data);
 }
 
 function MainLayout() {
