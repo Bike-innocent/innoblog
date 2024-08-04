@@ -31,13 +31,13 @@ const Post = ({ post }) => {
           />
         </Link>
         <div className="flex pt-2">
-          <div className="w-14">
+          <Link to={`/${post.user.username}`}  className="w-14">
             <PlaceholderImage
               name={post.user.name}
               avatar={post.user.avatar_url}
               placeholderColor={post.user.placeholder_color} // Pass the placeholder color
             />
-          </div>
+          </Link>
           <div className="flex-1 flex items-center justify-between">
             <Link to={`/posts/${post.slug}`} className="flex-1">
               <h2 className="text-xl font-semibold m-0 p-0 group-hover:underline">

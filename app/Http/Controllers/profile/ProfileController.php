@@ -64,32 +64,15 @@ class ProfileController extends Controller
     }
 
 
-    public function showProfile($username)
+    public function show($username)
     {
-        // Find user by username
         $user = User::where('username', $username)->first();
 
         if (!$user) {
-            return response()->json(['error' => 'User not found'], 404);
+            return response()->json(['message' => 'User not found'], 404);
         }
 
-        // Load roles and permissions if needed
-        $user->load('roles', 'permissions');
-
-        // Construct the URL for the avatar if it exists
-        if ($user->avatar) {
-            $user->avatar = url('avatars/' . $user->avatar);
-        }
-
-        // Add placeholder color to the response
-        $user->placeholder_color = $user->placeholder_color ?? ''; // Default color if none provided
-
-        return response()->json([
-            'name' => $user->name,
-            'username' => $user->username,
-            'avatar_url' => $user->avatar,
-            'placeholder_color' => $user->placeholder_color,
-            // Add other profile information here if needed
-        ], 200);
+        return response()->json($user);
     }
+
 }

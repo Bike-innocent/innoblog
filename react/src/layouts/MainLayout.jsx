@@ -70,6 +70,7 @@ function MainLayout() {
               </NavLink>
               <NavLink
                 to="/profile"
+                
                 onClick={toggleSidebar}
                 className={({ isActive }) =>
                   isActive
