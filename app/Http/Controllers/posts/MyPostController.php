@@ -101,17 +101,17 @@ class MyPostController extends Controller
         return response()->json(['message' => 'Post deleted successfully']);
     }
 
-    public function publish($id)
+    public function publish($slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::findOrFail($slug);
         $post->status = 1; // Change status to published
         $post->save();
 
         return response()->json(['message' => 'Post published successfully.'], 200);
     }
-    public function unPublish($id)
+    public function unPublish($slug)
     {
-        $post = Post::findOrFail($id);
+        $post = Post::findOrFail($slug);
         $post->status = 0; // Change status to published
         $post->save();
 

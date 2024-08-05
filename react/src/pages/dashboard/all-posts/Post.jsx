@@ -19,25 +19,7 @@ const Post = ({ post, refreshPosts }) => {
                 </Link>
                 <div className="flex pt-2">
                     <div className="w-10 pt-1">
-                        {post.status === 1 ? (
-                            <Chip
-                                className="capitalize"
-                                color="success"
-                                size="sm"
-                                variant="dot"
-                                border="success"
-                            >
-                            </Chip>
-                        ) : (
-                            <Chip
-                                className="capitalize"
-                                color="warning"
-                                size="sm"
-                                variant="dot"
-                                border="warning"
-                            >
-                            </Chip>
-                        )}
+                       
 
                         <PlaceholderImage
                             name={post.user.name}

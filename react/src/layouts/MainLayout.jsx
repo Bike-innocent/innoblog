@@ -115,7 +115,7 @@ function MainLayout() {
                   >
                     <BsJournalText className="mr-2" size={20} /> All Posts
                   </NavLink>
-                  <NavLink
+                  {/* <NavLink
                     to="/all-users"
                     onClick={toggleSidebar}
                     className={({ isActive }) =>
@@ -125,8 +125,8 @@ function MainLayout() {
                     }
                   >
                     <BsPeople className="mr-2" size={20} /> All Users
-                  </NavLink>
-                  <NavLink
+                  </NavLink> */}
+                  {/* <NavLink
                     to="/manage-category"
                     onClick={toggleSidebar}
                     className={({ isActive }) =>
@@ -136,7 +136,7 @@ function MainLayout() {
                     }
                   >
                     <BsPeople className="mr-2" size={20} /> Manage Category
-                  </NavLink>
+                  </NavLink> */}
                 </>
               )}
               <NavLink

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -27,21 +28,21 @@ class ProfileController extends Controller
 
 
 
-   public function update(ProfileUpdateRequest $request)
-    {
-        $user = Auth::user();
+  public function update(ProfileUpdateRequest $request)
+  {
+      $user = Auth::user();
 
-        $request->validated();
+      $request->validated();
 
-        $user->name = $request->name;
-        $user->email = $request->email;
-        if ($request->has('username')) {
-            $user->username = $request->username;
-        }
-        $user->save();
+      $user->name = $request->name;
+      $user->email = $request->email;
+      if ($request->has('username')) {
+          $user->username = '@' . ltrim($request->username, '@'); // Ensure the username starts with "@" and avoid duplicate "@"
+      }
+      $user->save();
 
-        return response()->json(['message' => 'Profile updated successfully.'], 200);
-    }
+      return response()->json(['message' => 'Profile updated successfully.'], 200);
+  }
 
     public function destroy(Request $request)
     {
@@ -73,6 +74,20 @@ class ProfileController extends Controller
         }
 
         return response()->json($user);
+    }
+
+
+
+
+
+    public function getPostsByUsername($username)
+    {
+        $user = User::where('username', $username)->firstOrFail();
+        $posts = Post::where('user_id', $user->id)->paginate(12);
+        foreach ($posts as $post) {
+            $post->image = url('post-images/' . $post->image);
+        }
+        return response()->json($posts);
     }
 
 }

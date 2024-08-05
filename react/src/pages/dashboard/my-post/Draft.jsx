@@ -16,27 +16,7 @@ const Draft = ({ post, refreshPosts }) => {
           />
         </Link>
         <div className="flex pt-2">
-          <div className="w-10 pt-1">
-            {post.status === 1 ? (
-              <Chip
-                className="capitalize"
-                color="success"
-                size="sm"
-                variant="dot"
-                border="success"
-              >
-              </Chip>
-            ) : (
-              <Chip
-                className="capitalize"
-                color="warning"
-                size="sm"
-                variant="dot"
-                border="warning"
-              >
-              </Chip>
-            )}
-          </div>
+
           <div className="flex-1 flex justify-between">
             <Link to={`/posts/${post.slug}`} className="flex-1">
               <h2 className="text-xl font-semibold m-0 p-0 group-hover:underline">
@@ -44,7 +24,7 @@ const Draft = ({ post, refreshPosts }) => {
               </h2>
             </Link>
             <PostActions
-              postId={post.slug}
+              postSlug={post.slug}
               isPublished={post.status === 1}
               refreshPosts={refreshPosts}
             />

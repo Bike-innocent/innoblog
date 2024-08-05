@@ -78,10 +78,12 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/avatar', [AvatarController::class, 'destroy']);
         Route::get('/avatar', [AvatarController::class, 'index']);
         Route::put('/password/update', [UpdatePasswordController::class, 'update']);
-        // <!-- Route::get('/{username}', [ProfileController::class, 'showProfile']); -->
+      
     });
 
 Route::get('/{username}', [ProfileController::class, 'show']);
+
+Route::get('/posts-from/{username}', [ProfileController::class, 'getPostsByUsername']);
 
 
 

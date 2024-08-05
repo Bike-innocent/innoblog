@@ -74,18 +74,19 @@ class User extends Authenticatable
     public static function generateUniqueUsername($name)
     {
         // Clean the name to be used as username
-        $baseUsername = strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $name));
-
+        $baseUsername = '@' . strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $name));
+    
         if (!self::where('username', $baseUsername)->exists()) {
             return $baseUsername;
         }
-
+    
         do {
             $username = $baseUsername . rand(1000, 9999);
         } while (self::where('username', $username)->exists());
-
+    
         return $username;
     }
+    
 
     // Accessor for the avatar URL
     public function getAvatarUrlAttribute()

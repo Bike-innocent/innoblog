@@ -3,7 +3,7 @@ import axiosInstance from '../../../axiosInstance';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import Processing from '../../../components/Processing';
 
-export default function UpdateProfileInformation({  className = '' }) {
+export default function UpdateProfileInformation({ className = '' }) {
     const queryClient = useQueryClient();
 
     const { data: userProfile, error } = useQuery({
@@ -22,19 +22,18 @@ export default function UpdateProfileInformation({  className = '' }) {
     });
 
     const [data, setData] = useState({ name: '', email: '', username: '' });
+    const [errors, setErrors] = useState({});
+    const [processing, setProcessing] = useState(false);
+    const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
     useEffect(() => {
         if (error) {
             console.error('Error fetching user profile:', error);
         }
         if (userProfile) {
-            setData({ name: userProfile.name || '', email: userProfile.email || '', username: userProfile.username || '' });
+            setData({ name: userProfile.name || '', email: userProfile.email || '', username: userProfile.username?.replace(/^@/, '') || '' });
         }
     }, [userProfile, error]);
-
-    const [errors, setErrors] = useState({});
-    const [processing, setProcessing] = useState(false);
-    const [recentlySuccessful, setRecentlySuccessful] = useState(false);
 
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -84,31 +83,23 @@ export default function UpdateProfileInformation({  className = '' }) {
                     {errors.name && <p className="mt-2 text-sm text-red-600">{errors.name}</p>}
                 </div>
 
-                {/* <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={data.email}
-                        onChange={handleChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
-                    {errors.email && <p className="mt-2 text-sm text-red-600">{errors.email}</p>}
-                </div> */}
-
                 <div>
                     <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
-                    <input
-                        id="username"
-                        name="username"
-                        type="text"
-                        value={data.username}
-                        onChange={handleChange}
-                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    />
+                    <div className="relative mt-1">
+                        <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">@</span>
+                        <input
+                            id="username"
+                            name="username"
+                            type="text"
+                            value={data.username}
+                            onChange={handleChange}
+                            className="pl-8 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                        />
+                    </div>
                     {errors.username && <p className="mt-2 text-sm text-red-600">{errors.username}</p>}
                 </div>
+
+                <p className="text-sm text-gray-600">URL: http://innoblog.com/@{data.username}</p>
 
                 <div className="flex items-center gap-4">
                     <button
