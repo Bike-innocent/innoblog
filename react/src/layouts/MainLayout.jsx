@@ -80,17 +80,7 @@ function MainLayout() {
               >
                 <AiOutlineUser className="mr-2" size={20} /> Profile
               </NavLink>
-              <NavLink
-                to="/my-post"
-                onClick={toggleSidebar}
-                className={({ isActive }) =>
-                  isActive
-                    ? 'flex items-center px-4 py-2 bg-blue-500 text-white'
-                    : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'
-                }
-              >
-                <BsPencilSquare className="mr-2" size={20} /> My Post
-              </NavLink>
+              
               <NavLink
                 to="/create-post"
                 onClick={toggleSidebar}
@@ -115,7 +105,7 @@ function MainLayout() {
                   >
                     <BsJournalText className="mr-2" size={20} /> All Posts
                   </NavLink>
-                  {/* <NavLink
+                  <NavLink
                     to="/all-users"
                     onClick={toggleSidebar}
                     className={({ isActive }) =>
@@ -125,8 +115,8 @@ function MainLayout() {
                     }
                   >
                     <BsPeople className="mr-2" size={20} /> All Users
-                  </NavLink> */}
-                  {/* <NavLink
+                  </NavLink>
+                  <NavLink
                     to="/manage-category"
                     onClick={toggleSidebar}
                     className={({ isActive }) =>
@@ -136,7 +126,7 @@ function MainLayout() {
                     }
                   >
                     <BsPeople className="mr-2" size={20} /> Manage Category
-                  </NavLink> */}
+                  </NavLink>
                 </>
               )}
               <NavLink

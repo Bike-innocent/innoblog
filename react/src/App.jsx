@@ -16,7 +16,7 @@ import CreatePost from './pages/dashboard/CreatePost';
 import AllPosts from './pages/dashboard/all-posts/AllPosts';
 import AllUsers from './pages/dashboard/AllUsers';
 import Settings from './pages/dashboard/Settings';
-import MyPost from './pages/dashboard/my-post/MyPost';
+
 import Unauthorized from './pages/Unauthorized';
 import NotFound from './pages/NotFound';
 
@@ -60,7 +60,7 @@ const router = createBrowserRouter([
       { path: 'all-posts', element: <AllPosts /> },
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },
-      { path: 'my-post', element: <MyPost /> },
+      
       { path: 'edit-post/:slug', element: <EditPost/> },
       { path: 'view-post/:slug', element: <ViewPost/> },
       { path: 'manage-category', element: <IndexCategory /> },

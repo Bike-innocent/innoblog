@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate ,Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../../axiosInstance'; // Adjust path as needed
 import PlaceholderImage from './PlaceholderImage'; // Adjust path as needed
@@ -97,6 +97,8 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
                 />
               </svg>
             </button>
+
+            <Link to="/profile" >
             <div className="relative ml-3">
               <div>
                 <button
@@ -124,7 +126,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
                   tabIndex="-1"
                 >
                   <NavLink
-                    to="/dashboard/profile"
+                    to="/profile"
                     className="block px-4 py-2 text-sm text-gray-700"
                     role="menuitem"
                     tabIndex="-1"
@@ -144,6 +146,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
                 </div>
               )}
             </div>
+            </Link>
           </div>
         </div>
       </div>

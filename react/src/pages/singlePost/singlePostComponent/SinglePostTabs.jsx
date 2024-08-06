@@ -76,7 +76,7 @@ function SinglePostTabs() {
                 <img
                   src={post.image}
                   alt={post.title}
-                  className="w-24 h-16 object-cover  ml-4"
+                  className="w-24 h-16 object-cover  ml-4 rounded-md"
                 />
               </div>
             </Link>

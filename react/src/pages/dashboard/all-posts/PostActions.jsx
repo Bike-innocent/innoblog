@@ -5,12 +5,12 @@ import axiosInstance from '../../../axiosInstance';
 import { Link } from 'react-router-dom';
 import { VerticalDotsIcon } from "../VerticalDotsIcons";
 
-const PostActions = ({ postId, isPublished, refreshPosts }) => {
+const PostActions = ({ postSlug, isPublished, refreshPosts }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPublishedState, setIsPublishedState] = useState(isPublished);
 
   const handleDelete = () => {
-    axiosInstance.delete(`/posts/${postId}`)
+    axiosInstance.delete(`/posts/${postSlug}`)
       .then(() => {
         refreshPosts();
         setIsDialogOpen(false);
@@ -22,7 +22,7 @@ const PostActions = ({ postId, isPublished, refreshPosts }) => {
   };
 
   const handlePublishToggle = () => {
-    const url = isPublishedState ? `/posts/${postId}/unpublish` : `/posts/${postId}/publish`;
+    const url = isPublishedState ? `/posts/${postSlug}/unpublish` : `/posts/${postSlug}/publish`;
     axiosInstance.patch(url)
       .then(() => {
         setIsPublishedState(!isPublishedState);
@@ -47,10 +47,10 @@ const PostActions = ({ postId, isPublished, refreshPosts }) => {
         </DropdownTrigger>
         <DropdownMenu>
           <DropdownItem>
-            <Link to={`/view-post/${postId}`} className="block">View</Link>
+            <Link to={`/view-post/${postSlug}`} className="block">View</Link>
           </DropdownItem>
           <DropdownItem>
-            <Link to={`/edit-post/${postId}`} className="block">Edit</Link>
+            <Link to={`/edit-post/${postSlug}`} className="block">Edit</Link>
           </DropdownItem>
           <DropdownItem onClick={openDeleteDialog}>Delete</DropdownItem>
           <DropdownItem onClick={handlePublishToggle}>

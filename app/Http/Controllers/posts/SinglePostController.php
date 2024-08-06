@@ -11,12 +11,17 @@ class SinglePostController extends Controller
 
     public function show($slug)
     {
-        $post = Post::with('category')->where('slug', $slug)->firstOrFail();
+        $post = Post::with(['category', 'user'])->where('slug', $slug)->firstOrFail();
         $post->image = url('post-images/' . $post->image);
-
+    
+        if ($post->user->avatar) {
+            $post->user->avatar = url('avatars/' . $post->user->avatar);
+        }
+    
         return response()->json($post);
     }
-
+    
+    
     public function related($slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();

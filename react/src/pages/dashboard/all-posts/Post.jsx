@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Chip } from '@nextui-org/react';
 import PostActions from './PostActions';
 import PlaceholderImage from './PlaceholderImage';
 
@@ -10,7 +9,7 @@ const Post = ({ post, refreshPosts }) => {
     return (
         <div className="w-full group">
             <div className="relative">
-                <Link to={`/posts/${post.id}`} className="block">
+                <Link to={`/posts/${post.slug}`} className="block">
                     <img
                         src={post.image}
                         alt={post.title}
@@ -18,24 +17,22 @@ const Post = ({ post, refreshPosts }) => {
                     />
                 </Link>
                 <div className="flex pt-2">
-                    <div className="w-10 pt-1">
-                       
-
+                    <Link to={`/${post.user.username}`} className="w-14">
                         <PlaceholderImage
                             name={post.user.name}
                             avatar={post.user.avatar_url}
                             placeholderColor={post.user.placeholder_color} // Pass the placeholder color
                         />
-                    </div>
+                    </Link>
 
                     <div className="flex-1 flex justify-between">
-                        <Link to={`/posts/${post.id}`} className="flex-1">
+                        <Link to={`/posts/${post.slug}`} className="flex-1">
                             <h2 className="text-xl font-semibold m-0 p-0 group-hover:underline">
                                 {post.title.length > 40 ? post.title.substring(0, 40) + '...' : post.title}
                             </h2>
                         </Link>
                         <PostActions
-                            postId={post.id}
+                            postSlug={post.slug}
                             isPublished={post.status === 1}
                             refreshPosts={refreshPosts}
                         />
