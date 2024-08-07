@@ -26,7 +26,7 @@ import SinglePost from './pages/singlePost/SinglePost';
 import IndexCategory from './pages/dashboard/categories/IndexCategory';
 import EditPost from './pages/dashboard/EditPost';
 import ViewPost from './pages/dashboard/ViewPost';
-import CategoryHome from './pages/CategoryHome';
+import CategoryHome from './pages/category/CategoryHome';
 import SubCategoryHome from './pages/SubCategoryHome';
 import Dashboard from './pages/dashboard/Dasboard';
 import Profile from './pages/profile/partials/Profile';

@@ -79,10 +79,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/avatar', [AvatarController::class, 'index']);
         Route::put('/password/update', [UpdatePasswordController::class, 'update']);
         Route::get('/{username}', [ProfileController::class, 'show']);
-      
+
     });
 
-   
+
 
     Route::get('/posts-from/{username}', [ProfileController::class, 'getPostsByUsername']);
 
@@ -116,19 +116,12 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
      Route::resource('categories', CategoryController::class)->parameters(['categories' => 'identifier']);
-    // //  Route::get('/categories', [SubCategoryController::class, 'index2']);
-    // Route::get('/categories/categories', [CategoryController::class, 'index']);
-    // Route::get('/categories/{identifier}', [CategoryController::class, 'show']);
 
     Route::apiResource('subcategories', SubCategoryController::class);
 
     Route::get('/categories/{categorySlug}/subcategories', [SubCategoryController::class, 'getSubcategoriesByCategory']);
     Route::get('/categories/{categorySlug}/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
     Route::get('/categories/{slug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
-
-
-    // Route::get('/section', [HomePageController::class, 'sections']);
-    // Route::get('/mixedPostOnHome', [HomePageController::class, 'MixedPostOnHome']);
 
 
 
