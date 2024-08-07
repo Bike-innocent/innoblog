@@ -40,7 +40,6 @@ class CategoryController extends Controller
     // Display the specified category
     public function show($identifier)
     {
-        // Find category by ID or slug
         $category = Category::where('id', $identifier)->orWhere('slug', $identifier)->first();
 
         if (!$category) {
@@ -93,14 +92,15 @@ class CategoryController extends Controller
             // Find the category by slug
             $category = Category::where('slug', $categorySlug)->firstOrFail();
 
-            // Fetch posts related to the category (this can be customized)
+            // Fetch posts related to the category
             $mixedPosts = Post::where('category_id', $category->id)
-                ->orderBy('created_at', 'desc') // Customize your query as needed
+                ->orderBy('created_at', 'desc')
                 ->get();
 
-             
-            
-
+            // Add image URLs to the posts
+            foreach ($mixedPosts as $post) {
+                $post->image = url('post-images/' . $post->image);
+            }
 
             return response()->json(['data' => $mixedPosts], 200);
         } catch (\Exception $e) {

@@ -78,12 +78,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/avatar', [AvatarController::class, 'destroy']);
         Route::get('/avatar', [AvatarController::class, 'index']);
         Route::put('/password/update', [UpdatePasswordController::class, 'update']);
+        Route::get('/{username}', [ProfileController::class, 'show']);
       
     });
 
-Route::get('/{username}', [ProfileController::class, 'show']);
+   
 
-Route::get('/posts-from/{username}', [ProfileController::class, 'getPostsByUsername']);
+    Route::get('/posts-from/{username}', [ProfileController::class, 'getPostsByUsername']);
 
 
 
@@ -114,7 +115,10 @@ Route::get('/posts-from/{username}', [ProfileController::class, 'getPostsByUsern
         // Define similar routes for sub-categories and tags
     });
 
-    Route::resource('categories', CategoryController::class)->parameters(['categories' => 'identifier']);
+     Route::resource('categories', CategoryController::class)->parameters(['categories' => 'identifier']);
+    // //  Route::get('/categories', [SubCategoryController::class, 'index2']);
+    // Route::get('/categories/categories', [CategoryController::class, 'index']);
+    // Route::get('/categories/{identifier}', [CategoryController::class, 'show']);
 
     Route::apiResource('subcategories', SubCategoryController::class);
 
@@ -123,12 +127,13 @@ Route::get('/posts-from/{username}', [ProfileController::class, 'getPostsByUsern
     Route::get('/categories/{slug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
 
 
-    Route::get('/section', [HomePageController::class, 'sections']);
-    Route::get('/mixedPostOnHome', [HomePageController::class, 'MixedPostOnHome']);
+    // Route::get('/section', [HomePageController::class, 'sections']);
+    // Route::get('/mixedPostOnHome', [HomePageController::class, 'MixedPostOnHome']);
 
 
 
 });
+
 
 // Admin routes
 Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function () {

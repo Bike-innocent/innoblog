@@ -13,6 +13,12 @@ class SubCategoryController extends Controller
         $subCategories = SubCategory::with('category')->get();
         return response()->json($subCategories);
     }
+    public function index2()
+    {
+        $categories = Category::with('subcategories')->get();
+        return response()->json($categories);
+    }
+
 
     public function store(Request $request)
     {

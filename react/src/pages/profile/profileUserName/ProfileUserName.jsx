@@ -8,7 +8,7 @@ import Avatar from './Avatar.jsx';
 import MyPostUserName from '../../dashboard/my-post/MyPostUserName.jsx';
 
 const fetchUserProfile = async (username) => {
-    const response = await axiosInstance.get(`/${username}`);
+    const response = await axiosInstance.get(`/profile/${username}`);
     return response.data;
 };
 

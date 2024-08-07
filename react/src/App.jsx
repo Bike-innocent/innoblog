@@ -32,6 +32,7 @@ import Dashboard from './pages/dashboard/Dasboard';
 import Profile from './pages/profile/partials/Profile';
 import ProfileUserName from './pages/profile/profileUserName/ProfileUserName';
 import EditProfile from './pages/profile/partials/EditProfile';
+import CategoryNav from './pages/CategoryNav';
 
 const router = createBrowserRouter([
   {
@@ -50,7 +51,7 @@ const router = createBrowserRouter([
     children: [
       { path: 'dashboard', element: <Dashboard />  },
       { path: 'about', element: <About /> },
-      { path: 'category', element: <Category /> },
+      { path: "/categories", element: <CategoryNav /> },
       { path: 'home', element: <Index /> },
       { path: '/posts/:slug', element: <SinglePost /> },
       { path: 'profile', element: <Profile/> },
