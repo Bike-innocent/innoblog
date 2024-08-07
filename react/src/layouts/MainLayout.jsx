@@ -156,7 +156,7 @@ function MainLayout() {
 
         <div className="flex flex-col flex-1 md:ml-1/5">
           <main className="flex-1  overflow-y-auto p-4 min-h-screen bg-white ">
-            <CategoryNav/>
+            {/* <CategoryNav/> */}
             <Outlet />
           </main>
         </div>

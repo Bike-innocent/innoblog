@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Tabs, Tab } from '@nextui-org/react';
+import { Tab } from '@headlessui/react';
 import axiosInstance from '../../axiosInstance';
 import Post from './Post';
 
@@ -38,7 +38,7 @@ const CategoryHome = () => {
     const fetchMixedPosts = async () => {
       try {
         const response = await axiosInstance.get(`/categories/${categorySlug}/mixed-posts`);
-        setMixedPosts(response.data.data);
+        setMixedPosts(response.data.data || []);
       } catch (error) {
         console.error('Error fetching mixed posts:', error);
         setError('Failed to fetch mixed posts');
@@ -54,7 +54,7 @@ const CategoryHome = () => {
     const fetchPosts = async () => {
       try {
         const response = await axiosInstance.get(`/categories/${categorySlug}/subcategories/${activeTab}`);
-        setPosts(response.data);
+        setPosts(response.data.data || []);
       } catch (error) {
         console.error('Error fetching posts:', error);
         setError('Failed to fetch posts');
@@ -84,65 +84,72 @@ const CategoryHome = () => {
 
   return (
     <div className="container mx-auto p-6">
-      <div className="overflow-x-auto whitespace-nowrap">
-        <Tabs>
+      <Tab.Group>
+        <Tab.List className="flex space-x-2 border-b">
           <Tab
-            key="home"
-            title={
-              <div
-                onClick={() => {
-                  setActiveTab('home');
-                  navigate(`/category/${categorySlug}`);
-                }}
-                className={`text-lg font-semibold ${activeTab === 'home' ? 'text-blue-800' : 'text-blue-600 hover:text-blue-800'}`}
-              >
-                Home
-              </div>
+            as="button"
+            className={({ selected }) =>
+              selected
+                ? 'px-4 py-2 text-lg font-semibold text-blue-800 border-b-2 border-blue-800'
+                : 'px-4 py-2 text-lg font-semibold text-blue-600 hover:text-blue-800'
             }
-            className={`whitespace-nowrap ${activeTab === 'home' ? 'border-b-2 border-blue-800' : ''}`}
+            onClick={() => {
+              setActiveTab('home');
+              navigate(`/categories/${categorySlug}`);
+            }}
           >
-            {activeTab === 'home' && (
-              <div>
-                <p>Mixed posts from the parent category will be displayed here.</p>
-                <div>
-                  {mixedPosts.map(post => (
-                    <Post key={post.slug} post={post} />
-                  ))}
-                </div>
-              </div>
-            )}
+            Home
           </Tab>
 
           {subcategories.map((subcategory) => (
             <Tab
               key={subcategory.id}
-              title={
-                <div
-                  onClick={() => {
-                    setActiveTab(subcategory.slug);
-                    navigate(`/categories/${categorySlug}/subcategories/${subcategory.slug}`);
-                  }}
-                  className={`text-lg font-semibold ${activeTab === subcategory.slug ? 'text-blue-800' : 'text-blue-600 hover:text-blue-800'}`}
-                >
-                  {subcategory.name}
-                </div>
+              as="button"
+              className={({ selected }) =>
+                selected
+                  ? 'px-4 py-2 text-lg font-semibold text-blue-800 border-b-2 border-blue-800'
+                  : 'px-4 py-2 text-lg font-semibold text-blue-600 hover:text-blue-800'
               }
-              className={`whitespace-nowrap ${activeTab === subcategory.slug ? 'border-b-2 border-blue-800' : ''}`}
+              onClick={() => {
+                setActiveTab(subcategory.slug);
+                navigate(`/categories/${categorySlug}/subcategories/${subcategory.slug}`);
+              }}
             >
+              {subcategory.name}
+            </Tab>
+          ))}
+        </Tab.List>
+
+        <Tab.Panels>
+          <Tab.Panel>
+            {activeTab === 'home' && (
+              <div>
+                <p>Mixed posts from the parent category will be displayed here.</p>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 m-0">
+                  {mixedPosts.map((post) => (
+                    <Post key={post.slug} post={post} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </Tab.Panel>
+
+          {subcategories.map((subcategory) => (
+            <Tab.Panel key={subcategory.id}>
               {activeTab === subcategory.slug && (
                 <div>
                   <p>Posts for {subcategory.name} will be displayed here.</p>
-                  <div>
-                    {posts.map(post => (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 m-0">
+                    {posts.map((post) => (
                       <Post key={post.slug} post={post} />
                     ))}
                   </div>
                 </div>
               )}
-            </Tab>
+            </Tab.Panel>
           ))}
-        </Tabs>
-      </div>
+        </Tab.Panels>
+      </Tab.Group>
     </div>
   );
 };

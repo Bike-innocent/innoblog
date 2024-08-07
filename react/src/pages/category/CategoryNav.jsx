@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Tab } from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
-import axiosInstance from '../axiosInstance'; // Adjust the path according to your project structure
+import axiosInstance from '../../axiosInstance'; // Adjust the path according to your project structure
 
 const CategoryNav = () => {
   const [categories, setCategories] = useState([]);
