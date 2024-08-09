@@ -127,9 +127,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{categorySlug}/subcategories', [CategoryController::class, 'getSubcategories']);
+
 Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
-// Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
-Route::get('/categories/{categorySlug}/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
+
+Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
 
 });
 

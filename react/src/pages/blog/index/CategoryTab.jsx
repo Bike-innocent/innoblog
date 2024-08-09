@@ -1,21 +1,23 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import { Tab } from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
+import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../../../axiosInstance'; // Adjust the path according to your project structure
 
+// Function to fetch categories
+const fetchCategories = async () => {
+  const response = await axiosInstance.get('/categories');
+  return response.data;
+};
+
 const CategoryTab = ({ onSelectCategory }) => {
-  const [categories, setCategories] = useState([]);
   const tabListRef = useRef(null);
 
-  useEffect(() => {
-    axiosInstance.get('/categories')
-      .then(response => {
-        setCategories(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching the categories!', error);
-      });
-  }, []);
+  // Use React Query to fetch categories
+  const { data: categories = [], isLoading, error } = useQuery({
+    queryKey: ['categorhnnhies'],
+    queryFn: fetchCategories,
+  });
 
   const scrollLeft = () => {
     if (tabListRef.current) {
@@ -28,6 +30,29 @@ const CategoryTab = ({ onSelectCategory }) => {
       tabListRef.current.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
+
+  const handleCategorySelect = async (category) => {
+    if (!category) {
+      onSelectCategory(null, []);
+      return;
+    }
+
+    try {
+      const response = await axiosInstance.get(`/categories/${category.slug}/subcategories`);
+      onSelectCategory(category.slug, response.data);
+    } catch (error) {
+      console.error('Error fetching subcategories:', error);
+      onSelectCategory(category.slug, []);
+    }
+  };
+
+  if (isLoading) {
+    return <div></div>; // You can replace this with a loader component
+  }
+
+  if (error) {
+    return <div>Error loading categories.</div>;
+  }
 
   return (
     <div className="relative flex items-center max-w-screen-lg mx-auto">
@@ -44,19 +69,19 @@ const CategoryTab = ({ onSelectCategory }) => {
             <Tab>
               {({ selected }) => (
                 <div
-                  onClick={() => onSelectCategory(null)}
+                  onClick={() => handleCategorySelect(null)}
                   className={`whitespace-nowrap px-3 py-2 cursor-pointer ${selected ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : ''}`}
                 >
                   All
                 </div>
               )}
             </Tab>
-            {categories.map(category => (
+            {categories.map((category) => (
               <Tab key={category.id}>
                 {({ selected }) => (
                   <div
-                    onClick={() => onSelectCategory(category.slug)}
-                    className={`whitespace-nowrap px-3 py-2 cursor-pointer ${selected ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : ''}`}
+                    onClick={() => handleCategorySelect(category)}
+                    className={`whitespace-nowrap focus:outline-none px-3 py-2 cursor-pointer ${selected ? 'border-b-2 border-blue-500 text-blue-500 focus:outline-none font-bold' : ' outline-none focus:outline-none border-none'}`}
                   >
                     {category.name}
                   </div>

@@ -56,46 +56,25 @@ class SubCategoryController extends Controller
         return response()->json(null, 204);
     }
 
-    // Add this method
-    public function getSubcategoriesByCategory($categorySlug)
+
+    public function getPostsBySubcategory($subcategorySlug)
     {
-        $category = Category::where('slug', $categorySlug)->first();
-
-
-       
-
-        $subcategories = $category->subcategories; // Assuming you have a subcategories relationship in your Category model
-
-        return response()->json($subcategories);
-    }
-    public function getPostsBySubcategory($categorySlug, $subcategorySlug)
-    {
-        // Find the category by its slug
-        $category = Category::where('slug', $categorySlug)->first();
+        
+        $subCategory = Subcategory::where('slug', $subcategorySlug)->first();
     
-        // If category not found, return an error response
-        if (!$category) {
-            return response()->json(['error' => 'Category not found'], 404);
-        }
-    
-        // Find the subcategory by its slug and category_id
-        $subCategory = Subcategory::where('slug', $subcategorySlug)
-            ->where('category_id', $category->id)
-            ->first();
-    
-        // If subcategory not found, return an error response
         if (!$subCategory) {
             return response()->json(['error' => 'Subcategory not found'], 404);
         }
     
-        // Retrieve posts related to the subcategory
+      
         $posts = $subCategory->posts()->with('user')->get();
-        
+    
         foreach ($posts as $post) {
             $post->image = url('post-images/' . $post->image);
         }
     
         return response()->json(['data' => $posts]);
     }
+    
     
 }

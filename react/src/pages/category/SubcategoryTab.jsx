@@ -63,7 +63,7 @@ const SubcategoryTab = ({ selectedCategory }) => {
   useEffect(() => {
     if (activeTab !== 'home') {
         const fetchPosts = async () => {
-            if (!selectedCategory) return; // Avoid making a request with a null category
+            if (!selectedCategory) return; 
         
             try {
                 const response = await axiosInstance.get(`/categories/${selectedCategory}/subcategories/${activeTab}/posts`);
