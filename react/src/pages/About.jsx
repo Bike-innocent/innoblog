@@ -1,5 +1,5 @@
 import React from 'react'
-import CategoryNav from './CategoryNav'
+
 
 function About() {
   return (

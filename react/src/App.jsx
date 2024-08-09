@@ -9,7 +9,6 @@ import ResetPassword from './pages/ResetPassword';
 import GuestLayout from './layouts/GuestLayout';
 import MainLayout from './layouts/MainLayout';
 import About from './pages/About';
-import Category from './pages/Category';
 
 
 import CreatePost from './pages/dashboard/CreatePost';
@@ -26,13 +25,14 @@ import SinglePost from './pages/singlePost/SinglePost';
 import IndexCategory from './pages/dashboard/categories/IndexCategory';
 import EditPost from './pages/dashboard/EditPost';
 import ViewPost from './pages/dashboard/ViewPost';
-import CategoryHome from './pages/category/CategoryHome';
-import SubCategoryHome from './pages/SubCategoryHome';
+
+
 import Dashboard from './pages/dashboard/Dasboard';
 import Profile from './pages/profile/partials/Profile';
 import ProfileUserName from './pages/profile/profileUserName/ProfileUserName';
 import EditProfile from './pages/profile/partials/EditProfile';
-import CategoryNav from './pages/CategoryNav';
+
+
 
 const router = createBrowserRouter([
   {
@@ -51,7 +51,7 @@ const router = createBrowserRouter([
     children: [
       { path: 'dashboard', element: <Dashboard />  },
       { path: 'about', element: <About /> },
-      { path: "/categories", element: <CategoryNav /> },
+
       { path: 'home', element: <Index /> },
       { path: '/posts/:slug', element: <SinglePost /> },
       { path: 'profile', element: <Profile/> },
@@ -61,14 +61,14 @@ const router = createBrowserRouter([
       { path: 'all-posts', element: <AllPosts /> },
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },
-      
+
       { path: 'edit-post/:slug', element: <EditPost/> },
       { path: 'view-post/:slug', element: <ViewPost/> },
       { path: 'manage-category', element: <IndexCategory /> },
       { path: 'unauthorized', element: <Unauthorized /> },
       { path: 'not-found', element: <NotFound /> },
-      { path: 'category/:categorySlug', element: <CategoryHome /> },
-      { path: 'categories/:categorySlug/subcategories/:subcategorySlug', element :<SubCategoryHome />} ,
+     
+      
 
     ],
   },

@@ -115,15 +115,21 @@ Route::middleware('auth:sanctum')->group(function () {
         // Define similar routes for sub-categories and tags
     });
 
-     Route::resource('categories', CategoryController::class)->parameters(['categories' => 'identifier']);
+    //  Route::resource('categories', CategoryController::class)->parameters(['categories' => 'identifier']);
 
-    Route::apiResource('subcategories', SubCategoryController::class);
+    // Route::apiResource('subcategories', SubCategoryController::class);
 
-    Route::get('/categories/{categorySlug}/subcategories', [SubCategoryController::class, 'getSubcategoriesByCategory']);
-    Route::get('/categories/{categorySlug}/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
-    Route::get('/categories/{slug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
+    // Route::get('/categories/{categorySlug}/subcategories', [SubCategoryController::class, 'getSubcategoriesByCategory']);
+    // Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
+    // Route::get('/categories/{slug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
 
 
+
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{categorySlug}/subcategories', [CategoryController::class, 'getSubcategories']);
+Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
+// Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
+Route::get('/categories/{categorySlug}/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
 
 });
 

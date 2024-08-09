@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../axiosInstance';
-import { UserContext } from '../context/UserContext';
+
 
 function Register() {
   const [name, setName] = useState('');
@@ -11,7 +11,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
-  const { setUser } = useContext(UserContext);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,7 +39,7 @@ function Register() {
 
       
       
-      navigate('/dashboard/home');
+      navigate('/login');
     } catch (error) {
       if (error.response && error.response.data.errors) {
         setErrors(error.response.data.errors);

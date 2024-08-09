@@ -6,7 +6,7 @@ import AuthNavbar from '../components/navbars/AuthNavbar';
 import Footer from '../components/Footer';
 import { useQuery } from '@tanstack/react-query';
 import axiosInstance from '../axiosInstance';
-import CategoryNav from '../pages/CategoryNav';
+
 
 function fetchUser() {
   return axiosInstance.get('/profile/user').then((response) => response.data);

@@ -16,6 +16,12 @@ class CategoryController extends Controller
         $categories = Category::with('subcategories')->get();
         return response()->json($categories);
     }
+    public function getSubcategories($categorySlug)
+    {
+        $category = Category::where('slug', $categorySlug)->firstOrFail();
+        $subcategories = $category->subcategories;
+        return response()->json($subcategories);
+    }
 
     // Store a newly created category in storage
     public function store(Request $request)
@@ -88,20 +94,20 @@ class CategoryController extends Controller
     public function getMixedPosts($categorySlug)
     {
         $category = Category::where('slug', $categorySlug)->firstOrFail();
-        
-        $limit = request()->get('limit', 12); // Default limit to 12 if not provided
+
+        $limit = request()->get('limit', 50); // Default limit to 12 if not provided
         $posts = Post::where('category_id', $category->id)
             ->with('user') // Eager load the user relationship
             ->orderBy('created_at', 'desc')
             ->paginate($limit);
-        
+
         // Add image URLs to the posts
         foreach ($posts as $post) {
             $post->image = url('post-images/' . $post->image);
         }
-    
+
         return response()->json($posts);
     }
-    
-    
+
+
 }

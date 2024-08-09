@@ -13,7 +13,7 @@ class SubCategoryController extends Controller
         $subCategories = SubCategory::with('category')->get();
         return response()->json($subCategories);
     }
- 
+
 
     public function store(Request $request)
     {
@@ -62,34 +62,40 @@ class SubCategoryController extends Controller
         $category = Category::where('slug', $categorySlug)->first();
 
 
-        if (!$category) {
-            return response()->json(['error' => 'Category not found'], 404);
-        }
+       
 
         $subcategories = $category->subcategories; // Assuming you have a subcategories relationship in your Category model
 
         return response()->json($subcategories);
     }
-    public function getPostsBySubCategory($categorySlug, $subcategorySlug)
+    public function getPostsBySubcategory($categorySlug, $subcategorySlug)
     {
-        $subCategory = SubCategory::where('slug', $subcategorySlug)
-            ->whereHas('category', function($query) use ($categorySlug) {
-                $query->where('slug', $categorySlug);
-            })->first();
+        // Find the category by its slug
+        $category = Category::where('slug', $categorySlug)->first();
     
+        // If category not found, return an error response
+        if (!$category) {
+            return response()->json(['error' => 'Category not found'], 404);
+        }
+    
+        // Find the subcategory by its slug and category_id
+        $subCategory = Subcategory::where('slug', $subcategorySlug)
+            ->where('category_id', $category->id)
+            ->first();
+    
+        // If subcategory not found, return an error response
         if (!$subCategory) {
             return response()->json(['error' => 'Subcategory not found'], 404);
         }
     
+        // Retrieve posts related to the subcategory
         $posts = $subCategory->posts()->with('user')->get();
-    
+        
         foreach ($posts as $post) {
             $post->image = url('post-images/' . $post->image);
         }
     
-        return response()->json($posts);
+        return response()->json(['data' => $posts]);
     }
     
-
-
 }

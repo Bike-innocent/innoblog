@@ -1,18 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
 import { Tab } from '@headlessui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
-import axiosInstance from '../../axiosInstance'; // Adjust the path according to your project structure
+import axiosInstance from '../../../axiosInstance'; // Adjust the path according to your project structure
 
-const CategoryNav = () => {
+const CategoryTab = ({ onSelectCategory }) => {
   const [categories, setCategories] = useState([]);
   const tabListRef = useRef(null);
 
   useEffect(() => {
-    // Fetch categories from the Laravel backend using the Axios instance
     axiosInstance.get('/categories')
       .then(response => {
-        console.log("Categories fetched: ", response.data); // Debug log
         setCategories(response.data);
       })
       .catch(error => {
@@ -41,28 +38,28 @@ const CategoryNav = () => {
       >
         <ChevronLeftIcon className="h-5 w-5" />
       </button>
-      <div className="overflow-hidden whitespace-nowrap flex-grow  px-8">
+      <div className="overflow-hidden whitespace-nowrap flex-grow px-8">
         <Tab.Group>
           <Tab.List ref={tabListRef} className="flex space-x-4 overflow-x-auto scrollbar-hide">
-            <Tab className="focus:outline-none">
+            <Tab>
               {({ selected }) => (
-                <Link
-                  to="/"
-                  className={`whitespace-nowrap px-3 py-2 ${selected ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : ''}`}
+                <div
+                  onClick={() => onSelectCategory(null)}
+                  className={`whitespace-nowrap px-3 py-2 cursor-pointer ${selected ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : ''}`}
                 >
                   All
-                </Link>
+                </div>
               )}
             </Tab>
             {categories.map(category => (
-              <Tab key={category.id} className="focus:outline-none">
+              <Tab key={category.id}>
                 {({ selected }) => (
-                  <Link
-                    to={`/category/${category.slug}`}
-                    className={`whitespace-nowrap px-3 py-2 ${selected ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : ''}`}
+                  <div
+                    onClick={() => onSelectCategory(category.slug)}
+                    className={`whitespace-nowrap px-3 py-2 cursor-pointer ${selected ? 'border-b-2 border-blue-500 text-blue-500 font-bold' : ''}`}
                   >
                     {category.name}
-                  </Link>
+                  </div>
                 )}
               </Tab>
             ))}
@@ -80,4 +77,4 @@ const CategoryNav = () => {
   );
 };
 
-export default CategoryNav;
+export default CategoryTab;
