@@ -72,7 +72,7 @@ const PostActions = ({ postSlug, isPublished, refreshPosts }) => {
               Confirm Delete
             </Dialog.Title>
             <div className="mt-2">
-              <p className="text-sm text-gray-500">
+              <p className="text-sm ">
                 Are you sure you want to delete this post?
               </p>
             </div>
@@ -81,7 +81,7 @@ const PostActions = ({ postSlug, isPublished, refreshPosts }) => {
               <Button auto flat color="error" onClick={() => setIsDialogOpen(false)} className="sm:ml-3 sm:w-auto sm:text-sm">
                 Cancel
               </Button>
-              <Button auto onClick={handleDelete} className="mt-3 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
+              <Button auto onClick={handleDelete} className="mt-3 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm text-white bg-red-500">
                 Delete
               </Button>
             </div>

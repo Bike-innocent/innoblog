@@ -23,7 +23,7 @@ import Index from './pages/blog/Index';
 
 import SinglePost from './pages/singlePost/SinglePost';
 import IndexCategory from './pages/dashboard/categories/IndexCategory';
-import EditPost from './pages/dashboard/EditPost';
+import EditPost from './pages/dashboard/my-post/EditPost';
 import ViewPost from './pages/dashboard/ViewPost';
 
 

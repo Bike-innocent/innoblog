@@ -15,7 +15,7 @@ const SinglePostHeaderSection = () => {
     const { slug } = useParams();
 
     const { data: post, isLoading, isError, error } = useQuery({
-        queryKey: ['post', slug],
+        queryKey: ['postrt', slug],
         queryFn: () => fetchPost(slug),
     });
 
@@ -66,7 +66,11 @@ const SinglePostHeaderSection = () => {
                         <p className="ml-2 text-gray-700">{post.user.name}</p>
                     </div>
                 </Link>
-                <p className="text-gray-700">{post.content}</p>
+                {/* Render post content as HTML */}
+                <div
+                  
+                    dangerouslySetInnerHTML={{ __html: post.content }}
+                />
             </div>
         </div>
     );

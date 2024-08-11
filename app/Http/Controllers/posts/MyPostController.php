@@ -63,7 +63,7 @@ class MyPostController extends Controller
 
     public function update(Request $request, $slug)
     {
-        $post = Post::findOrFail($slug);
+        $post = Post::where('slug', $slug)->firstOrFail();
 
         $request->validate([
             'title' => 'required|max:255',
@@ -93,26 +93,31 @@ class MyPostController extends Controller
         return response()->json(['message' => 'Post updated successfully.']);
     }
 
-    public function destroy($slug)
-    {
-        $post = Post::findOrFail($slug);
-        $post->delete();
 
-        return response()->json(['message' => 'Post deleted successfully']);
-    }
+
+    public function destroy($slug)
+{
+    $post = Post::where('slug', $slug)->firstOrFail();
+
+    $post->delete();
+
+    return response()->json(['message' => 'Post deleted successfully']);
+}
+
 
     public function publish($slug)
     {
-        $post = Post::findOrFail($slug);
-        $post->status = 1; // Change status to published
+        $post = Post::where('slug', $slug)->firstOrFail();
+        $post->status = 1; // Published
         $post->save();
 
         return response()->json(['message' => 'Post published successfully.'], 200);
     }
+
     public function unPublish($slug)
     {
-        $post = Post::findOrFail($slug);
-        $post->status = 0; // Change status to published
+        $post = Post::where('slug', $slug)->firstOrFail();
+        $post->status = 0; // Unpublished
         $post->save();
 
         return response()->json(['message' => 'Post unpublished successfully.'], 200);

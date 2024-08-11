@@ -51,7 +51,7 @@ const ViewPost = () => {
                     </div>
 
 
-                    <Link to="/my-post" className="btn btn-secondary">Back</Link>
+                    <Link to="/profile" className="btn btn-secondary">Back</Link>
                 </div>
             </div>
         </>

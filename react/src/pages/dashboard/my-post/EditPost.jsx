@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../axiosInstance';
+import axiosInstance from '../../../axiosInstance';
 import { useNavigate, useParams } from 'react-router-dom';
-import Processing from '../../components/Processing';
-import Loader from '../../components/Loader';
+import Processing from '../../../components/Processing';
+import Loader from '../../../components/Loader';
 
 const EditPost = () => {
     const { slug } = useParams();
@@ -23,6 +23,7 @@ const EditPost = () => {
         const fetchPostData = async () => {
             try {
                 const response = await axiosInstance.get(`/posts/${slug}`);
+                
                 const post = response.data.post;
                 setTitle(post.title);
                 setContent(post.content);
@@ -49,7 +50,7 @@ const EditPost = () => {
 
         fetchPostData();
         fetchFormData();
-    }, [id]);
+    }, [slug]);
 
     useEffect(() => {
         if (category) {
@@ -90,7 +91,7 @@ const EditPost = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             });
-            navigate('/my-post', { state: { success: 'Post updated successfully.' } });
+            navigate('/profile', { state: { success: 'Post updated successfully.' } });
         } catch (error) {
             if (error.response && error.response.data.errors) {
                 setErrors(error.response.data.errors);
