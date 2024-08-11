@@ -12,7 +12,7 @@ const isColorLight = (color) => {
 
 const PlaceholderImage = ({ name = '', avatar, placeholderColor }) => {
   if (avatar) {
-    return <img src={avatar} alt={`${name}'s avatar`} className="w-10 h-10 rounded-full" />;
+    return <img src={avatar} alt={`${name}'s avatar`} className="w-10 h-10 rounded-full object-cover" />;
   }
 
   const initial = name.charAt(0).toUpperCase(); // Safe usage of charAt
@@ -21,7 +21,7 @@ const PlaceholderImage = ({ name = '', avatar, placeholderColor }) => {
 
   return (
     <div
-      className={`w-10 h-10 rounded-full ${textColor} flex items-center justify-center`}
+      className={`w-10 h-10 rounded-full  ${textColor} flex items-center justify-center`}
       style={{
         backgroundColor,
         fontSize: '1.2rem', // Adjust this value to fit your needs
