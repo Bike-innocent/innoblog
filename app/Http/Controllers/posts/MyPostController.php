@@ -54,7 +54,8 @@ class MyPostController extends Controller
 
     public function show($slug)
     {
-        $post = Post::with(['category', 'subCategory'])->findOrFail($slug);
+        $post = Post::with(['category', 'subCategory'])->where('slug', $slug)->firstOrFail();
+
         $post->image = url('post-images/' . $post->image);
 
         return response()->json(['post' => $post]);
