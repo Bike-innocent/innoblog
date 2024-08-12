@@ -67,6 +67,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/{slug}', [MyPostController::class, 'show']);
         Route::put('/{slug}', [MyPostController::class, 'update']);
         Route::delete('/{slug}', [MyPostController::class, 'destroy']);
+        Route::post('/{slug}/like', [PostController::class, 'like']);
+
     });
 
     // Profile routes

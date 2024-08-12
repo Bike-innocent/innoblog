@@ -5,6 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@nextui-org/react';
 import PlaceholderImage from './PlaceholderImage'; // Adjust the import path as necessary
+import LikeButton from './LikeButton'; // Adjust the import path as necessary
 
 const fetchPost = async (slug) => {
     const response = await axiosInstance.get(`/blog/show/posts/${slug}`);
@@ -56,21 +57,27 @@ const SinglePostHeaderSection = () => {
                         {post.category.name} | {formatDate(post.created_at)}
                     </div>
                 </div>
-                <Link to={`/${post.user.username}`}  >
-                    <div className="flex items-center mt-4">
+                <div className="flex items-center mt-4">
+                    <Link to={`/${post.user.username}`}>
                         <PlaceholderImage
                             name={post.user.name}
                             avatar={post.user.avatar}
                             placeholderColor={post.user.placeholder_color}
                         />
-                        <p className="ml-2 text-gray-700">{post.user.name}</p>
+                    </Link>
+                    <div className="ml-4">
+                        <p>{post.user.name}</p>
                     </div>
-                </Link>
+                    <div className="ml-4">
+                        <LikeButton
+                            slug={slug}
+                            initialLikes={post.likes_count}
+                            isInitiallyLiked={post.is_liked_by_user}
+                        />
+                    </div>
+                </div>
                 {/* Render post content as HTML */}
-                <div
-                  
-                    dangerouslySetInnerHTML={{ __html: post.content }}
-                />
+                <div dangerouslySetInnerHTML={{ __html: post.content }} />
             </div>
         </div>
     );

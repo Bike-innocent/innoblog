@@ -11,17 +11,23 @@ class SinglePostController extends Controller
 
     public function show($slug)
     {
-        $post = Post::with(['category', 'user'])->where('slug', $slug)->firstOrFail();
+        $user = auth()->user();
+        $post = Post::with(['category', 'user', 'likes'])->where('slug', $slug)->firstOrFail();
         $post->image = url('post-images/' . $post->image);
-    
+
         if ($post->user->avatar) {
             $post->user->avatar = url('avatars/' . $post->user->avatar);
         }
-    
+
+        // Add the likes count to the post
+        $post->likes_count = $post->likes()->count();
+        $post->is_liked_by_user = $post->likes()->where('user_id', $user->id)->exists();
+
         return response()->json($post);
     }
-    
-    
+
+
+
     public function related($slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();

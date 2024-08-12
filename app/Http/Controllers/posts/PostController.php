@@ -3,6 +3,7 @@ namespace App\Http\Controllers\posts;
 
 use App\Http\Controllers\Controller;
 use App\Models\Post;
+use App\Models\Like;
 use Illuminate\Http\Request;
 
 class PostController extends Controller
@@ -25,6 +26,35 @@ class PostController extends Controller
         });
 
         return response()->json($posts);
+    }
+
+    public function like($slug)
+    {
+        $user = auth()->user();
+
+        // Find the post by slug
+        $post = Post::where('slug', $slug)->firstOrFail();
+
+        // Check if the user has already liked the post
+        $like = Like::where('post_id', $post->id)->where('user_id', $user->id)->first();
+
+        if ($like) {
+            // If the like exists, delete it (unlike)
+            $like->delete();
+            $isLikedByUser = false;
+        } else {
+            // If the like doesn't exist, create a new one
+            Like::create([
+                'post_id' => $post->id,
+                'user_id' => $user->id,
+            ]);
+            $isLikedByUser = true;
+        }
+
+        return response()->json([
+            'likes_count' => $post->likes()->count(),
+            'is_liked_by_user' => $isLikedByUser,
+        ]);
     }
 
 }
