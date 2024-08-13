@@ -31,6 +31,7 @@ import Dashboard from './pages/dashboard/Dasboard';
 import Profile from './pages/profile/partials/Profile';
 import ProfileUserName from './pages/profile/profileUserName/ProfileUserName';
 import EditProfile from './pages/profile/partials/EditProfile';
+import SavedPost from './pages/savedpost/SavedPost';
 
 
 
@@ -58,6 +59,7 @@ const router = createBrowserRouter([
       { path: 'profile/edit', element: <EditProfile/> },
       { path: '/:username', element: <ProfileUserName /> },
       { path: 'create-post', element:<CreatePost /> },
+      { path: 'saved', element:<SavedPost /> },
       { path: 'all-posts', element: <AllPosts /> },
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },

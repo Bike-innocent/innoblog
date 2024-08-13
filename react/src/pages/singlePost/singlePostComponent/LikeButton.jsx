@@ -35,7 +35,7 @@ const LikeButton = ({ slug, initialLikes, isInitiallyLiked }) => {
                     className={`${isLiked ? 'text-blue-500' : 'text-gray-500'}`} // Color based on isLiked state
                 />
             </button>
-            <span className="ml-2 text-lg">{likesCount}</span>
+            <span className="ml-1 text-lg">{likesCount}</span>
         </div>
     );
 };

@@ -95,6 +95,17 @@ function MainLayout() {
                             >
                                 <BsPencilSquare className="mr-2" size={20} /> Create Post
                             </NavLink>
+                            <NavLink
+                                to="/saved"
+                                onClick={toggleSidebar}
+                                className={({ isActive }) =>
+                                    isActive
+                                        ? 'flex items-center px-4 py-2 bg-blue-500 text-white'
+                                        : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'
+                                }
+                            >
+                                <BsPencilSquare className="mr-2" size={20} /> Saved 
+                            </NavLink>
                             {user && user.roles && user.roles.some((role) => role.name === 'admin') && (
                                 <>
                                     <NavLink

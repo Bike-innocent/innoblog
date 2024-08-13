@@ -57,8 +57,14 @@ Route::middleware('auth:sanctum')->group(function () {
         return response()->json(['message' => 'Successfully logged out']);
     });
 
+
     // Posts routes
     Route::prefix('posts')->group(function () {
+        Route::get('/saved-posts', [PostController::class, 'getSavedPosts']);
+        Route::get('/{slug}/is-saved', [PostController::class, 'isPostSaved']);
+        Route::delete('/{slug}/remove-save', [PostController::class, 'removeSave']);
+
+
         Route::get('/form-data', [MyPostController::class, 'formData']);
         Route::patch('/{slug}/publish', [MyPostController::class, 'publish']);
         Route::patch('/{slug}/unpublish', [MyPostController::class, 'unPublish']);
@@ -68,6 +74,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::put('/{slug}', [MyPostController::class, 'update']);
         Route::delete('/{slug}', [MyPostController::class, 'destroy']);
         Route::post('/{slug}/like', [PostController::class, 'like']);
+        Route::post('/{slug}/save', [PostController::class, 'toggleSave']);
+
+
+
 
     });
 
