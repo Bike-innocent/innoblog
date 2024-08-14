@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import PlaceholderImage from './PlaceholderImage';
 import PostDropdown from './PostDropdown';
 
-const Post = ({ post, isSaved }) => {
+const Post = ({ post, isSaved, onRemove }) => {
   return (
     <div className="w-full group">
       <div className="relative">
@@ -28,7 +28,7 @@ const Post = ({ post, isSaved }) => {
                 {post.title.length > 40 ? post.title.substring(0, 40) + '...' : post.title}
               </h2>
             </Link>
-            <PostDropdown post={post} isSaved={isSaved} />
+            <PostDropdown post={post} isSaved={isSaved} onRemove={onRemove} /> {/* Pass onRemove to PostDropdown */}
           </div>
         </div>
         <p className="text-gray-500">{post.user.name}</p>

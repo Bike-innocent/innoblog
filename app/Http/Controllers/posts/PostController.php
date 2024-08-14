@@ -78,6 +78,18 @@ class PostController extends Controller
             'is_saved' => $isSaved,
         ]);
     }
+    public function isPostSaved($slug)
+{
+    $user = auth()->user();
+    $post = Post::where('slug', $slug)->firstOrFail();
+
+    $isSaved = $user->savedPosts()->where('post_id', $post->id)->exists();
+
+    return response()->json([
+        'is_saved' => $isSaved,
+    ]);
+}
+
 
 public function removeSave($slug)
 {

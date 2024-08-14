@@ -4,21 +4,15 @@ import { Skeleton } from '@nextui-org/react';
 import axiosInstance from '../../axiosInstance';
 import Post from './Post';
 
-// const fetchSavedPosts = async ({ pageParam = 1 }) => {
-//   const response = await axiosInstance.get(`/posts/saved-posts?page=${pageParam}&limit=12`);
-//   return response.data;
-// };
-
 const fetchSavedPosts = async ({ pageParam = 1 }) => {
-    try {
-      const response = await axiosInstance.get(`posts/saved-posts?page=${pageParam}&limit=12`);
-      return response.data;
-    } catch (error) {
-      console.error('Error during API call:', error.response || error.message || error);
-      throw error; // Rethrow so that React Query can handle the error state
-    }
-  };
-  
+  try {
+    const response = await axiosInstance.get(`posts/saved-posts?page=${pageParam}&limit=12`);
+    return response.data;
+  } catch (error) {
+    console.error('Error during API call:', error.response || error.message || error);
+    throw error; // Rethrow so that React Query can handle the error state
+  }
+};
 
 const SavedPost = () => {
   const {
@@ -29,6 +23,7 @@ const SavedPost = () => {
     isLoading,
     isError,
     error,
+    refetch, // <-- refetch function from useInfiniteQuery
   } = useInfiniteQuery({
     queryKey: ['savedPostscc'],
     queryFn: fetchSavedPosts,
@@ -94,7 +89,7 @@ const SavedPost = () => {
         <h3>saved posts</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 m-0">
           {posts.map((post, index) => (
-            <Post key={index} post={post} isSaved={true} />
+            <Post key={index} post={post} isSaved={true} onRemove={refetch} />  
           ))}
         </div>
         <div ref={observerRef} className="w-full h-10"></div>

@@ -73,11 +73,11 @@ const PostDropdown = ({ post }) => {
             <BsShare className="mr-2" /> Share
           </div>
         </DropdownItem>
-        <DropdownItem key="not-interested" onClick={handleNotInterested}>
+        {/* <DropdownItem key="not-interested" onClick={handleNotInterested}>
           <div className="flex items-center">
             <BsExclamationCircle className="mr-2" /> Not Interested
           </div>
-        </DropdownItem>
+        </DropdownItem> */}
         <DropdownItem key="report" onClick={handleReport}>
           <div className="flex items-center">
             <BsFlag className="mr-2" /> Report

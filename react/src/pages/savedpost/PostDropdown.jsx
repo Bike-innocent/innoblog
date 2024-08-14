@@ -10,7 +10,7 @@ const PostDropdown = ({ post, onRemove }) => {
       console.log('Remove from save response:', response.data);
 
       if (onRemove) {
-        onRemove(post.slug); // Pass the post slug back to the parent component
+        onRemove(); // Simply trigger the refetch in the parent component
       }
     } catch (error) {
       console.error('Error removing post from saved:', error);
