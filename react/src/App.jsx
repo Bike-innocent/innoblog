@@ -61,6 +61,7 @@ const router = createBrowserRouter([
       { path: 'create-post', element:<CreatePost /> },
       { path: 'saved', element:<SavedPost /> },
       { path: 'all-posts', element: <AllPosts /> },
+      { path: 'reports', element: <AllPosts /> },
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },
 

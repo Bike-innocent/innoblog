@@ -128,8 +128,20 @@ function MainLayout() {
                                                 : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'
                                         }
                                     >
-                                        <BsPeople className="mr-2" size={20} /> All Users
+                                        <BsPeople className="mr-2" size={20} /> Reports
                                     </NavLink>
+                                    <NavLink
+                                        to="/reports"
+                                        onClick={toggleSidebar}
+                                        className={({ isActive }) =>
+                                            isActive
+                                                ? 'flex items-center px-4 py-2 bg-blue-500 text-white'
+                                                : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'
+                                        }
+                                    >
+                                        <BsPeople className="mr-2" size={20} /> Reports
+                                    </NavLink>
+
                                     <NavLink
                                         to="/manage-category"
                                         onClick={toggleSidebar}
