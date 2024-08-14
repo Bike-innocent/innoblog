@@ -19,9 +19,11 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CategorySeeder::class,
             SubCategorySeeder::class,
-            // TagSeeder::class,
+        
             PostSeeder::class,
+            ReportReasonSeeder::class,
             AboutUsSeeder::class,
+            
             // CommentsTableSeeder::class,
         ]);
     }

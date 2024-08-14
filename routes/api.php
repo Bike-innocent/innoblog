@@ -18,12 +18,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
-
-
-use App\Http\Controllers\Posts\HomePageController;
-use App\Http\Controllers\Posts\SportController;
-
-
+use App\Http\Controllers\posts\ReportController;
 
 
 /*
@@ -56,6 +51,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
         return response()->json(['message' => 'Successfully logged out']);
     });
+
+
+
+    Route::get('/report-reasons', [ReportController::class, 'getReasons']);
+    Route::post('/reports', [ReportController::class, 'store']);
 
 
     // Posts routes
