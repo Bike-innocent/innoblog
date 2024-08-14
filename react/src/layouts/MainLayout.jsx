@@ -128,7 +128,7 @@ function MainLayout() {
                                                 : 'flex items-center px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white'
                                         }
                                     >
-                                        <BsPeople className="mr-2" size={20} /> Reports
+                                        <BsPeople className="mr-2" size={20} /> All Users
                                     </NavLink>
                                     <NavLink
                                         to="/reports"

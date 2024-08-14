@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
     public function reporter()
     {
         return $this->belongsTo(User::class, 'reporter_id');
@@ -22,5 +24,11 @@ class Report extends Model
     public function post()
     {
         return $this->belongsTo(Post::class);
+    }
+
+    // Add this method to define the relationship with ReportReason
+    public function reason()
+    {
+        return $this->belongsTo(ReportReason::class, 'reason_id');
     }
 }

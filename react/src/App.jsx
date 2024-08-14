@@ -32,6 +32,7 @@ import Profile from './pages/profile/partials/Profile';
 import ProfileUserName from './pages/profile/profileUserName/ProfileUserName';
 import EditProfile from './pages/profile/partials/EditProfile';
 import SavedPost from './pages/savedpost/SavedPost';
+import Reports  from './pages/reports/Reports';
 
 
 
@@ -61,7 +62,7 @@ const router = createBrowserRouter([
       { path: 'create-post', element:<CreatePost /> },
       { path: 'saved', element:<SavedPost /> },
       { path: 'all-posts', element: <AllPosts /> },
-      { path: 'reports', element: <AllPosts /> },
+      { path: 'reports', element: <Reports /> },
       { path: 'all-users', element: <AllUsers /> },
       { path: 'settings', element: <Settings /> },
 

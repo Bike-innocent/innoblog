@@ -8,6 +8,13 @@ use Illuminate\Http\Request;
 
 class ReportController extends Controller
 {
+    public function index()
+    {
+        // Fetch reports with related data
+        $reports = Report::with(['reporter', 'reportedUser', 'post', 'reason'])->get();
+
+        return response()->json($reports);
+    }
     public function getReasons()
     {
         $reasons = ReportReason::all();

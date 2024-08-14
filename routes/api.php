@@ -53,7 +53,7 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-
+    Route::get('/reports', [ReportController::class, 'index']);
     Route::get('/report-reasons', [ReportController::class, 'getReasons']);
     Route::post('/reports', [ReportController::class, 'store']);
 
