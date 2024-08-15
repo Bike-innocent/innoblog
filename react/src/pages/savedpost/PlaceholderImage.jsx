@@ -16,7 +16,7 @@ const PlaceholderImage = ({ name, avatar, placeholderColor }) => {
   }
 
   const initial = name.charAt(0).toUpperCase();
-  const backgroundColor = placeholderColor || '#000000'; // Default color if none provided
+  const backgroundColor = placeholderColor || ''; // Default color if none provided
   const textColor = isColorLight(backgroundColor) ? 'text-black' : 'text-white';
 
   return (

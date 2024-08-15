@@ -22,6 +22,7 @@ const Post = ({ post, isSaved, onRemove }) => {
               placeholderColor={post.user.placeholder_color}
             />
           </Link>
+          
           <div className="flex-1 flex items-center justify-between">
             <Link to={`/posts/${post.slug}`} className="flex-1">
               <h2 className="text-xl font-semibold m-0 p-0 group-hover:underline">
