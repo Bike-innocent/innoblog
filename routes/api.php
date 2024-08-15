@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use App\Http\Controllers\posts\ReportController;
+use App\Http\Controllers\posts\ReportReasonController;
 
 
 /*
@@ -54,8 +55,15 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/reports', [ReportController::class, 'index']);
-    Route::get('/report-reasons', [ReportController::class, 'getReasons']);
+    Route::get('/report-reasons-dropdown', [ReportController::class, 'getReasons']);
     Route::post('/reports', [ReportController::class, 'store']);
+    Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
+
+
+    Route::get('/report-reasons', [ReportReasonController::class, 'index']);
+Route::post('/report-reasons', [ReportReasonController::class, 'store']);
+Route::put('/report-reasons/{id}', [ReportReasonController::class, 'update']);
+Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']);
 
 
     // Posts routes

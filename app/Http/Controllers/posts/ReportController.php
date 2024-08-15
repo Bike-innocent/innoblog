@@ -47,5 +47,14 @@ class ReportController extends Controller
   
       return response()->json(['message' => 'Report submitted successfully', 'report' => $report], 201);
   }
+  public function destroy($id)
+  {
+   
+          $report = Report::findOrFail($id);
+          $report->delete();
+
+          return response()->json(['message' => 'Report deleted successfully.'], 200);
+   
+  }
   
 }

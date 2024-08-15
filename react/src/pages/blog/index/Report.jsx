@@ -9,7 +9,7 @@ const Report = ({ postId, isOpen, onClose }) => {
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
-        axiosInstance.get('/report-reasons')
+        axiosInstance.get('/report-reasons-dropdown')
             .then(response => setReasons(response.data))
             .catch(error => console.error('Error fetching report reasons:', error));
     }, []);
