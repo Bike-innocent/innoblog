@@ -21,13 +21,13 @@ const CategoryTab = ({ onSelectCategory }) => {
 
   const scrollLeft = () => {
     if (tabListRef.current) {
-      tabListRef.current.scrollBy({ left: -200, behavior: 'smooth' });
+      tabListRef.current.scrollBy({ left: -300, behavior: 'smooth' });
     }
   };
 
   const scrollRight = () => {
     if (tabListRef.current) {
-      tabListRef.current.scrollBy({ left: 200, behavior: 'smooth' });
+      tabListRef.current.scrollBy({ left: 300, behavior: 'smooth' });
     }
   };
 
@@ -55,7 +55,7 @@ const CategoryTab = ({ onSelectCategory }) => {
   }
 
   return (
-    <div className="relative flex items-center max-w-screen-lg mx-auto">
+    <div className="relative flex items-center my-categorytab mx-auto">
       <button
         onClick={scrollLeft}
         className="absolute left-0 z-10 bg-white p-2 shadow-md rounded-full"

@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react';
 import { BsThreeDotsVertical, BsBookmark, BsBookmarkFill, BsShare, BsFlag } from 'react-icons/bs';
-import axiosInstance from '../../../axiosInstance'; // Ensure axiosInstance is correctly set up
-import Report from './Report'; // Import the Report modal component
+import axiosInstance from '../../../axiosInstance';
+import Report from './Report';
+import Share from './Share';
 
 const PostDropdown = ({ post }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   useEffect(() => {
-    // Fetch the initial saved state when the component mounts
     const fetchSavedState = async () => {
       try {
         const response = await axiosInstance.get(`posts/${post.slug}/is-saved`);
@@ -25,18 +26,10 @@ const PostDropdown = ({ post }) => {
   const handleSave = async () => {
     try {
       const response = await axiosInstance.post(`posts/${post.slug}/save`);
-      console.log('Save/Unsave response:', response.data);
-
-      // Update the saved state based on the response
       setIsSaved(response.data.is_saved);
     } catch (error) {
       console.error('Error saving post:', error);
     }
-  };
-
-  const handleShare = () => {
-    console.log('Share post:', post.slug);
-    // Add your share logic here
   };
 
   const handleReport = () => {
@@ -45,6 +38,14 @@ const PostDropdown = ({ post }) => {
 
   const closeReportModal = () => {
     setIsReportOpen(false);
+  };
+
+  const handleShare = () => {
+    setIsShareOpen(true);
+  };
+
+  const closeShareModal = () => {
+    setIsShareOpen(false);
   };
 
   return (
@@ -69,6 +70,7 @@ const PostDropdown = ({ post }) => {
               )}
             </div>
           </DropdownItem>
+
           <DropdownItem key="share" onClick={handleShare}>
             <div className="flex items-center">
               <BsShare className="mr-2" /> Share
@@ -85,6 +87,9 @@ const PostDropdown = ({ post }) => {
 
       {/* Report Modal */}
       <Report postId={post.id} isOpen={isReportOpen} onClose={closeReportModal} />
+
+      {/* Share Dialog */}
+      <Share isOpen={isShareOpen} onClose={closeShareModal} postUrl={`http://localhost:5173/posts/${post.slug}`} />
     </>
   );
 };

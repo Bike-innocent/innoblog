@@ -38,15 +38,10 @@ function MainLayout() {
 
             <div className="flex bg-gray-100 mt-16 ">
                 <div
-                    className={`fixed  inset-y-0 left-0 top-16 z-50 min-w-64 bg-gray-900 shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                        } transition-transform duration-300 ease-in-out md:sticky   md:h-screen md:translate-x-0 md:flex md:flex-col md:w-1/5`}
+                    className={`fixed  inset-y-0 left-0 top-16 z-50 min-w-64 bg-gray-800 shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                     } transition-transform duration-300 ease-in-out xl:sticky   xl:h-screen xl:translate-x-0 xl:flex xl:flex-col xl:w-1/5`}
                 >
-                    <div className="flex items-center justify-between px-4 py-3 text-white bg-gray-900">
-                        <span className="text-xl font-semibold md:hidden">Innoblog</span>
-                        <button className="md:hidden bg-gray-900 p-2 rounded" onClick={toggleSidebar}>
-                            <BsBoxArrowRight size={24} />
-                        </button>
-                    </div>
+                    
                     <div className="flex flex-col flex-1  overflow-y-auto">
                         <nav className="flex-1  space-y-2">
                             <NavLink
@@ -179,7 +174,7 @@ function MainLayout() {
                     </div>
                 </div>
 
-                <div className="flex flex-col flex-1 md:ml-1/5">
+                <div className="flex flex-col flex-1 xl:ml-1/5">
                     <main className="flex-1  overflow-y-auto p-4 min-h-screen bg-white ">
                         {/* <CategoryNav/> */}
                         <Outlet />
