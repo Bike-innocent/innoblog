@@ -38,12 +38,12 @@ function MainLayout() {
 
             <div className="flex bg-gray-100 mt-16 ">
                 <div
-                    className={`fixed  inset-y-0 left-0 top-16 z-50 min-w-64 bg-gray-800 shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                    className={`fixed  inset-y-0 left-0 top-16 z-50 min-w-64 bg-gray-900 shadow-lg transform ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
                      } transition-transform duration-300 ease-in-out xl:sticky   xl:h-screen xl:translate-x-0 xl:flex xl:flex-col xl:w-1/5`}
                 >
                     
                     <div className="flex flex-col flex-1  overflow-y-auto">
-                        <nav className="flex-1  space-y-2">
+                        <nav className="flex-1  space-y-2 mt-3">
                             <NavLink
                                 to="/home"
                                 onClick={toggleSidebar}
