@@ -85,7 +85,7 @@ const SubcategoryTab = ({ selectedCategory, subcategories }) => {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto ">
       <Tab.Group
         as="div"
         selectedIndex={subcategories.findIndex(sub => sub.slug === activeTab) + 1}
@@ -97,7 +97,7 @@ const SubcategoryTab = ({ selectedCategory, subcategories }) => {
           }
         }}
       >
-        <Tab.List className="flex space-x-2">
+        <Tab.List className="flex  overflow-x-auto scrollbar-hide my-categorytab whitespace-nowrap">
           <Tab
             as="button"
             className={({ selected }) =>
