@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Dropdown, DropdownMenu, DropdownTrigger, DropdownItem } from "@nextui-org/react";
 import { Dialog } from '@headlessui/react';
-import axiosInstance from '../../../axiosInstance';
+import axiosInstance from '../../axiosInstance';
 import { Link } from 'react-router-dom';
 import { VerticalDotsIcon } from "../VerticalDotsIcons";
 

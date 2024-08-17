@@ -1,30 +1,33 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import axiosInstance from '../../../axiosInstance';
+import axiosInstance from '../../axiosInstance';
 import { Dialog, Transition } from '@headlessui/react';
 
-const SubCategories = () => {
-    const [subCategories, setSubCategories] = useState([]);
+const Tags = () => {
+    const [tags, setTags] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [subCategories, setSubCategories] = useState([]);
     const [name, setName] = useState('');
     const [slug, setSlug] = useState('');
     const [categoryId, setCategoryId] = useState('');
-    const [editingSubCategory, setEditingSubCategory] = useState(null);
+    const [subCategoryId, setSubCategoryId] = useState('');
+    const [editingTag, setEditingTag] = useState(null);
     const [errors, setErrors] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [subCategoryToDelete, setSubCategoryToDelete] = useState(null);
+    const [tagToDelete, setTagToDelete] = useState(null);
 
     useEffect(() => {
-        fetchSubCategories();
+        fetchTags();
         fetchCategories();
+        fetchSubCategories();
     }, []);
 
-    const fetchSubCategories = async () => {
+    const fetchTags = async () => {
         try {
-            const response = await axiosInstance.get('/subcategories');
-            setSubCategories(response.data);
+            const response = await axiosInstance.get('/tags');
+            setTags(response.data);
         } catch (error) {
-            console.error('Error fetching subcategories:', error);
+            console.error('Error fetching tags:', error);
         }
     };
 
@@ -37,125 +40,131 @@ const SubCategories = () => {
         }
     };
 
-    const fetchCategory = async (categoryId) => {
+    const fetchSubCategories = async () => {
         try {
-            const response = await axiosInstance.get(`/categories/${categoryId}`);
-            return response.data;
+            const response = await axiosInstance.get('/subcategories');
+            setSubCategories(response.data);
         } catch (error) {
-            console.error('Error fetching category:', error);
-            return null;
+            console.error('Error fetching subcategories:', error);
         }
     };
 
-    const handleCreateSubCategory = async () => {
+    const handleCreateTag = async () => {
         try {
-            const response = await axiosInstance.post('/subcategories', {
+            const response = await axiosInstance.post('/tags', {
                 name,
                 slug,
-                category_id: categoryId
+                sub_category_id: subCategoryId  // Only include sub_category_id
             });
 
-            const category = await fetchCategory(categoryId);
-            const newSubCategory = { ...response.data, category };
-
-            setSubCategories([...subCategories, newSubCategory]);
+            const newTag = { ...response.data };
+            setTags([...tags, newTag]);
             setName('');
             setSlug('');
-            setCategoryId('');
+            setSubCategoryId('');
             setErrors([]);
             closeModal();
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setErrors(error.response.data.errors);
             } else {
-                console.error('Error creating subcategory:', error);
+                console.error('Error creating tag:', error);
             }
         }
     };
 
-    const handleUpdateSubCategory = async () => {
+    const handleUpdateTag = async () => {
         try {
-            const response = await axiosInstance.put(`/subcategories/${editingSubCategory.id}`, {
+            const response = await axiosInstance.put(`/tags/${editingTag.id}`, {
                 name,
                 slug,
-                category_id: categoryId
+                sub_category_id: subCategoryId  // Only include sub_category_id
             });
 
-            const category = await fetchCategory(categoryId);
-            const updatedSubCategory = { ...response.data, category };
-
-            setSubCategories(subCategories.map(subCat => (subCat.id === editingSubCategory.id ? updatedSubCategory : subCat)));
-            setEditingSubCategory(null);
+            const updatedTag = { ...response.data };
+            setTags(tags.map(tag => (tag.id === editingTag.id ? updatedTag : tag)));
+            setEditingTag(null);
             setName('');
             setSlug('');
-            setCategoryId('');
+            setSubCategoryId('');
             setErrors([]);
             closeModal();
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setErrors(error.response.data.errors);
             } else {
-                console.error('Error updating subcategory:', error);
+                console.error('Error updating tag:', error);
             }
         }
     };
 
-    const handleDeleteSubCategory = async () => {
+
+    const handleDeleteTag = async () => {
         try {
-            await axiosInstance.delete(`/subcategories/${subCategoryToDelete.id}`);
-            setSubCategories(subCategories.filter(subCat => subCat.id !== subCategoryToDelete.id));
-            setSubCategoryToDelete(null);
+            await axiosInstance.delete(`/tags/${tagToDelete.id}`);
+            setTags(tags.filter(tag => tag.id !== tagToDelete.id));
+            setTagToDelete(null);
             setIsDeleteModalOpen(false);
         } catch (error) {
-            console.error('Error deleting subcategory:', error);
+            console.error('Error deleting tag:', error);
         }
     };
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (editingSubCategory) {
-            handleUpdateSubCategory();
+        if (editingTag) {
+            handleUpdateTag();
         } else {
-            handleCreateSubCategory();
+            handleCreateTag();
         }
     };
 
-    const handleEdit = (subCategory) => {
-        setEditingSubCategory(subCategory);
-        setName(subCategory.name);
-        setSlug(subCategory.slug);
-        setCategoryId(subCategory.category_id);
+    const handleEdit = (tag) => {
+        setEditingTag(tag);
+        setName(tag.name);
+        setSlug(tag.slug);
+        setCategoryId(tag.category_id);
+        setSubCategoryId(tag.sub_category_id);
         openModal();
     };
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => {
         setIsModalOpen(false);
-        setEditingSubCategory(null);
+        setEditingTag(null);
         setName('');
         setSlug('');
         setCategoryId('');
+        setSubCategoryId('');
         setErrors([]);
     };
 
-    const openDeleteModal = (subCategory) => {
-        setSubCategoryToDelete(subCategory);
+    const openDeleteModal = (tag) => {
+        setTagToDelete(tag);
         setIsDeleteModalOpen(true);
     };
     const closeDeleteModal = () => {
-        setSubCategoryToDelete(null);
+        setTagToDelete(null);
         setIsDeleteModalOpen(false);
     };
 
+    const handleCategoryChange = (e) => {
+        const selectedCategoryId = e.target.value;
+        setCategoryId(selectedCategoryId);
+        setSubCategoryId('');
+    };
+
+    const filteredSubCategories = subCategories.filter(subCategory => subCategory.category_id === parseInt(categoryId));
+
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-2xl font-bold mb-4">Manage SubCategories</h1>
+            <h1 className="text-2xl font-bold mb-4">Manage Tags</h1>
 
             <button
                 onClick={openModal}
                 className="mb-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
             >
-                Add SubCategory
+                Add Tag
             </button>
 
             {errors.length > 0 && (
@@ -173,25 +182,27 @@ const SubCategories = () => {
                         <th className="py-2 px-4 border-b">Name</th>
                         <th className="py-2 px-4 border-b">Slug</th>
                         <th className="py-2 px-4 border-b">Category</th>
+                        <th className="py-2 px-4 border-b">SubCategory</th>
                         <th className="py-2 px-4 border-b">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {subCategories.map((subCategory) => (
-                        <tr key={subCategory?.id}>
-                            <td className="py-2 px-4 border-b">{subCategory?.id}</td>
-                            <td className="py-2 px-4 border-b">{subCategory?.name}</td>
-                            <td className="py-2 px-4 border-b">{subCategory?.slug}</td>
-                            <td className="py-2 px-4 border-b">{subCategory?.category?.name}</td>
+                    {tags.map((tag) => (
+                        <tr key={tag?.id}>
+                            <td className="py-2 px-4 border-b">{tag?.id}</td>
+                            <td className="py-2 px-4 border-b">{tag?.name}</td>
+                            <td className="py-2 px-4 border-b">{tag?.slug}</td>
+                            <td className="py-2 px-4 border-b">{tag?.sub_category?.category?.name}</td>
+                            <td className="py-2 px-4 border-b">{tag?.sub_category?.name}</td>
                             <td className="py-2 px-4 border-b">
                                 <button
-                                    onClick={() => handleEdit(subCategory)}
+                                    onClick={() => handleEdit(tag)}
                                     className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 mr-2"
                                 >
                                     Edit
                                 </button>
                                 <button
-                                    onClick={() => openDeleteModal(subCategory)}
+                                    onClick={() => openDeleteModal(tag)}
                                     className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
                                 >
                                     Delete
@@ -200,9 +211,10 @@ const SubCategories = () => {
                         </tr>
                     ))}
                 </tbody>
+
             </table>
 
-            {/* Create/Edit SubCategory Modal */}
+            {/* Create/Edit Tag Modal */}
             <Transition appear show={isModalOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-10" onClose={closeModal}>
                     <Transition.Child
@@ -233,30 +245,40 @@ const SubCategories = () => {
                                         as="h3"
                                         className="text-lg font-medium leading-6 text-gray-900"
                                     >
-                                        {editingSubCategory ? 'Edit SubCategory' : 'Add SubCategory'}
+                                        {editingTag ? 'Edit Tag' : 'Create Tag'}
                                     </Dialog.Title>
                                     <form onSubmit={handleSubmit}>
                                         <div className="mt-2">
+                                            <label className="block text-sm font-medium text-gray-700">Name</label>
                                             <input
                                                 type="text"
-                                                className="w-full p-2 border border-gray-300 rounded mt-2"
-                                                placeholder="Name"
                                                 value={name}
                                                 onChange={(e) => setName(e.target.value)}
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                                required
                                             />
+                                        </div>
+
+                                        <div className="mt-2">
+                                            <label className="block text-sm font-medium text-gray-700">Slug</label>
                                             <input
                                                 type="text"
-                                                className="w-full p-2 border border-gray-300 rounded mt-2"
-                                                placeholder="Slug"
                                                 value={slug}
                                                 onChange={(e) => setSlug(e.target.value)}
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                                required
                                             />
+                                        </div>
+
+                                        <div className="mt-2">
+                                            <label className="block text-sm font-medium text-gray-700">Category</label>
                                             <select
-                                                className="w-full p-2 border border-gray-300 rounded mt-2"
                                                 value={categoryId}
-                                                onChange={(e) => setCategoryId(e.target.value)}
+                                                onChange={handleCategoryChange}
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                                required
                                             >
-                                                <option value="">Select Category</option>
+                                                <option value="">Select a category</option>
                                                 {categories.map((category) => (
                                                     <option key={category.id} value={category.id}>
                                                         {category.name}
@@ -265,19 +287,29 @@ const SubCategories = () => {
                                             </select>
                                         </div>
 
+                                        <div className="mt-2">
+                                            <label className="block text-sm font-medium text-gray-700">SubCategory</label>
+                                            <select
+                                                value={subCategoryId}
+                                                onChange={(e) => setSubCategoryId(e.target.value)}
+                                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
+                                                required
+                                            >
+                                                <option value="">Select a subcategory</option>
+                                                {filteredSubCategories.map((subCategory) => (
+                                                    <option key={subCategory.id} value={subCategory.id}>
+                                                        {subCategory.name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
                                         <div className="mt-4">
                                             <button
                                                 type="submit"
-                                                className="inline-flex justify-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-sm font-medium text-white hover:bg-blue-600"
+                                                className="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 text-sm font-medium text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                                             >
-                                                {editingSubCategory ? 'Update' : 'Create'}
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="inline-flex justify-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-sm font-medium text-black hover:bg-gray-400 ml-2"
-                                                onClick={closeModal}
-                                            >
-                                                Cancel
+                                                {editingTag ? 'Update Tag' : 'Create Tag'}
                                             </button>
                                         </div>
                                     </form>
@@ -319,25 +351,25 @@ const SubCategories = () => {
                                         as="h3"
                                         className="text-lg font-medium leading-6 text-gray-900"
                                     >
-                                        Delete SubCategory
+                                        Confirm Delete
                                     </Dialog.Title>
                                     <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                            Are you sure you want to delete this subcategory? This action cannot be undone.
+                                            Are you sure you want to delete this tag? This action cannot be undone.
                                         </p>
                                     </div>
 
                                     <div className="mt-4">
                                         <button
                                             type="button"
-                                            className="inline-flex justify-center rounded-md border border-transparent bg-red-500 px-4 py-2 text-sm font-medium text-white hover:bg-red-600"
-                                            onClick={handleDeleteSubCategory}
+                                            className="inline-flex justify-center rounded-md border border-transparent bg-red-100 px-4 py-2 text-sm font-medium text-red-900 hover:bg-red-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                                            onClick={handleDeleteTag}
                                         >
                                             Delete
                                         </button>
                                         <button
                                             type="button"
-                                            className="inline-flex justify-center rounded-md border border-transparent bg-gray-300 px-4 py-2 text-sm font-medium text-black hover:bg-gray-400 ml-2"
+                                            className="ml-2 inline-flex justify-center rounded-md border border-transparent bg-gray-100 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-gray-500 focus-visible:ring-offset-2"
                                             onClick={closeDeleteModal}
                                         >
                                             Cancel
@@ -353,4 +385,4 @@ const SubCategories = () => {
     );
 };
 
-export default SubCategories;
+export default Tags;

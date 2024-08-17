@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../../axiosInstance';
+import axiosInstance from '../../axiosInstance';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Editor } from '@tinymce/tinymce-react';
-import Processing from '../../../components/Processing';
-import Loader from '../../../components/Loader';
+import Processing from '../../components/Processing';
+import Loader from '../../components/Loader';
 
 const EditPost = () => {
     const { slug } = useParams();

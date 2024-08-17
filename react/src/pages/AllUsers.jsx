@@ -1,42 +1,25 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import axiosInstance from '../../axiosInstance';
-import { Link } from 'react-router-dom';
-import SuccessMessage from '../../components/SuccessMessage';
-import Loader from '../../components/Loader';
+import axiosInstance from '../axiosInstance';
+import SuccessMessage from '../components/SuccessMessage';
+import Loader from '../components/Loader';
 
-const fetchPosts = async ({ queryKey }) => {
+const fetchUsers = async ({ queryKey }) => {
   const [_key, { page }] = queryKey;
-  const response = await axiosInstance.get(`/admin/all-posts?page=${page}`);
+  const response = await axiosInstance.get(`/admin/all-users?page=${page}`);
   return response.data;
 };
 
-const deletePost = async (id) => {
-  await axiosInstance.delete(`/admin/all-posts/${id}`);
-};
-
-const AllPosts = () => {
+const AllUsers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [successMessage, setSuccessMessage] = useState('');
   const queryClient = useQueryClient();
 
   const { data, error, isLoading } = useQuery({
-    queryKey: ['posts', { page: currentPage }],
-    queryFn: fetchPosts,
+    queryKey: ['users', { page: currentPage }],
+    queryFn: fetchUsers,
     keepPreviousData: true,
   });
-
-  const mutation = useMutation({
-    mutationFn: deletePost,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['posts', { page: currentPage }]);
-      setSuccessMessage('Post deleted successfully');
-    },
-  });
-
-  const handleDelete = (id) => {
-    mutation.mutate(id);
-  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -47,35 +30,28 @@ const AllPosts = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold">All Posts</h1>
+      <h1 className="text-2xl font-bold">All Users</h1>
       <SuccessMessage message={successMessage} onClose={() => setSuccessMessage('')} />
       {data.data.length === 0 ? (
-        <p>No posts found.</p>
+        <p>No users found.</p>
       ) : (
         <>
           <table className="table-auto w-full">
             <thead>
               <tr>
                 <th>S/N</th>
-                <th>Image</th>
-                <th>Title</th>
-                <th>Date</th>
-                <th>Actions</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Roles</th>
               </tr>
             </thead>
             <tbody>
-              {data.data.map((post, index) => (
-                <tr key={post.id}>
+              {data.data.map((user, index) => (
+                <tr key={user.id}>
                   <td>{index + 1 + (currentPage - 1) * 10}</td>
-                  <td>
-                    <img src={post.image} alt={post.title} className="w-16 h-16 object-cover" />
-                  </td>
-                  <td>{post.title}</td>
-                  <td>{new Date(post.created_at).toLocaleDateString()}</td>
-                  <td>
-                    <Link to={`/dashboard/edit-post/${post.id}`} className="btn btn-warning mr-2">Edit</Link>
-                    <button onClick={() => handleDelete(post.id)} className="btn btn-danger">Delete</button>
-                  </td>
+                  <td>{user.name}</td>
+                  <td>{user.email}</td>
+                  <td>{user.roles.join(', ')}</td>
                 </tr>
               ))}
             </tbody>
@@ -117,4 +93,4 @@ const AllPosts = () => {
   );
 };
 
-export default AllPosts;
+export default AllUsers;

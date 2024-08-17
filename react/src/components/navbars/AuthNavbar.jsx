@@ -36,7 +36,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
   }
 
   return (
-    <nav className="bg-gray-900 fixed top-0 left-0 w-full z-50">
+    <nav className="bg-gray-900  fixed top-0 left-0 w-full z-50">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center">
@@ -47,7 +47,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
             >
               <span className="sr-only">Toggle sidebar</span>
               <svg
-                className="block h-6 w-6"
+                className= "block h-6 w-6   xl:none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -100,7 +100,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
               <div>
                 <button
                   type="button"
-                  className="flex rounded-full bg-gray-800 text-sm focus:outline-none xl:hidden"
+                  className="flex rounded-full bg-gray-800 text-sm focus:outline-none"
                   id="user-menu-button"
                   aria-expanded="false"
                   aria-haspopup="true"
@@ -116,7 +116,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
               </div>
               {isDropdownOpen && (
                 <div
-                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 xl:hidden"
+                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5"
                   role="menu"
                   aria-orientation="vertical"
                   aria-labelledby="user-menu-button"
@@ -151,3 +151,4 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
 }
 
 export default AuthNavbar;
+

@@ -190,10 +190,10 @@
 
 
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../axiosInstance';
+import axiosInstance from '../axiosInstance';
 import { useNavigate } from 'react-router-dom';
 import { Editor } from '@tinymce/tinymce-react';
-import Processing from '../../components/Processing';
+import Processing from '../components/Processing';
 
 const CreatePost = () => {
     const [title, setTitle] = useState('');

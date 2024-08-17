@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from '@nextui-org/react';
 import Avatar from './Avatar.jsx';
 
-import MyPostUserName from '../../dashboard/my-post/MyPostUserName.jsx';
+import MyPostUserName from '../../my-post/MyPostUserName.jsx';
 
 const fetchUserProfile = async (username) => {
     const response = await axiosInstance.get(`/profile/${username}`);

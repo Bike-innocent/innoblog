@@ -1,5 +1,5 @@
 import React, { useState, useEffect, Fragment } from 'react';
-import axiosInstance from '../../../axiosInstance';
+import axiosInstance from '../../axiosInstance';
 import { Dialog, Transition } from '@headlessui/react';
 
 const Categories = () => {

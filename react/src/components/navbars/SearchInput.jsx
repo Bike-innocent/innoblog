@@ -1,8 +1,6 @@
 import React from 'react';
 import { Input } from '@nextui-org/react';
-import { SearchIcon } from '../../pages/dashboard/SearchIcon';
-import { CancelIcon } from '../../pages/dashboard/CancelIcon'; // Adjust path as needed
-
+import { AiOutlineLike } from 'react-icons/ai';
 const SearchInput = ({ isSearchOpen, handleSearchToggle }) => {
   return (
     <div className="relative flex items-center">
@@ -34,18 +32,18 @@ const SearchInput = ({ isSearchOpen, handleSearchToggle }) => {
             }}
             placeholder="Type to search..."
             startContent={
-              <SearchIcon className="text-black/50 mb-0.5 dark:text-white/90 pointer-events-none flex-shrink-0" />
+              <AiOutlineLike className="text-black/50 mb-0.5 dark:text-white/90 pointer-events-none flex-shrink-0" />
             }
             endContent={
               <button onClick={handleSearchToggle}>
-                <CancelIcon className="text-black/50 dark:text-white/90 pointer-events-none flex-shrink-0" />
+                <AiOutlineLike className="text-black/50 dark:text-white/90 pointer-events-none flex-shrink-0" />
               </button>
             }
           />
         </div>
       ) : (
         <button onClick={handleSearchToggle}>
-          <SearchIcon className="text-white" />
+          <AiOutlineLike className="text-white" />
         </button>
       )}
     </div>

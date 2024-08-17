@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { Tab } from '@headlessui/react';
 import { Skeleton } from '@nextui-org/react';
-import axiosInstance from '../../../axiosInstance';
+import axiosInstance from '../../axiosInstance';
 import Published from './Published';
 import Draft from './Draft';
 
