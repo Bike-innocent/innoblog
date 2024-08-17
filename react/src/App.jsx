@@ -19,7 +19,7 @@ import Settings from './pages/Settings';
 import Unauthorized from './pages/Unauthorized';
 import NotFound from './pages/NotFound';
 
-import Index from './pages/blog/Index';
+import Index from './pages/home/Index';
 
 import SinglePost from './pages/singlePost/SinglePost';
 import IndexCategory from './pages/categories/IndexCategory';
