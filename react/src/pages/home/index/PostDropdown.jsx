@@ -5,7 +5,7 @@ import axiosInstance from '../../../axiosInstance';
 import Report from './Report';
 import Share from './Share';
 
-const PostDropdown = ({ post, }) => {
+const PostDropdown = ({ post, setSuccessMessage }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [isReportOpen, setIsReportOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -16,7 +16,11 @@ const PostDropdown = ({ post, }) => {
         const response = await axiosInstance.get(`posts/${post.slug}/is-saved`);
         setIsSaved(response.data.is_saved);
       } catch (error) {
-        console.error('Error fetching saved state:', error);
+        if (error.response && error.response.status === 429) {
+          console.error('Too many requests. Please slow down.');
+        } else {
+          console.error('Error fetching saved state:', error);
+        }
       }
     };
 
@@ -27,8 +31,10 @@ const PostDropdown = ({ post, }) => {
     try {
       const response = await axiosInstance.post(`posts/${post.slug}/save`);
       setIsSaved(response.data.is_saved);
+      setSuccessMessage(response.data.is_saved ? 'Post saved successfully' : 'Post unsaved successfully');
     } catch (error) {
       console.error('Error saving post:', error);
+      setSuccessMessage('An error occurred while saving the post');
     }
   };
 
@@ -95,6 +101,3 @@ const PostDropdown = ({ post, }) => {
 };
 
 export default PostDropdown;
-
-
-

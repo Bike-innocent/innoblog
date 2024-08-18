@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use App\Http\Controllers\posts\ReportController;
 use App\Http\Controllers\posts\ReportReasonController;
+use App\Http\Controllers\comment\CommentController;
 
 
 /*
@@ -88,6 +89,19 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
 
 
     });
+
+
+
+
+    Route::post('/comments', [CommentController::class, 'store']);
+    Route::get('/posts/{post}/comments', [CommentController::class, 'index']);
+
+
+
+
+
+
+
 
     // Profile routes
     Route::prefix('profile')->group(function () {

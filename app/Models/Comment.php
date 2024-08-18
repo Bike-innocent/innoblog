@@ -21,8 +21,19 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
+    // public function replies()
+    // {
+    //     return $this->hasMany(Comment::class, 'parent_id');
+    // }
+
     public function replies()
     {
-        return $this->hasMany(Comment::class, 'parent_id');
+        return $this->hasMany(Comment::class, 'parent_id')->with('replies'); // Recursive relation for nested replies
+    }
+
+    // A comment may belong to a parent comment (if it's a reply)
+    public function parent()
+    {
+        return $this->belongsTo(Comment::class, 'parent_id');
     }
 }

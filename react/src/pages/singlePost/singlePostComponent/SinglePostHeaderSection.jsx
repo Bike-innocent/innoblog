@@ -4,8 +4,9 @@ import axiosInstance from '../../../axiosInstance';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
 import { Skeleton } from '@nextui-org/react';
-import PlaceholderImage from './PlaceholderImage'; // Adjust the import path as necessary
-import LikeButton from './LikeButton'; // Adjust the import path as necessary
+import PlaceholderImage from './PlaceholderImage';
+import LikeButton from './LikeButton';
+import CommentSection from './CommentSection';
 
 const fetchPost = async (slug) => {
     const response = await axiosInstance.get(`/blog/show/posts/${slug}`);
@@ -19,11 +20,6 @@ const SinglePostHeaderSection = () => {
         queryKey: ['postrt', slug],
         queryFn: () => fetchPost(slug),
     });
-
-    const formatDate = (dateString) => {
-        const options = { year: 'numeric', month: 'short', day: 'numeric' };
-        return new Date(dateString).toLocaleDateString('en-US', options).toUpperCase();
-    };
 
     if (isLoading) {
         return (
@@ -54,7 +50,7 @@ const SinglePostHeaderSection = () => {
                         className="w-full h-64 md:h-96 object-cover rounded-lg mb-4"
                     />
                     <div className="absolute top-2 right-2 bg-white bg-opacity-75 text-black text-sm p-1 rounded">
-                        {post.category.name} | {formatDate(post.created_at)}
+                        {post.category.name} | {new Date(post.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }).toUpperCase()}
                     </div>
                 </div>
                 <div className="flex items-center mt-4">
@@ -78,6 +74,9 @@ const SinglePostHeaderSection = () => {
                 </div>
                 {/* Render post content as HTML */}
                 <div dangerouslySetInnerHTML={{ __html: post.content }} />
+
+                {/* Pass both slug and post ID to CommentSection */}
+                <CommentSection slug={slug} postId={post.id} />
             </div>
         </div>
     );

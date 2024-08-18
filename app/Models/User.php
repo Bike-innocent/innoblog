@@ -86,23 +86,29 @@ public function savedPosts()
     {
         // Clean the name to be used as username
         $baseUsername = '@' . strtolower(preg_replace('/[^a-zA-Z0-9]+/', '', $name));
-    
+
         if (!self::where('username', $baseUsername)->exists()) {
             return $baseUsername;
         }
-    
+
         do {
             $username = $baseUsername . rand(1000, 9999);
         } while (self::where('username', $username)->exists());
-    
+
         return $username;
     }
-    
+
 
     // Accessor for the avatar URL
     public function getAvatarUrlAttribute()
     {
         return $this->avatar ? url('avatars/' . $this->avatar) : null;
     }
-    
+
+    public function comments()
+{
+    return $this->hasMany(Comment::class);
+}
+
+
 }
