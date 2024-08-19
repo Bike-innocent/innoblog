@@ -28,14 +28,38 @@ class CommentController extends Controller
       }
 
       // Get all comments for a post
-      public function index($postId)
-      {
-          $comments = Comment::where('post_id', $postId)
-              ->with(['user', 'replies.user']) // Eager load the user and nested replies
-              ->whereNull('parent_id') // Only get top-level comments
-              ->orderBy('created_at', 'desc')
-              ->get();
+     public function index($postId)
+{
+    $comments = Comment::where('post_id', $postId)
+        ->with(['user', 'replies' => function ($query) {
+            $query->with('user');
+        }]) // Ensure that replies also load the user relationship
+        ->whereNull('parent_id') // Only get top-level comments
+        ->orderBy('created_at', 'desc')
+        ->get();
 
-          return response()->json($comments);
-      }
+    return response()->json($comments);
+}
+
+
+//       public function index($postId)
+// {
+//     $comments = Comment::where('post_id', $postId)
+//         ->with(['user', 'replies.user']) // Eager load the user and nested replies
+//         ->whereNull('parent_id') // Only get top-level comments
+//         ->orderBy('created_at', 'desc')
+//         ->get();
+
+//     $comments->each(function ($comment) {
+//         $comment->replies->each(function ($reply) {
+//             if ($reply->parent_id) {
+//                 $parentComment = Comment::find($reply->parent_id);
+//                 $reply->replied_to_user_name = $parentComment->user->name ?? 'Unknown';
+//             }
+//         });
+//     });
+
+//     return response()->json($comments);
+// }
+
 }
