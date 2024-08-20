@@ -27,16 +27,19 @@ const CommentSection = ({ slug, postId }) => {
         },
     });
 
-    const handleAddComment = () => {
-        commentMutation.mutate({
-            post_id: postId, // Use the post ID for the comment submission
-            content: newComment,
-            parent_id: replyTo,
-        });
+    const handleReply = (commentId, username = '') => {
+        setReplyTo(commentId);
+        if (username) {
+            setNewComment(`${username}, `); // Prefill the comment box with the username
+        }
     };
 
-    const handleReply = (commentId) => {
-        setReplyTo(commentId);
+    const handleAddComment = () => {
+        commentMutation.mutate({
+            post_id: postId,
+            content: newComment,
+            parent_id: replyTo, // Set the parent_id for replies
+        });
     };
 
     if (isLoading) return <p>Loading comments...</p>;
@@ -44,9 +47,15 @@ const CommentSection = ({ slug, postId }) => {
 
     return (
         <div className="mt-8">
-            <h3 className="text-2xl font-semibold mb-4">Comments</h3>
+            <h3 className="text-2xl font-semibold mb-4">
+                {comments?.filter(comment => comment.parent_id === null).length || 0} Comments
+            </h3>
             {comments && comments.map(comment => (
-                <Comment key={comment.id} comment={comment} onReply={handleReply} />
+                <Comment
+                    key={comment.id}
+                    comment={comment}
+                    onReply={handleReply} // Handle reply for both comments and replies
+                />
             ))}
             <div className="mt-4">
                 <textarea
