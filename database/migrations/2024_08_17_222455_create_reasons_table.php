@@ -1,5 +1,4 @@
 
-
 <?php
 
 use Illuminate\Database\Migrations\Migration;
@@ -17,9 +16,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('reporter_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('reported_user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('post_id')->constrained('posts')->onDelete('cascade');
-            $table->foreignId('reason_id')->constrained('report_reasons')->onDelete('cascade'); // Updated to use a foreign key
-            $table->text('additional_info')->nullable(); // Optional field for additional information
+            $table->foreignId('post_id')->nullable()->constrained('posts')->onDelete('cascade'); // Make post_id nullable
+            $table->foreignId('comment_id')->nullable()->constrained('comments')->onDelete('cascade'); // Add comment_id
+            $table->foreignId('reason_id')->constrained('report_reasons')->onDelete('cascade');
+            $table->text('additional_info')->nullable();
             $table->timestamps();
         });
     }

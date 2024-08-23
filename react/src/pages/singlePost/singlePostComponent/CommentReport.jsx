@@ -1,29 +1,33 @@
+
+
 import React, { useState, Fragment } from 'react';
-import axiosInstance from '../../../axiosInstance';
 import { Dialog, Transition } from '@headlessui/react';
 import { useQuery } from '@tanstack/react-query';
+import axiosInstance from '../../../axiosInstance';
 
-// Define the fetchReportReasons function
-const fetchReportReasons = async () => {
-    const response = await axiosInstance.get('/report-reasons-dropdown'); // Adjust the endpoint to match your API
-    return response.data;
-};
-
-const Report = ({ postId, isOpen, onClose }) => {
+const CommentReport = ({ commentId, isOpen, onClose }) => {
     const [selectedReason, setSelectedReason] = useState(null);
     const [additionalInfo, setAdditionalInfo] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    // Use React Query to fetch report reasons
+    // Define the fetchReportReasons function
+const fetchReportReasons = async () => {
+    const response = await axiosInstance.get('/report-reasons'); // Adjust the endpoint to match your API
+    return response.data;
+};
+
+
+
+    // Use React Query to fetch and cache report reasons
     const { data: reasons, isLoading: reasonsLoading, isError } = useQuery({
-        queryKey: ['reportReasoegrgns'],
+        queryKey: ['reportReasons'],
         queryFn: fetchReportReasons,
     });
 
     const handleSubmit = () => {
         setIsLoading(true);
         axiosInstance.post('/reports', {
-            post_id: postId,
+            comment_id: commentId,
             reason_id: selectedReason,
             additional_info: additionalInfo,
         })
@@ -81,7 +85,7 @@ const Report = ({ postId, isOpen, onClose }) => {
                                     as="h3"
                                     className="text-lg font-medium leading-6 text-gray-900"
                                 >
-                                    Report Post
+                                    Report Comment
                                 </Dialog.Title>
                                 <div className="mt-4">
                                     {reasons.map(reason => (
@@ -133,4 +137,5 @@ const Report = ({ postId, isOpen, onClose }) => {
     );
 };
 
-export default Report;
+export default CommentReport;
+

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -26,7 +25,11 @@ class Report extends Model
         return $this->belongsTo(Post::class);
     }
 
-    // Add this method to define the relationship with ReportReason
+    public function comment()
+    {
+        return $this->belongsTo(Comment::class);
+    }
+
     public function reason()
     {
         return $this->belongsTo(ReportReason::class, 'reason_id');

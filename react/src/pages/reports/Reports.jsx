@@ -5,8 +5,8 @@ import ManageReport from './ManageReports';
 
 function Reports() {
     const [reports, setReports] = useState([]);
-    const [selectedReport, setSelectedReport] = useState(null); // State to store the selected report for deletion
-    const [isDialogOpen, setIsDialogOpen] = useState(false); // State to control the dialog visibility
+    const [selectedReport, setSelectedReport] = useState(null); 
+    const [isDialogOpen, setIsDialogOpen] = useState(false); 
 
     useEffect(() => {
         fetchReports();
