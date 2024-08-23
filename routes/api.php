@@ -95,6 +95,9 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
 
     Route::post('/comments', [CommentController::class, 'store']);
     Route::get('/posts/{post}/comments', [CommentController::class, 'index']);
+    Route::put('/comments/{id}', [CommentController::class, 'update']);
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
+
 
 
 

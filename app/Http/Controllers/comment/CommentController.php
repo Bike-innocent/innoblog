@@ -41,10 +41,44 @@ class CommentController extends Controller
               ->whereNull('parent_id') // Only get top-level comments
               ->orderBy('created_at', 'desc')
               ->get();
-      
+
           return response()->json($comments);
       }
-      
+
+      public function update(Request $request, $id)
+      {
+          $request->validate([
+              'content' => 'required|string|max:1000',
+          ]);
+
+          $comment = Comment::findOrFail($id);
+
+          // Ensure the logged-in user is the owner of the comment
+          if ($comment->user_id !== Auth::id()) {
+              return response()->json(['error' => 'Unauthorized'], 403);
+          }
+
+          $comment->update([
+              'content' => $request->content,
+          ]);
+
+          return response()->json($comment, 200);
+      }
+
+      public function destroy($id)
+      {
+          $comment = Comment::findOrFail($id);
+
+          // Ensure the logged-in user is the owner of the comment
+          if ($comment->user_id !== Auth::id()) {
+              return response()->json(['error' => 'Unauthorized'], 403);
+          }
+
+          $comment->delete();
+
+          return response()->json(['message' => 'Comment deleted successfully'], 200);
+      }
+
 
 
 }
