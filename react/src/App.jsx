@@ -33,7 +33,7 @@ import ProfileUserName from './pages/profile/profileUserName/ProfileUserName';
 import EditProfile from './pages/profile/partials/EditProfile';
 import SavedPost from './pages/savedpost/SavedPost';
 import Reports  from './pages/reports/Reports';
-import SearchResults from './pages/SearchResults';
+import SearchResults from './pages/search-result/SearchResults';
 
 
 
