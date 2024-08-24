@@ -33,6 +33,7 @@ import ProfileUserName from './pages/profile/profileUserName/ProfileUserName';
 import EditProfile from './pages/profile/partials/EditProfile';
 import SavedPost from './pages/savedpost/SavedPost';
 import Reports  from './pages/reports/Reports';
+import SearchResults from './pages/SearchResults';
 
 
 
@@ -52,7 +53,7 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { path: 'dashboard', element: <Dashboard />  },
-     
+      { path: 'search', element: <SearchResults/>  },
 
       { path: 'home', element: <Index /> },
       { path: '/posts/:slug', element: <SinglePost /> },
@@ -71,8 +72,8 @@ const router = createBrowserRouter([
       { path: 'manage-category', element: <IndexCategory /> },
       { path: 'unauthorized', element: <Unauthorized /> },
       { path: 'not-found', element: <NotFound /> },
-     
-      
+
+
 
     ],
   },

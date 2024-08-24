@@ -1,52 +1,31 @@
-import React from 'react';
-import { Input } from '@nextui-org/react';
-import { AiOutlineLike } from 'react-icons/ai';
-const SearchInput = ({ isSearchOpen, handleSearchToggle }) => {
+import React, { useState } from 'react';
+import { AiOutlineSearch } from 'react-icons/ai'; // Import the search icon
+import { useNavigate } from 'react-router-dom';
+
+const SearchInput = () => {
+  const [query, setQuery] = useState('');
+  const navigate = useNavigate();
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (query.trim()) {
+      navigate(`/search?query=${query}`);
+    }
+  };
+
   return (
-    <div className="relative flex items-center">
-      {isSearchOpen ? (
-        <div className="absolute inset-0 z-50 flex items-center bg-gray-800 p-2 rounded-lg">
-          <Input
-            isClearable
-            radius="md"
-            size="md"
-            classNames={{
-              label: "text-black/50 dark:text-white/90",
-              input: [
-                "bg-transparent",
-                "text-black dark:text-white/90",
-                "placeholder:text-default-700/50 dark:placeholder:text-white/60",
-              ],
-              innerWrapper: "bg-transparent",
-              inputWrapper: [
-                "bg-gray-100",
-                "dark:bg-default/60",
-                "backdrop-blur-xl",
-                "backdrop-saturate-200",
-                "hover:bg-default-200/70",
-                "dark:hover:bg-default/70",
-                "group-data-[focus=true]:bg-default-200/50",
-                "dark:group-data-[focus=true]:bg-default/60",
-                "!cursor-text",
-              ],
-            }}
-            placeholder="Type to search..."
-            startContent={
-              <AiOutlineLike className="text-black/50 mb-0.5 dark:text-white/90 pointer-events-none flex-shrink-0" />
-            }
-            endContent={
-              <button onClick={handleSearchToggle}>
-                <AiOutlineLike className="text-black/50 dark:text-white/90 pointer-events-none flex-shrink-0" />
-              </button>
-            }
-          />
-        </div>
-      ) : (
-        <button onClick={handleSearchToggle}>
-          <AiOutlineLike className="text-white" />
-        </button>
-      )}
-    </div>
+    <form onSubmit={handleSearch} className="relative flex items-center w-full">
+      <input
+        type="text"
+        placeholder="Type to search..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        className="w-96 bg-gray-100 dark:bg-gray-800 text-black dark:text-white px-4 py-2 pl-10 rounded-md shadow-md outline-none focus:ring-2 focus:ring-blue-500 transition-width duration-300 ease-in-out"
+      />
+      <button type="submit" className="absolute left-2 text-gray-600 dark:text-gray-300">
+        <AiOutlineSearch className="text-xl" />
+      </button>
+    </form>
   );
 };
 

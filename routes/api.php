@@ -10,6 +10,7 @@ use App\Http\Controllers\Category\ManageCategoryController;
 use App\Http\Controllers\category\SubCategoryController;
 use App\Http\Controllers\posts\MyPostController;
 use App\Http\Controllers\posts\PostController;
+use App\Http\Controllers\posts\HomePageController;
 use App\Http\Controllers\posts\SinglePostController;
 use App\Http\Controllers\profile\AvatarController;
 use App\Http\Controllers\profile\ProfileController;
@@ -129,6 +130,7 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
 
 
 
+    Route::get('/search', [HomePageController::class, 'search']);
 
 
 

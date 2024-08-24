@@ -68,7 +68,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
               Innoblog
             </NavLink>
           </div>
-          <div className="flex justify-center items-center flex-1 sm:ml-6 w-24">
+          <div className="flex justify-center items-center flex-1 sm:ml-6 w-64">
             <SearchInput
               isSearchOpen={isSearchOpen}
               handleSearchToggle={() => setIsSearchOpen(!isSearchOpen)}
