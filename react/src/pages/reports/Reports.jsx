@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import axiosInstance from '../../axiosInstance';
@@ -5,8 +6,8 @@ import ManageReport from './ManageReports';
 
 function Reports() {
     const [reports, setReports] = useState([]);
-    const [selectedReport, setSelectedReport] = useState(null); 
-    const [isDialogOpen, setIsDialogOpen] = useState(false); 
+    const [selectedReport, setSelectedReport] = useState(null);
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     useEffect(() => {
         fetchReports();
@@ -55,28 +56,48 @@ function Reports() {
                         <h2 className="text-xl font-semibold mb-2">Report: {report.id}</h2>
 
                         <p className="text-gray-600">
-                            Reporter: 
+                            Reporter:
                             <Link to={`/${report.reporter.username}`} className="text-blue-500 hover:underline">
                                 {report.reporter.name}
                             </Link>
                         </p>
 
-                        <p className="text-gray-600">
-                            Post: 
-                            <Link to={`/posts/${report.post.slug}`} className="text-blue-500 hover:underline">
-                                {report.post.title}
-                            </Link>
-                        </p>
+                        {/* Display post information if the report is related to a post */}
+                        {report.post && (
+                            <p className="text-gray-600">
+                                Post:
+                                <Link to={`/posts/${report.post.slug}`} className="text-blue-500 hover:underline">
+                                    {report.post.title}
+                                </Link>
+                            </p>
+                        )}
+
+                        {/* Display comment information if the report is related to a comment */}
+                        {report.comment && (
+                            <>
+                                <p className="text-gray-600">
+                                    Comment: <div dangerouslySetInnerHTML={{ __html: report.comment.content }} />
+                                </p>
+                                <p className="text-gray-600">
+                                    Commented by:
+                                    <Link to={`/${report.comment?.user?.username}`} className="text-blue-500 hover:underline">
+                                        {report.comment?.user?.name}
+                                    </Link>
+                                </p>
+
+
+                            </>
+                        )}
 
                         <p className="text-gray-600">
-                            Reported User: 
+                            Reported User:
                             <Link to={`/${report.reported_user.username}`} className="text-blue-500 hover:underline">
                                 {report.reported_user.name}
                             </Link>
                         </p>
 
                         <p className="text-gray-600">Reason: {report.reason.reason}</p>
-                        
+
                         {report.additional_info && (
                             <p className="text-gray-600">Additional Info: {report.additional_info}</p>
                         )}
@@ -120,3 +141,4 @@ function Reports() {
 }
 
 export default Reports;
+

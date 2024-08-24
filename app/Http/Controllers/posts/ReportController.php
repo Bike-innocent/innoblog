@@ -78,7 +78,7 @@ class ReportController extends Controller
     public function index()
     {
         // Fetch reports with related data
-        $reports = Report::with(['reporter', 'reportedUser', 'post', 'comment', 'reason'])->get();
+        $reports = Report::with(['reporter', 'reportedUser', 'post', 'comment.user', 'reason'])->get();
 
         return response()->json($reports);
     }
@@ -92,29 +92,28 @@ class ReportController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'post_id' => 'nullable|exists:posts,id',
             'comment_id' => 'nullable|exists:comments,id',
             'reason_id' => 'required|exists:report_reasons,id',
             'additional_info' => 'nullable|string',
         ]);
 
-        // Ensure either post_id or comment_id is provided, but not both
-        if (!$validated['post_id'] && !$validated['comment_id']) {
-            return response()->json(['error' => 'Either post_id or comment_id must be provided'], 400);
+        // Ensure comment_id is provided
+        if (!$validated['comment_id']) {
+            return response()->json(['error' => 'Comment ID must be provided'], 400);
         }
 
-        // Determine the reported user's ID based on whether it's a post or comment
-        if ($validated['post_id']) {
-            $reportedUserId = Post::findOrFail($validated['post_id'])->user_id;
-        } elseif ($validated['comment_id']) {
-            $reportedUserId = Comment::findOrFail($validated['comment_id'])->user_id;
-        }
+        // Fetch the comment and the associated post
+        $comment = Comment::findOrFail($validated['comment_id']);
+        $post = $comment->post;
+
+        // Determine the reported user's ID
+        $reportedUserId = $comment->user_id;
 
         $report = Report::create([
             'reporter_id' => auth()->id(),
             'reported_user_id' => $reportedUserId,
-            'post_id' => $validated['post_id'] ?? null,
-            'comment_id' => $validated['comment_id'] ?? null,
+            'post_id' => $post->id,  // Automatically associate the post with the comment
+            'comment_id' => $validated['comment_id'],
             'reason_id' => $validated['reason_id'],
             'additional_info' => $validated['additional_info'] ?? null,
         ]);
