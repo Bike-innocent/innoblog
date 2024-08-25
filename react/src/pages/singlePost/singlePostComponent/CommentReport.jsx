@@ -26,7 +26,7 @@ const fetchReportReasons = async () => {
 
     const handleSubmit = () => {
         setIsLoading(true);
-        axiosInstance.post('/reports', {
+        axiosInstance.post('/report-comment', {
             comment_id: commentId,
             reason_id: selectedReason,
             additional_info: additionalInfo,

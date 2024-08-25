@@ -58,7 +58,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/reports', [ReportController::class, 'index']);
     Route::get('/report-reasons-dropdown', [ReportController::class, 'getReasons']);
-    Route::post('/reports', [ReportController::class, 'store']);
+    Route::post('/report-post', [ReportController::class, 'reportPost']);
+    Route::post('/report-comment', [ReportController::class, 'reportComment']);
     Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
 
 
@@ -154,14 +155,7 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
         // Define similar routes for sub-categories and tags
     });
 
-    //  Route::resource('categories', CategoryController::class)->parameters(['categories' => 'identifier']);
-
-    // Route::apiResource('subcategories', SubCategoryController::class);
-
-    // Route::get('/categories/{categorySlug}/subcategories', [SubCategoryController::class, 'getSubcategoriesByCategory']);
-    // Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubCategory']);
-    // Route::get('/categories/{slug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
-
+   
 
 
 Route::get('/categories', [CategoryController::class, 'index']);

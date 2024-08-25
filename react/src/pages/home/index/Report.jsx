@@ -22,7 +22,7 @@ const Report = ({ postId, isOpen, onClose }) => {
 
     const handleSubmit = () => {
         setIsLoading(true);
-        axiosInstance.post('/reports', {
+        axiosInstance.post('/report-post', {
             post_id: postId,
             reason_id: selectedReason,
             additional_info: additionalInfo,
