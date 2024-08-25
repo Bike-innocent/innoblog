@@ -45,7 +45,7 @@ const HeaderSection = () => {
         observer.unobserve(observerRef.current);
       }
     };
-  }, [hasNextPage, fetchNextPage]);
+  }, [hasNextPage, fetchNextPage]); 
 
   if (isLoading) {
     return (

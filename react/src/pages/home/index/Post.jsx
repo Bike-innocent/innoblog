@@ -5,7 +5,7 @@ import PostDropdown from './PostDropdown';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const Post = ({ post, isSaved }) => {
+const Post = ({ post, }) => {
     const notifySuccess = (message) => toast.success(message);
 
     return (
@@ -32,7 +32,7 @@ const Post = ({ post, isSaved }) => {
                                 {post.title.length > 40 ? `${post.title.substring(0, 40)}...` : post.title}
                             </h2>
                         </Link>
-                        <PostDropdown post={post} isSaved={isSaved} setSuccessMessage={notifySuccess} />
+                        <PostDropdown post={post}  setSuccessMessage={notifySuccess} />
                     </div>
                 </div>
                 <p className="text-gray-500">{post.user.name}</p>

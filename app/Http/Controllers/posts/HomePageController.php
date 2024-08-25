@@ -12,15 +12,16 @@ class HomePageController extends Controller
 {
 
 
-
-   public function search(Request $request) {
+public function search(Request $request) {
     $query = $request->input('query');
+    $limit = $request->input('limit', 12); // Number of results per page
+    $page = $request->input('page', 1); // Current page
 
     // Assuming you have a Post model and relationships set up
     $results = Post::where('title', 'LIKE', "%{$query}%")
                    ->orWhere('content', 'LIKE', "%{$query}%")
                    ->with('user') // Eager load the user relationship
-                   ->get();
+                   ->paginate($limit, ['*'], 'page', $page); // Use paginate for pagination
 
     // Add the full image URL and user avatar URL
     foreach ($results as $post) {
@@ -31,6 +32,8 @@ class HomePageController extends Controller
     return response()->json($results);
 }
 
+}
+
     
 
-}
+
