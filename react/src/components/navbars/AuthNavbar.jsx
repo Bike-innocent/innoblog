@@ -7,7 +7,6 @@ import SearchInput from './SearchInput'; // Adjust path as needed
 
 function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // State to manage search input visibility
 
   const navigate = useNavigate();
 
@@ -36,7 +35,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
   }
 
   return (
-    <nav className="bg-gray-900  fixed top-0 left-0 w-full z-50">
+    <nav className="bg-gray-900 fixed top-0 left-0 w-full z-50">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-16 items-center justify-between">
           <div className="flex items-center">
@@ -47,7 +46,7 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
             >
               <span className="sr-only">Toggle sidebar</span>
               <svg
-                className= "block h-6 w-6   xl:none"
+                className="block h-6 w-6 xl:none"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -68,11 +67,9 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
               Innoblog
             </NavLink>
           </div>
-          <div className="flex justify-center items-center flex-1 sm:ml-6 w-64">
-            <SearchInput
-              isSearchOpen={isSearchOpen}
-              handleSearchToggle={() => setIsSearchOpen(!isSearchOpen)}
-            />
+          {/* Center the search input */}
+          <div className="flex-1 flex justify-center items-center px-2 lg:px-0">
+            <SearchInput />
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
@@ -151,4 +148,3 @@ function AuthNavbar({ isSidebarOpen, toggleSidebar }) {
 }
 
 export default AuthNavbar;
-
