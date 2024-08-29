@@ -44,7 +44,7 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
 // Protected routes
-Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::post('/logout', function (Request $request) {
@@ -155,7 +155,7 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
         // Define similar routes for sub-categories and tags
     });
 
-   
+
 
 
 Route::get('/categories', [CategoryController::class, 'index']);
@@ -165,7 +165,7 @@ Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class,
 
 Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
 
-});
+// });
 
 
 // Admin routes
