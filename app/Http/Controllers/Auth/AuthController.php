@@ -18,12 +18,17 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
+        // Create the new user
         $user = User::create([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
         ]);
 
+        // Automatically log the user in after registration
+        Auth::login($user);
+
+        // Create a new token for the user
         $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json(['user' => $user, 'access_token' => $token, 'token_type' => 'Bearer'], 201);
