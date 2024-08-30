@@ -15,11 +15,12 @@ use App\Http\Controllers\posts\SinglePostController;
 use App\Http\Controllers\profile\AvatarController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\UpdatePasswordController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+// use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use App\Http\Controllers\posts\ReportController;
+use App\Http\Controllers\Auth\SocialiteController;
 use App\Http\Controllers\posts\ReportReasonController;
 use App\Http\Controllers\comment\CommentController;
 
@@ -38,6 +39,11 @@ use App\Http\Controllers\comment\CommentController;
 // Public routes
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+
+
+Route::get('auth/google', [SocialiteController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 
@@ -46,14 +52,9 @@ Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::post('/logout', [AuthController::class, 'logout']);
 
-    Route::post('/logout', function (Request $request) {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Successfully logged out']);
-    });
 
 
     Route::get('/reports', [ReportController::class, 'index']);
