@@ -18,8 +18,8 @@ class PostFactory extends Factory
         $faker = \Faker\Factory::create('en_US'); // Set the locale to English
 
         $images = [
-            '1718486207.jpg', 
-            '1718483390.jpg',
+            '1718486207.jpg',
+           
             '1718491950.jpg',
             '1718494763.jpg',
             '1718636339.jpg',
@@ -33,7 +33,7 @@ class PostFactory extends Factory
         $user = User::inRandomOrder()->first();
         $category = Category::inRandomOrder()->first();
         $subCategory = SubCategory::where('category_id', $category->id)->inRandomOrder()->first();
-      
+
 
         return [
             'title' => $faker->sentence,
@@ -46,5 +46,5 @@ class PostFactory extends Factory
         ];
     }
 
-    
+
 }
