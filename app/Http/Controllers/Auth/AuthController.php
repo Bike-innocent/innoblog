@@ -7,7 +7,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
+use Laravel\Sanctum\HasApiTokens;
+
+// use Laravel\Sanctum\PersonalAccessToken;
 
 class AuthController extends Controller
 {
@@ -52,11 +54,41 @@ class AuthController extends Controller
         return response()->json(['access_token' => $token, 'token_type' => 'Bearer'], 200);
     }
 
-    public function logout(Request $request)
-    {
-        // Revoke the token that was used to authenticate the current request
-        $request->user()->currentAccessToken()->delete();
+// public function logout(Request $request)
+// {
+//     $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Logged out successfully'], 200);
-    }
+
+//         // Handle the case where no valid token is found
+//         return response()->json(['message' => 'logout sucessfully inno'], 200);
+
+// }
+public function logout(Request $request)
+{
+    // Revoke all tokens for the user
+    $request->user('sanctum')->tokens()->delete();
+
+    // Logout the user from the web guard (session)
+    Auth::guard('web')->logout();
+
+    return response()->json(['message' => 'Logged out successfully'], 200);
 }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
