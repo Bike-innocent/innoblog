@@ -1,12 +1,11 @@
 <?php
-
 use App\Http\Controllers\admin\AllPostController;
 use App\Http\Controllers\admin\AllUserController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
-use App\Http\Controllers\Category\CategoryController;
-use App\Http\Controllers\Category\ManageCategoryController;
+use App\Http\Controllers\category\CategoryController;
+use App\Http\Controllers\category\ManageCategoryController;
 use App\Http\Controllers\category\SubCategoryController;
 use App\Http\Controllers\posts\MyPostController;
 use App\Http\Controllers\posts\PostController;
@@ -15,8 +14,6 @@ use App\Http\Controllers\posts\SinglePostController;
 use App\Http\Controllers\profile\AvatarController;
 use App\Http\Controllers\profile\ProfileController;
 use App\Http\Controllers\profile\UpdatePasswordController;
-// use Illuminate\Http\Request;
-// use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use App\Http\Controllers\posts\ReportController;
