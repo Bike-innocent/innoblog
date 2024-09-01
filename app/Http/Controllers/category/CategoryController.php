@@ -7,16 +7,33 @@ use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+
 
 class CategoryController extends Controller
 {
     // Display a listing of the categories
     public function index()
     {
-        $categories = Category::with('subcategories')->get();
-        return response()->json($categories);
+        try {
+            Log::info('Entering the index method in CategoryController.');
+
+            $categories = Category::with('subcategories')->get();
+
+            Log::info('Successfully retrieved categories.', ['categories' => $categories]);
+
+            return response()->json($categories);
+        } catch (\Exception $e) {
+            Log::error('Error in the index method of CategoryController.', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+            ]);
+
+            return response()->json(['error' => 'An error occurred while fetching categories.'], 500);
+        }
     }
-    public function getSubcategories($categorySlug)
+        public function getSubcategories($categorySlug)
     {
         $category = Category::where('slug', $categorySlug)->firstOrFail();
         $subcategories = $category->subcategories;

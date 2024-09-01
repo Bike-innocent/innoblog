@@ -65,9 +65,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::get('/report-reasons', [ReportReasonController::class, 'index']);
-Route::post('/report-reasons', [ReportReasonController::class, 'store']);
-Route::put('/report-reasons/{id}', [ReportReasonController::class, 'update']);
-Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']);
+    Route::post('/report-reasons', [ReportReasonController::class, 'store']);
+    Route::put('/report-reasons/{id}', [ReportReasonController::class, 'update']);
+    Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']);
 
 
     // Posts routes
@@ -75,8 +75,6 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
         Route::get('/saved-posts', [PostController::class, 'getSavedPosts']);
         Route::get('/{slug}/is-saved', [PostController::class, 'isPostSaved']);
         Route::delete('/{slug}/remove-save', [PostController::class, 'removeSave']);
-
-
         Route::get('/form-data', [MyPostController::class, 'formData']);
         Route::patch('/{slug}/publish', [MyPostController::class, 'publish']);
         Route::patch('/{slug}/unpublish', [MyPostController::class, 'unPublish']);
@@ -87,10 +85,6 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
         Route::delete('/{slug}', [MyPostController::class, 'destroy']);
         Route::post('/{slug}/like', [PostController::class, 'like']);
         Route::post('/{slug}/save', [PostController::class, 'toggleSave']);
-
-
-
-
     });
 
 
@@ -100,11 +94,6 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
     Route::get('/posts/{post}/comments', [CommentController::class, 'index']);
     Route::put('/comments/{id}', [CommentController::class, 'update']);
     Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
-
-
-
-
-
 
 
 
@@ -123,13 +112,7 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
     });
 
 
-
     Route::get('/posts-from/{username}', [ProfileController::class, 'getPostsByUsername']);
-
-
-
-
-
 
 
     Route::get('/search', [HomePageController::class, 'search']);
@@ -159,14 +142,50 @@ Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']
 
 
 
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/categories/{categorySlug}/subcategories', [CategoryController::class, 'getSubcategories']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{categorySlug}/subcategories', [CategoryController::class, 'getSubcategories']);
+    Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
 
-Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
+    Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
 
-Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
+
+
+
+
+
+
+
+
+
+
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // Admin routes
@@ -179,10 +198,4 @@ Route::middleware(['auth:sanctum', 'admin'])->prefix('admin')->group(function ()
 
     // All users routes
     Route::get('/all-users', [AllUserController::class, 'index']);
-});
-
-
-// routes/api.php
-Route::get('/test', function () {
-    return response()->json(['message' => 'API is working']);
 });
