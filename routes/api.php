@@ -77,6 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/{slug}/unpublish', [MyPostController::class, 'unPublish']);
         Route::get('/', [MyPostController::class, 'index']);
         Route::post('/', [MyPostController::class, 'store']);
+        Route::post('/store-publish', [MyPostController::class, 'storeAndPublish']);
         Route::get('/{slug}', [MyPostController::class, 'show']);
         Route::put('/{slug}', [MyPostController::class, 'update']);
         Route::delete('/{slug}', [MyPostController::class, 'destroy']);

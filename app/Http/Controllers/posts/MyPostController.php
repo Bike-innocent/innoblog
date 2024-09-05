@@ -26,20 +26,21 @@ class MyPostController extends Controller
         return response()->json($posts);
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
             'title' => 'required|max:255',
             'content' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
             'category_id' => 'required|exists:categories,id',
             'sub_category_id' => 'nullable|exists:sub_categories,id',
         ]);
-
+    
+        // Image upload
         $imageName = time() . '.' . $request->image->extension();
         $request->image->move(public_path('post-images'), $imageName);
-
+    
+        // Store post data
         $post = new Post();
         $post->title = $request->title;
         $post->content = $request->content;
@@ -47,10 +48,13 @@ class MyPostController extends Controller
         $post->category_id = $request->category_id;
         $post->sub_category_id = $request->sub_category_id;
         $post->user_id = Auth::id();
+        $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
         $post->save();
-
-        return response()->json(['message' => 'Post created successfully']);
+    
+        return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
     }
+    
+    
 
     public function show($slug)
     {
