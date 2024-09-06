@@ -1,5 +1,6 @@
 <?php
 
+
 // namespace App\Http\Controllers\Auth;
 
 // use App\Http\Controllers\Controller;
@@ -63,15 +64,9 @@ class GoogleController extends Controller
     public function handleGoogleCallback(Request $request)
     {
         try {
-            // Extract the credential from the request
-            $credential = $request->input('credential');
-            if (!$credential) {
-                return response()->json(['error' => 'No credential provided'], 400);
-            }
-
-            // Use the credential to get user info from Google
-            $googleUser = Socialite::driver('google')->stateless()->userFromToken($credential);
-
+            // Retrieve the Google user information
+            $googleUser = Socialite::driver('google')->stateless()->user();
+    
             // Find or create the user in the local database
             $user = User::updateOrCreate(
                 [
@@ -82,16 +77,15 @@ class GoogleController extends Controller
                     'google_id' => $googleUser->getId(),
                 ]
             );
-
+    
             // Log the user in manually
             Auth::login($user);
-
+    
             // Generate a token for API authentication (for React frontend)
             $token = $user->createToken('authToken')->plainTextToken;
-
-            // Send the token in the response
+    
+            // Respond with the token
             return response()->json(['token' => $token]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => 'Something went wrong: ' . $e->getMessage()], 500);
         }
