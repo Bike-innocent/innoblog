@@ -1,12 +1,11 @@
 <?php
 
-
 // namespace App\Http\Controllers\Auth;
+
 // use App\Http\Controllers\Controller;
 // use Laravel\Socialite\Facades\Socialite;
 // use App\Models\User;
-//  use Illuminate\Support\Facades\Auth;
-// // use Illuminate\Http\Request;
+// use Illuminate\Support\Facades\Auth;
 
 // class GoogleController extends Controller
 // {
@@ -14,10 +13,11 @@
 //     {
 //         return Socialite::driver('google')->stateless()->redirect();
 //     }
+
 //     public function handleGoogleCallback()
 //     {
 //         try {
-//             // Retrieve the Google user
+//             // Retrieve the Google user information
 //             $googleUser = Socialite::driver('google')->stateless()->user();
     
 //             // Find or create the user in the local database
@@ -37,19 +37,12 @@
 //             // Generate a token for API authentication (for React frontend)
 //             $token = $user->createToken('authToken')->plainTextToken;
     
-//             // Return token and user information as JSON to the React app
-//             return response()->json([
-//                 'token' => $token,
-//                 'user' => $user,
-//             ], 200);
-    
+//             // Redirect back to React frontend with the token in the query params
+//             return redirect('https://innoblog.com.ng?token=' . $token);
 //         } catch (\Exception $e) {
 //             return response()->json(['error' => 'Something went wrong: ' . $e->getMessage()], 500);
 //         }
 //     }
-    
-
-    
 // }
 
 namespace App\Http\Controllers\Auth;
@@ -58,6 +51,7 @@ use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class GoogleController extends Controller
 {
@@ -66,12 +60,18 @@ class GoogleController extends Controller
         return Socialite::driver('google')->stateless()->redirect();
     }
 
-    public function handleGoogleCallback()
+    public function handleGoogleCallback(Request $request)
     {
         try {
-            // Retrieve the Google user information
-            $googleUser = Socialite::driver('google')->stateless()->user();
-    
+            // Extract the credential from the request
+            $credential = $request->input('credential');
+            if (!$credential) {
+                return response()->json(['error' => 'No credential provided'], 400);
+            }
+
+            // Use the credential to get user info from Google
+            $googleUser = Socialite::driver('google')->stateless()->userFromToken($credential);
+
             // Find or create the user in the local database
             $user = User::updateOrCreate(
                 [
@@ -82,15 +82,16 @@ class GoogleController extends Controller
                     'google_id' => $googleUser->getId(),
                 ]
             );
-    
+
             // Log the user in manually
             Auth::login($user);
-    
+
             // Generate a token for API authentication (for React frontend)
             $token = $user->createToken('authToken')->plainTextToken;
-    
-            // Redirect back to React frontend with the token in the query params
-            return redirect('https://innoblog.com.ng?token=' . $token);
+
+            // Send the token in the response
+            return response()->json(['token' => $token]);
+
         } catch (\Exception $e) {
             return response()->json(['error' => 'Something went wrong: ' . $e->getMessage()], 500);
         }

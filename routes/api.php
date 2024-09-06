@@ -37,9 +37,12 @@ use App\Http\Controllers\comment\CommentController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
-Route::get('/auth/google/redirect', [GoogleController::class, 'redirectToGoogle']);
-Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+// Route::get('/auth/google/redirect', [GoogleController::class, 'redirectToGoogle']);
+// Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
+
+Route::get('/auth/google/redirect', [GoogleController::class, 'redirectToGoogle']);
+Route::post('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 
 
