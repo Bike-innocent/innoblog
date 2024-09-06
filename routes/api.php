@@ -17,7 +17,7 @@ use App\Http\Controllers\profile\UpdatePasswordController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use App\Http\Controllers\posts\ReportController;
-use App\Http\Controllers\Auth\SocialiteController;
+use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\posts\ReportReasonController;
 use App\Http\Controllers\comment\CommentController;
 
@@ -37,9 +37,11 @@ use App\Http\Controllers\comment\CommentController;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 
+Route::get('/auth/google/redirect', [GoogleController::class, 'redirectToGoogle']);
+Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
-Route::get('auth/google', [SocialiteController::class, 'redirectToGoogle']);
-Route::get('auth/google/callback', [SocialiteController::class, 'handleGoogleCallback']);
+
+
 
 Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail']);
 Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
