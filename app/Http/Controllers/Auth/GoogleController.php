@@ -48,50 +48,64 @@ class GoogleController extends Controller
     // }
 
 
+
     public function handleGoogleCallback(Request $request)
     {
-        $googleToken = $request->input('code'); // Authorization code from Google
+        try {
+            // Step 1: Get the authorization code from the request
+            $googleToken = $request->input('code'); // Authorization code from Google
 
-        // Exchange authorization code for access token
-        $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
-            'code' => $googleToken,
-            'client_id' => env('GOOGLE_CLIENT_ID'),
-            'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-            'redirect_uri' => env('GOOGLE_REDIRECT_URL'),
-            'grant_type' => 'authorization_code',
-        ]);
+            if (!$googleToken) {
+                return response()->json(['error' => 'No authorization code provided'], 400);
+            }
 
-        $tokenData = $response->json();
+            // Step 2: Exchange the authorization code for an access token
+            $tokenResponse = Http::asForm()->post('https://oauth2.googleapis.com/token', [
+                'code' => $googleToken,
+                'client_id' => env('GOOGLE_CLIENT_ID'),
+                'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+                'redirect_uri' => env('GOOGLE_REDIRECT_URL'),
+                'grant_type' => 'authorization_code',
+            ]);
 
-        if (!isset($tokenData['id_token'])) {
-            return response()->json(['error' => 'Invalid Google token'], 401);
-        }
+            $tokenData = $tokenResponse->json();
 
-        // Verify ID token with Google
-        $idToken = $tokenData['id_token'];
-        $userInfo = Http::get('https://oauth2.googleapis.com/tokeninfo', [
-            'id_token' => $idToken
-        ])->json();
+            // Check if token was successfully retrieved
+            if (!isset($tokenData['id_token'])) {
+                return response()->json(['error' => 'Failed to retrieve Google tokens', 'details' => $tokenData], 401);
+            }
 
-        if (isset($userInfo['email'])) {
-            // Create or update user in the database
+            // Step 3: Verify the ID token
+            $idToken = $tokenData['id_token'];
+            $userInfoResponse = Http::get('https://www.googleapis.com/oauth2/v3/tokeninfo', [
+                'id_token' => $idToken,
+            ]);
+
+            $userInfo = $userInfoResponse->json();
+
+            if (!isset($userInfo['email'])) {
+                return response()->json(['error' => 'Invalid ID token, user email not found'], 401);
+            }
+
+            // Step 4: Find or create the user in the database
             $user = User::updateOrCreate(
                 ['email' => $userInfo['email']],
                 [
-                    'name' => $userInfo['name'],
+                    'name' => $userInfo['name'] ?? '',
                     'google_id' => $userInfo['sub'],
                 ]
             );
 
-            // Log the user in and create a token
+            // Step 5: Log the user in and generate an authentication token
             Auth::login($user);
             $authToken = $user->createToken('authToken')->plainTextToken;
 
-            // Redirect to React frontend with token
+            // Step 6: Redirect to the frontend with the token
             return redirect("https://innoblog.com.ng?token={$authToken}");
+
+        } catch (\Exception $e) {
+            // Handle any errors during the process
+            return response()->json(['error' => 'An error occurred during the Google login process', 'message' => $e->getMessage()], 500);
         }
-
-        return response()->json(['error' => 'Invalid Google token'], 401);
     }
-
 }
