@@ -7,7 +7,8 @@ use App\Http\Controllers\Controller;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
+// use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 
 class GoogleController extends Controller
 {
@@ -48,39 +49,49 @@ class GoogleController extends Controller
 
 
     public function handleGoogleCallback(Request $request)
-{
-    $googleToken = $request->input('code'); // This is the authorization code from Google
+    {
+        $googleToken = $request->input('code'); // Authorization code from Google
 
-    // Initialize Google Client
-    $client = new \Google\Client();
-    $client->setClientId(env('GOOGLE_CLIENT_ID'));
-    $client->setClientSecret(env('GOOGLE_CLIENT_SECRET'));
-    $client->setRedirectUri(env('GOOGLE_REDIRECT_URL'));
+        // Exchange authorization code for access token
+        $response = Http::asForm()->post('https://oauth2.googleapis.com/token', [
+            'code' => $googleToken,
+            'client_id' => env('GOOGLE_CLIENT_ID'),
+            'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+            'redirect_uri' => env('GOOGLE_REDIRECT_URL'),
+            'grant_type' => 'authorization_code',
+        ]);
 
-    $token = $client->fetchAccessTokenWithAuthCode($googleToken);
+        $tokenData = $response->json();
 
-    // Now you can use $token['access_token'] to verify with Google
-    $payload = $client->verifyIdToken($token['id_token']);
+        if (!isset($tokenData['id_token'])) {
+            return response()->json(['error' => 'Invalid Google token'], 401);
+        }
 
-    if ($payload) {
-        // Create or update user
-        $user = User::updateOrCreate(
-            ['email' => $payload['email']],
-            [
-                'name' => $payload['name'],
-                'google_id' => $payload['sub']
-            ]
-        );
+        // Verify ID token with Google
+        $idToken = $tokenData['id_token'];
+        $userInfo = Http::get('https://oauth2.googleapis.com/tokeninfo', [
+            'id_token' => $idToken
+        ])->json();
 
-        // Log the user in and create a token
-        Auth::login($user);
-        $authToken = $user->createToken('authToken')->plainTextToken;
+        if (isset($userInfo['email'])) {
+            // Create or update user in the database
+            $user = User::updateOrCreate(
+                ['email' => $userInfo['email']],
+                [
+                    'name' => $userInfo['name'],
+                    'google_id' => $userInfo['sub'],
+                ]
+            );
 
-        // Redirect to React frontend with token
-        return redirect("https://innoblog.com.ng?token={$authToken}");
+            // Log the user in and create a token
+            Auth::login($user);
+            $authToken = $user->createToken('authToken')->plainTextToken;
+
+            // Redirect to React frontend with token
+            return redirect("https://innoblog.com.ng?token={$authToken}");
+        }
+
+        return response()->json(['error' => 'Invalid Google token'], 401);
     }
-
-    return response()->json(['error' => 'Invalid Google token'], 401);
-}
 
 }
