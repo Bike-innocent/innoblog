@@ -45,53 +45,48 @@
 //         }
 //     }
 // }
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\User;
+use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Support\Facades\Auth;
-// use Laravel\Sanctum\HasApiTokens;
-use Google\Client;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class GoogleController extends Controller
 {
-    public function handleGoogleCallback(Request $request)
+    // Redirect to Google login
+    public function redirectToGoogle()
     {
-        $googleToken = $request->input('credential');
+        return Socialite::driver('google')->stateless()->redirect();
+    }
 
-        // Initialize Google Client
-        $client = new Client(['client_id' => '794515842840-l1gtp80th79222cimtr0mo3dj414rvfl.apps.googleusercontent.com']);
-        
-        // Verify the token with Google
-        $payload = $client->verifyIdToken($googleToken);
+    // Handle callback from Google
+    public function handleGoogleCallback()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
-        if ($payload) {
-            // Retrieve user information from Google
-            $googleUserId = $payload['sub'];
-            $email = $payload['email'];
-            $name = $payload['name'];
-
-            // Find or create the user in your local database
+            // Find or create the user
             $user = User::updateOrCreate(
-                ['email' => $email],
+                ['email' => $googleUser->email],
                 [
-                    'name' => $name,
-                    'google_id' => $googleUserId,
+                    'name' => $googleUser->name,
+                    'google_id' => $googleUser->id,
+                    'password' => Hash::make(uniqid()), // Generate random password
                 ]
             );
 
             // Log the user in
             Auth::login($user);
 
-            // Generate token for React app (e.g., Laravel Sanctum token)
+            // Generate a token (if using Sanctum)
             $token = $user->createToken('authToken')->plainTextToken;
 
-            // Return token to React frontend
+            // Return the token to the frontend
             return response()->json(['token' => $token]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to authenticate'], 500);
         }
-
-        return response()->json(['error' => 'Invalid Google token'], 401);
     }
 }
