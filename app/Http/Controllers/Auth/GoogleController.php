@@ -18,35 +18,6 @@ class GoogleController extends Controller
         return Socialite::driver('google')->stateless()->redirect();
     }
 
-    // Handle callback from Google
-    // public function handleGoogleCallback()
-    // {
-    //     try {
-    //         $googleUser = Socialite::driver('google')->stateless()->user();
-
-    //         // Find or create the user
-    //         $user = User::updateOrCreate(
-    //             ['email' => $googleUser->email],
-    //             [
-    //                 'name' => $googleUser->name,
-    //                 'google_id' => $googleUser->id,
-    //                 'password' => Hash::make(uniqid()), // Generate random password
-    //             ]
-    //         );
-
-    //         // Log the user in
-    //         Auth::login($user);
-
-    //         // Generate a token (if using Sanctum)
-    //         $token = $user->createToken('authToken')->plainTextToken;
-
-    //         // Return the token to the frontend
-    //         return response()->json(['token' => $token]);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'Failed to authenticate'], 500);
-    //     }
-    // }
-
     public function handleGoogleCallback()
 {
     try {

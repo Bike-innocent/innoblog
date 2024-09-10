@@ -18,11 +18,7 @@ class ReportController extends Controller
         return response()->json($reports);
     }
 
-    public function getReasons()
-    {
-        $reasons = ReportReason::all();
-        return response()->json($reasons);
-    }
+
 
     // Method for reporting a comment
     public function reportComment(Request $request)

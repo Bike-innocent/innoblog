@@ -10,27 +10,59 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     // Method to fetch paginated posts
-    public function index(Request $request)
+//     public function index(Request $request)
+// {
+//     $limit = $request->query('limit', 12); // Default limit is 12
+
+//     // Fetch posts with user data and randomly order them
+//     $posts = Post::with('user')->inRandomOrder()->paginate($limit);
+
+//     // Transform posts to include full URL for images and user avatars
+//     $posts->getCollection()->transform(function ($post) {
+//         $post->image = url('post-images/' . $post->image);
+//         if ($post->user && $post->user->avatar) {
+//             $post->user->avatar_url = url('avatars/' . $post->user->avatar);
+//         } else {
+//             $post->user->avatar_url = null;
+//             $post->user->placeholder_color = $post->user->placeholder_color;
+//         }
+//         return $post;
+//     });
+
+//     return response()->json($posts);
+// }
+
+public function index(Request $request)
 {
     $limit = $request->query('limit', 12); // Default limit is 12
+
+    $user = auth()->user(); // Get the authenticated user, if available
 
     // Fetch posts with user data and randomly order them
     $posts = Post::with('user')->inRandomOrder()->paginate($limit);
 
-    // Transform posts to include full URL for images and user avatars
-    $posts->getCollection()->transform(function ($post) {
+    // Transform posts to include full URL for images, user avatars, and is_saved status
+    $posts->getCollection()->transform(function ($post) use ($user) {
+        // Set the image URL
         $post->image = url('post-images/' . $post->image);
+
+        // Set user avatar URL or placeholder color
         if ($post->user && $post->user->avatar) {
             $post->user->avatar_url = url('avatars/' . $post->user->avatar);
         } else {
             $post->user->avatar_url = null;
             $post->user->placeholder_color = $post->user->placeholder_color;
         }
+
+        // Check if the authenticated user has saved this post
+        $post->is_saved = $user ? $user->savedPosts()->where('post_id', $post->id)->exists() : false;
+
         return $post;
     });
 
     return response()->json($posts);
 }
+
 
 
     // Method to like/unlike a post

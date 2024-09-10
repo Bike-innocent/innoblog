@@ -45,6 +45,33 @@ Route::post('/reset-password', [ResetPasswordController::class, 'reset']);
 
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
+Route::prefix('blog')->group(function () {
+    Route::get('/posts', [PostController::class, 'index']);
+    Route::get('/show/posts/{slug}', [SinglePostController::class, 'show']);
+    Route::get('/related/{slug}', [SinglePostController::class, 'related']);
+
+});
+
+Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories/{categorySlug}/subcategories', [CategoryController::class, 'getSubcategories']);
+Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
+
+Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
+
+
+
+Route::get('/reports', [ReportController::class, 'index']);
+
+Route::post('/report-post', [ReportController::class, 'reportPost']);
+Route::post('/report-comment', [ReportController::class, 'reportComment']);
+Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
+
+
+Route::get('/report-reasons', [ReportReasonController::class, 'index']);
+Route::post('/report-reasons', [ReportReasonController::class, 'store']);
+Route::put('/report-reasons/{id}', [ReportReasonController::class, 'update']);
+Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']);
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -53,17 +80,6 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
-    Route::get('/reports', [ReportController::class, 'index']);
-    Route::get('/report-reasons-dropdown', [ReportController::class, 'getReasons']);
-    Route::post('/report-post', [ReportController::class, 'reportPost']);
-    Route::post('/report-comment', [ReportController::class, 'reportComment']);
-    Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
-
-
-    Route::get('/report-reasons', [ReportReasonController::class, 'index']);
-    Route::post('/report-reasons', [ReportReasonController::class, 'store']);
-    Route::put('/report-reasons/{id}', [ReportReasonController::class, 'update']);
-    Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']);
 
 
     // Posts routes
@@ -120,12 +136,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     // Posts Index route
-    Route::prefix('blog')->group(function () {
-        Route::get('/posts', [PostController::class, 'index']);
-        Route::get('/show/posts/{slug}', [SinglePostController::class, 'show']);
-        Route::get('/related/{slug}', [SinglePostController::class, 'related']);
 
-    });
 
     // Manage Category routes
     Route::prefix('manage-category')->group(function () {
@@ -137,13 +148,6 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
 
-
-
-    Route::get('/categories', [CategoryController::class, 'index']);
-    Route::get('/categories/{categorySlug}/subcategories', [CategoryController::class, 'getSubcategories']);
-    Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
-
-    Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
 
 
 
