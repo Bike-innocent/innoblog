@@ -72,6 +72,9 @@ Route::post('/report-reasons', [ReportReasonController::class, 'store']);
 Route::put('/report-reasons/{id}', [ReportReasonController::class, 'update']);
 Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']);
 
+
+Route::get('/posts/{post}/comments', [CommentController::class, 'index']);
+
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
 
@@ -104,7 +107,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     Route::post('/comments', [CommentController::class, 'store']);
-    Route::get('/posts/{post}/comments', [CommentController::class, 'index']);
+
     Route::put('/comments/{id}', [CommentController::class, 'update']);
     Route::delete('/comments/{id}', [CommentController::class, 'destroy']);
 
