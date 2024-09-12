@@ -20,7 +20,7 @@ use App\Http\Controllers\posts\ReportController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\posts\ReportReasonController;
 use App\Http\Controllers\comment\CommentController;
-
+use App\Models\Post;
 
 /*
 |--------------------------------------------------------------------------
@@ -185,6 +185,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 
+Route::get('/posts/slugs/site-map', function () {
+    return Post::pluck('slug'); // Fetch only the slugs
+});
 
 
 
