@@ -68,7 +68,7 @@ Route::delete('/reports/{id}', [ReportController::class, 'destroy']);
 
 
 Route::get('/report-reasons', [ReportReasonController::class, 'index']);
-Route::post('/report-reasons', [ReportReasonController::class, 'store']);
+
 Route::put('/report-reasons/{id}', [ReportReasonController::class, 'update']);
 Route::delete('/report-reasons/{id}', [ReportReasonController::class, 'destroy']);
 
@@ -81,7 +81,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
 
-
+    Route::post('/report-reasons', [ReportReasonController::class, 'store']);
 
 
 

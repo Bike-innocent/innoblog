@@ -9,28 +9,6 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-    // Method to fetch paginated posts
-//     public function index(Request $request)
-// {
-//     $limit = $request->query('limit', 12); // Default limit is 12
-
-//     // Fetch posts with user data and randomly order them
-//     $posts = Post::with('user')->inRandomOrder()->paginate($limit);
-
-//     // Transform posts to include full URL for images and user avatars
-//     $posts->getCollection()->transform(function ($post) {
-//         $post->image = url('post-images/' . $post->image);
-//         if ($post->user && $post->user->avatar) {
-//             $post->user->avatar_url = url('avatars/' . $post->user->avatar);
-//         } else {
-//             $post->user->avatar_url = null;
-//             $post->user->placeholder_color = $post->user->placeholder_color;
-//         }
-//         return $post;
-//     });
-
-//     return response()->json($posts);
-// }
 
 public function index(Request $request)
 {
