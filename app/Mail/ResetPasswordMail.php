@@ -21,7 +21,7 @@ class ResetPasswordMail extends Mailable
 
     public function build()
     {
-        $frontendUrl = config('app.frontend_url', 'http://localhost:5173');
+        $frontendUrl = config('app.frontend_url', 'https://innoblog.com.ng');
         $url = $frontendUrl . '/reset-password?token=' . $this->token . '&email=' . urlencode($this->email);
         
         return $this->view('emails.reset-password')
