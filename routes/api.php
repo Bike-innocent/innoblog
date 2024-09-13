@@ -48,7 +48,7 @@ Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 Route::prefix('blog')->group(function () {
     Route::get('/posts', [PostController::class, 'index']);
     Route::get('/show/posts/{slug}', [SinglePostController::class, 'show']);
-    Route::get('/related/{slug}', [SinglePostController::class, 'related']);
+    Route::get(uri: '/related/{slug}', [SinglePostController::class, 'related']);
 
 });
 

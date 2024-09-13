@@ -6,18 +6,57 @@ use App\Http\Controllers\Controller;
 use App\Models\Post;
 use App\Models\Like;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class PostController extends Controller
 {
 
+// public function index(Request $request)
+// {
+//     $limit = $request->query('limit', 12); // Default limit is 12
+
+//     $user = auth()->user(); // Get the authenticated user, if available
+
+//     // Fetch posts with user data and randomly order them
+//     $posts = Post::with('user')->inRandomOrder()->paginate($limit);
+
+//     // Transform posts to include full URL for images, user avatars, and is_saved status
+//     $posts->getCollection()->transform(function ($post) use ($user) {
+//         // Set the image URL
+//         $post->image = url('post-images/' . $post->image);
+
+//         // Set user avatar URL or placeholder color
+//         if ($post->user && $post->user->avatar) {
+//             $post->user->avatar_url = url('avatars/' . $post->user->avatar);
+//         } else {
+//             $post->user->avatar_url = null;
+//             $post->user->placeholder_color = $post->user->placeholder_color;
+//         }
+
+//         // Check if the authenticated user has saved this post
+//         $post->is_saved = $user ? $user->savedPosts()->where('post_id', $post->id)->exists() : false;
+
+//         return $post;
+//     });
+
+//     return response()->json($posts);
+// }
+
+
+
 public function index(Request $request)
 {
     $limit = $request->query('limit', 12); // Default limit is 12
+    $cacheKey = 'random_posts_' . auth()->id(); // Unique cache key per user
+    $cacheDuration = 2 * 60; // Cache for 3 minutes (300 seconds)
 
     $user = auth()->user(); // Get the authenticated user, if available
 
-    // Fetch posts with user data and randomly order them
-    $posts = Post::with('user')->inRandomOrder()->paginate($limit);
+    // Check if cached posts exist, otherwise fetch and cache them
+    $posts = Cache::remember($cacheKey, $cacheDuration, function () use ($limit) {
+        // Fetch only published posts where status = 1 and randomize the order
+        return Post::with('user')->where('status', 1)->inRandomOrder()->paginate($limit);
+    });
 
     // Transform posts to include full URL for images, user avatars, and is_saved status
     $posts->getCollection()->transform(function ($post) use ($user) {
@@ -40,6 +79,7 @@ public function index(Request $request)
 
     return response()->json($posts);
 }
+
 
 
 

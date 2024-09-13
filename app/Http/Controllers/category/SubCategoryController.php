@@ -57,24 +57,51 @@ class SubCategoryController extends Controller
     }
 
 
-    public function getPostsBySubcategory($subcategorySlug)
-    {
+    // public function getPostsBySubcategory($subcategorySlug)
+    // {
         
-        $subCategory = Subcategory::where('slug', $subcategorySlug)->first();
+    //     $subCategory = Subcategory::where('slug', $subcategorySlug)->first();
     
-        if (!$subCategory) {
-            return response()->json(['error' => 'Subcategory not found'], 404);
-        }
+    //     if (!$subCategory) {
+    //         return response()->json(['error' => 'Subcategory not found'], 404);
+    //     }
     
       
-        $posts = $subCategory->posts()->with('user')->get();
+    //     $posts = $subCategory->posts()->with('user')->get();
     
-        foreach ($posts as $post) {
-            $post->image = url('post-images/' . $post->image);
-        }
+    //     foreach ($posts as $post) {
+    //         $post->image = url('post-images/' . $post->image);
+    //     }
     
-        return response()->json(['data' => $posts]);
+    //     return response()->json(['data' => $posts]);
+    // }
+    
+
+    public function getPostsBySubcategory($subcategorySlug)
+{
+    // Find the subcategory by slug
+    $subCategory = Subcategory::where('slug', $subcategorySlug)->first();
+    
+    // If the subcategory doesn't exist, return a 404 error
+    if (!$subCategory) {
+        return response()->json(['error' => 'Subcategory not found'], 404);
     }
-    
+
+    // Fetch only published posts (status = 1) and order by the most recent (created_at desc)
+    $posts = $subCategory->posts()
+                ->with('user') // Include the user relationship
+                ->where('status', 1) // Only fetch published posts
+                ->orderBy('created_at', 'desc') // Order by the most recent posts
+                ->get();
+
+    // Update the image URL for each post
+    foreach ($posts as $post) {
+        $post->image = url('post-images/' . $post->image);
+    }
+
+    // Return the posts as JSON
+    return response()->json(['data' => $posts]);
+}
+
     
 }

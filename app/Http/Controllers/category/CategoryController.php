@@ -108,23 +108,48 @@ class CategoryController extends Controller
         $category->delete();
         return response()->json(['message' => 'Category deleted successfully']);
     }
+    // public function getMixedPosts($categorySlug)
+    // {
+    //     $category = Category::where('slug', $categorySlug)->firstOrFail();
+
+    //     $limit = request()->get('limit', 50); // Default limit to 12 if not provided
+    //     $posts = Post::where('category_id', $category->id)
+    //         ->with('user') // Eager load the user relationship
+    //         ->orderBy('created_at', 'desc')
+    //         ->paginate($limit);
+
+    //     // Add image URLs to the posts
+    //     foreach ($posts as $post) {
+    //         $post->image = url('post-images/' . $post->image);
+    //     }
+
+    //     return response()->json($posts);
+    // }
+
     public function getMixedPosts($categorySlug)
-    {
-        $category = Category::where('slug', $categorySlug)->firstOrFail();
+{
+    // Find the category by slug or return 404 if not found
+    $category = Category::where('slug', $categorySlug)->firstOrFail();
 
-        $limit = request()->get('limit', 50); // Default limit to 12 if not provided
-        $posts = Post::where('category_id', $category->id)
-            ->with('user') // Eager load the user relationship
-            ->orderBy('created_at', 'desc')
-            ->paginate($limit);
+    // Default limit to 50 if not provided
+    $limit = request()->get('limit', 100);
 
-        // Add image URLs to the posts
-        foreach ($posts as $post) {
-            $post->image = url('post-images/' . $post->image);
-        }
+    // Fetch posts from the category where status is 1 (published) and order by recent posts
+    $posts = Post::where('category_id', $category->id)
+                ->where('status', 1) // Only fetch published posts
+                ->with('user') // Eager load the user relationship
+                ->orderBy('created_at', 'desc') // Order by the most recent posts
+                ->paginate($limit); // Paginate the results
 
-        return response()->json($posts);
+    // Add image URLs to each post
+    foreach ($posts as $post) {
+        $post->image = url('post-images/' . $post->image);
     }
+
+    // Return the paginated posts as a JSON response
+    return response()->json($posts);
+}
+
 
 
 }

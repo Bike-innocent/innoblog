@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\posts;
-
+use Illuminate\Support\Facades\Cache;
 use App\Http\Controllers\Controller;
 use App\Models\Post;
 
@@ -78,20 +78,71 @@ class SinglePostController extends Controller
 
 
 
-    public function related($slug)
-    {
-        $post = Post::where('slug', $slug)->firstOrFail();
-        $relatedPosts = Post::with('user', 'category')
+    // public function related($slug)
+    // {
+    //     $post = Post::where('slug', $slug)->firstOrFail();
+    //     $relatedPosts = Post::with('user', 'category')
+    //         ->where('category_id', $post->category_id)
+    //         ->where('slug', '!=', $slug)
+    //         ->take(5)
+    //         ->latest()
+    //         ->get();
+
+    //     foreach ($relatedPosts as $relatedPost) {
+    //         $relatedPost->image = url('post-images/' . $relatedPost->image);
+    //     }
+
+    //     return response()->json(['relatedPosts' => $relatedPosts]);
+    // }
+
+//     public function related($slug)
+// {
+//     $post = Post::where('slug', $slug)->firstOrFail();
+
+//     // Fetch first 20 posts in random order from the same category
+//     $relatedPosts = Post::with('user', 'category')
+//         ->where('category_id', $post->category_id)
+//         ->where('slug', '!=', $slug)
+//         ->inRandomOrder() // Randomize the order
+//         ->limit(20) // Fetch the first 20 posts
+//         ->take(5) // Limit to 5 posts
+//         ->get();
+
+//     // Update image URLs
+//     foreach ($relatedPosts as $relatedPost) {
+//         $relatedPost->image = url('post-images/' . $relatedPost->image);
+//     }
+
+//     return response()->json(['relatedPosts' => $relatedPosts]);
+// }
+
+
+
+
+public function related($slug)
+{
+    $post = Post::where('slug', $slug)->firstOrFail();
+
+    // Cache the related posts for 2 minutes based on the category
+    $cacheKey = 'related_posts_category_' . $post->category_id;
+
+    $relatedPosts = Cache::remember($cacheKey, 60, function () use ($post, $slug) {
+        // Fetch first 20 posts in random order from the same category
+        return Post::with('user', 'category')
             ->where('category_id', $post->category_id)
             ->where('slug', '!=', $slug)
-            ->take(5)
-            ->latest()
-            ->get();
+            ->inRandomOrder() // Randomize the order
+            ->limit(20) // Fetch the first 20 posts
+            ->take(5) // Limit to 5 posts
+            ->get()
+            ->each(function ($relatedPost) {
+                $relatedPost->image = url('post-images/' . $relatedPost->image);
+            });
+    });
 
-        foreach ($relatedPosts as $relatedPost) {
-            $relatedPost->image = url('post-images/' . $relatedPost->image);
-        }
+    return response()->json(['relatedPosts' => $relatedPosts]);
+}
 
-        return response()->json(['relatedPosts' => $relatedPosts]);
-    }
+
+
 }

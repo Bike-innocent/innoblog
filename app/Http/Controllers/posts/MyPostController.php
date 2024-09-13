@@ -11,20 +11,40 @@ use Illuminate\Support\Facades\Auth;
 
 class MyPostController extends Controller
 {
+    // public function index()
+    // {
+    //     $user = Auth::user();
+    //     $posts = Post::where('user_id', $user->id)
+    //         ->with('category', 'subCategory') // Eager load category and subcategory
+    //         ->paginate(12); // Use pagination
+
+    //     // Update image URLs
+    //     foreach ($posts as $post) {
+    //         $post->image = url('post-images/' . $post->image);
+    //     }
+
+    //     return response()->json($posts);
+    // }
+
     public function index()
-    {
-        $user = Auth::user();
-        $posts = Post::where('user_id', $user->id)
-            ->with('category', 'subCategory') // Eager load category and subcategory
-            ->paginate(12); // Use pagination
+{
+    $user = Auth::user();
 
-        // Update image URLs
-        foreach ($posts as $post) {
-            $post->image = url('post-images/' . $post->image);
-        }
+    // Fetch user's posts, order by most recent, and eager load category and subcategory
+    $posts = Post::where('user_id', $user->id)
+                ->with('category', 'subCategory') // Eager load category and subcategory
+                ->orderBy('created_at', 'desc') // Order by most recent
+                ->paginate(12); // Paginate the results with a limit of 12 per page
 
-        return response()->json($posts);
+    // Update image URLs
+    foreach ($posts as $post) {
+        $post->image = url('post-images/' . $post->image);
     }
+
+    // Return the posts as a JSON response
+    return response()->json($posts);
+}
+
 
     public function store(Request $request)
     {

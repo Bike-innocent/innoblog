@@ -84,18 +84,41 @@ class ProfileController extends Controller
         return response()->json($user);
     }
     
+    // public function getPostsByUsername($username)
+    // {
+    //     $user = User::where('username', $username)->firstOrFail();
+    //     if (!$user) {
+    //         return response()->json(['message' => 'User not found'], 404);
+    //     }
+
+    //     $posts = Post::where('user_id', $user->id)->paginate(12);
+    //     foreach ($posts as $post) {
+    //         $post->image = url('post-images/' . $post->image);
+    //     }
+
+    //     return response()->json($posts);
+    // }
+
     public function getPostsByUsername($username)
-    {
-        $user = User::where('username', $username)->firstOrFail();
-        if (!$user) {
-            return response()->json(['message' => 'Userc not found'], 404);
-        }
-
-        $posts = Post::where('user_id', $user->id)->paginate(12);
-        foreach ($posts as $post) {
-            $post->image = url('post-images/' . $post->image);
-        }
-
-        return response()->json($posts);
+{
+    $user = User::where('username', $username)->firstOrFail();
+    
+    if (!$user) {
+        return response()->json(['message' => 'User not found'], 404);
     }
+
+    // Fetch user's posts, order by most recent, and paginate
+    $posts = Post::where('user_id', $user->id)
+                ->orderBy('created_at', 'desc') // Order by most recent
+                ->paginate(12);
+
+    // Update image URLs
+    foreach ($posts as $post) {
+        $post->image = url('post-images/' . $post->image);
+    }
+
+    // Return the posts as a JSON response
+    return response()->json($posts);
+}
+
 }
