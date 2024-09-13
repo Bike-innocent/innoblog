@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\posts;
-
+use App\Http\Requests\StorePostRequest;
+use App\Http\Requests\UpdatePostRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
@@ -46,33 +47,59 @@ class MyPostController extends Controller
 }
 
 
-    public function store(Request $request)
-    {
-        $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'nullable|exists:sub_categories,id',
-        ]);
+    // public function store(Request $request)
+    // {
+    //     $request->validate([
+    //         'title' => 'required|max:255',
+    //         'content' => 'required',
+    //         'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+    //         'category_id' => 'required|exists:categories,id',
+    //         'sub_category_id' => 'nullable|exists:sub_categories,id',
+    //     ]);
     
-        // Image upload
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('post-images'), $imageName);
+    //     // Image upload
+    //     $imageName = time() . '.' . $request->image->extension();
+    //     $request->image->move(public_path('post-images'), $imageName);
     
-        // Store post data
-        $post = new Post();
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->image = $imageName;
-        $post->category_id = $request->category_id;
-        $post->sub_category_id = $request->sub_category_id;
-        $post->user_id = Auth::id();
-        $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
-        $post->save();
+    //     // Store post data
+    //     $post = new Post();
+    //     $post->title = $request->title;
+    //     $post->content = $request->content;
+    //     $post->image = $imageName;
+    //     $post->category_id = $request->category_id;
+    //     $post->sub_category_id = $request->sub_category_id;
+    //     $post->user_id = Auth::id();
+    //     $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
+    //     $post->save();
     
-        return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
-    }
+    //     return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
+    // }
+
+
+   
+
+public function store(StorePostRequest $request)
+{
+    // The validated data is automatically available from the request object
+
+    // Image upload
+    $imageName = time() . '.' . $request->image->extension();
+    $request->image->move(public_path('post-images'), $imageName);
+
+    // Store post data
+    $post = new Post();
+    $post->title = $request->title;
+    $post->content = $request->content;
+    $post->image = $imageName;
+    $post->category_id = $request->category_id;
+    $post->sub_category_id = $request->sub_category_id;
+    $post->user_id = Auth::id();
+    $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
+    $post->save();
+
+    return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
+}
+
     
     
 
@@ -86,37 +113,70 @@ class MyPostController extends Controller
     }
 
 
-    public function update(Request $request, $slug)
-    {
-        $post = Post::where('slug', $slug)->firstOrFail();
+    // public function update(Request $request, $slug)
+    // {
+    //     $post = Post::where('slug', $slug)->firstOrFail();
 
-        $request->validate([
-            'title' => 'required|max:255',
-            'content' => 'required',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'category_id' => 'required|exists:categories,id',
-            'sub_category_id' => 'nullable|exists:sub_categories,id',
-        ]);
+    //     $request->validate([
+    //         'title' => 'required|max:255',
+    //         'content' => 'required',
+    //         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    //         'category_id' => 'required|exists:categories,id',
+    //         'sub_category_id' => 'nullable|exists:sub_categories,id',
+    //     ]);
 
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if (file_exists(public_path('post-images/' . $post->image))) {
-                unlink(public_path('post-images/' . $post->image));
-            }
+    //     if ($request->hasFile('image')) {
+    //         // Delete old image
+    //         if (file_exists(public_path('post-images/' . $post->image))) {
+    //             unlink(public_path('post-images/' . $post->image));
+    //         }
 
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('post-images'), $imageName);
-            $post->image = $imageName;
+    //         $imageName = time() . '.' . $request->image->extension();
+    //         $request->image->move(public_path('post-images'), $imageName);
+    //         $post->image = $imageName;
+    //     }
+
+    //     $post->title = $request->title;
+    //     $post->content = $request->content;
+    //     $post->category_id = $request->category_id;
+    //     $post->sub_category_id = $request->sub_category_id;
+    //     $post->save();
+
+    //     return response()->json(['message' => 'Post updated successfully.']);
+    // }
+
+
+
+
+
+
+    
+
+public function update(UpdatePostRequest $request, $slug)
+{
+    $post = Post::where('slug', $slug)->firstOrFail();
+
+    // Handle image upload if a new image is provided
+    if ($request->hasFile('image')) {
+        // Delete old image
+        if (file_exists(public_path('post-images/' . $post->image))) {
+            unlink(public_path('post-images/' . $post->image));
         }
 
-        $post->title = $request->title;
-        $post->content = $request->content;
-        $post->category_id = $request->category_id;
-        $post->sub_category_id = $request->sub_category_id;
-        $post->save();
-
-        return response()->json(['message' => 'Post updated successfully.']);
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('post-images'), $imageName);
+        $post->image = $imageName;
     }
+
+    // Update post data
+    $post->title = $request->title;
+    $post->content = $request->content;
+    $post->category_id = $request->category_id;
+    $post->sub_category_id = $request->sub_category_id;
+    $post->save();
+
+    return response()->json(['message' => 'Post updated successfully.']);
+}
 
 
 

@@ -22,7 +22,7 @@ class AvatarUpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'avatar' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:5120',
         ];
     }
 
@@ -35,7 +35,7 @@ class AvatarUpdateRequest extends FormRequest
             'avatar.required' => 'The avatar field is required.',
             'avatar.image' => 'The avatar must be an image.',
             'avatar.mimes' => 'The avatar must be a file of type: jpeg, png, jpg, gif, svg.',
-            'avatar.max' => 'The avatar may not be greater than 2048 kilobytes.',
+            'avatar.max' => 'The avatar size should not be greater than 5MB.',
         ];
     }
 }

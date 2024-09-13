@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
@@ -29,24 +31,60 @@ class ProfileController extends Controller
         return response()->json($user);
     }
 
+    // public function update(ProfileUpdateRequest $request)
+    // {
+    //     $user = Auth::user();
+    //     if (!$user) {
+    //         return response()->json(['message' => 'User not authenticated'], 401);
+    //     }
+
+    //     $request->validated();
+
+    //     $user->name = $request->name;
+    //     $user->email = $request->email;
+    //     if ($request->has('username')) {
+    //         $user->username = '@' . ltrim($request->username, '@'); // Ensure the username starts with "@" and avoid duplicate "@"
+    //     }
+    //     $user->save();
+
+    //     return response()->json(['message' => 'Profile updated successfully.'], 200);
+    // }
+
+
     public function update(ProfileUpdateRequest $request)
     {
         $user = Auth::user();
+
         if (!$user) {
             return response()->json(['message' => 'User not authenticated'], 401);
         }
 
-        $request->validated();
+        $validatedData = $request->validated();
 
-        $user->name = $request->name;
-        $user->email = $request->email;
+        // Update user profile fields
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+
         if ($request->has('username')) {
-            $user->username = '@' . ltrim($request->username, '@'); // Ensure the username starts with "@" and avoid duplicate "@"
+            // Ensure the "@" is prepended when saving to the database
+            $username = '@' . ltrim($validatedData['username'], '@');
+            $user->username = $username;
         }
-        $user->save();
 
-        return response()->json(['message' => 'Profile updated successfully.'], 200);
+        try {
+            $user->save();
+            return response()->json(['message' => 'Profile updated successfully.'], 200);
+        } catch (QueryException $e) {
+            // Check for a duplicate username
+            if ($e->errorInfo[1] === 1062) {
+                return response()->json(['errors' => ['username' => 'Username is not avaliable.']], 422);
+            }
+
+            return response()->json(['message' => 'An error occurred while updating the profile.'], 500);
+        }
     }
+
+
 
     public function destroy(Request $request)
     {
@@ -76,14 +114,14 @@ class ProfileController extends Controller
             \Log::error('User not found with username: ' . $username);
             return response()->json(['message' => 'User not found'], 404);
         }
-    
+
         if ($user->avatar) {
             $user->avatar = url('avatars/' . $user->avatar);
         }
-    
+
         return response()->json($user);
     }
-    
+
     // public function getPostsByUsername($username)
     // {
     //     $user = User::where('username', $username)->firstOrFail();
@@ -102,7 +140,7 @@ class ProfileController extends Controller
     public function getPostsByUsername($username)
 {
     $user = User::where('username', $username)->firstOrFail();
-    
+
     if (!$user) {
         return response()->json(['message' => 'User not found'], 404);
     }
