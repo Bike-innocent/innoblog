@@ -108,23 +108,7 @@ class CategoryController extends Controller
         $category->delete();
         return response()->json(['message' => 'Category deleted successfully']);
     }
-    // public function getMixedPosts($categorySlug)
-    // {
-    //     $category = Category::where('slug', $categorySlug)->firstOrFail();
-
-    //     $limit = request()->get('limit', 50); // Default limit to 12 if not provided
-    //     $posts = Post::where('category_id', $category->id)
-    //         ->with('user') // Eager load the user relationship
-    //         ->orderBy('created_at', 'desc')
-    //         ->paginate($limit);
-
-    //     // Add image URLs to the posts
-    //     foreach ($posts as $post) {
-    //         $post->image = url('post-images/' . $post->image);
-    //     }
-
-    //     return response()->json($posts);
-    // }
+ 
 
     public function getMixedPosts($categorySlug)
 {

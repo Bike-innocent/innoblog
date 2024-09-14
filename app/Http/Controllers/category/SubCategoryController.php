@@ -57,25 +57,6 @@ class SubCategoryController extends Controller
     }
 
 
-    // public function getPostsBySubcategory($subcategorySlug)
-    // {
-        
-    //     $subCategory = Subcategory::where('slug', $subcategorySlug)->first();
-    
-    //     if (!$subCategory) {
-    //         return response()->json(['error' => 'Subcategory not found'], 404);
-    //     }
-    
-      
-    //     $posts = $subCategory->posts()->with('user')->get();
-    
-    //     foreach ($posts as $post) {
-    //         $post->image = url('post-images/' . $post->image);
-    //     }
-    
-    //     return response()->json(['data' => $posts]);
-    // }
-    
 
     public function getPostsBySubcategory($subcategorySlug)
 {

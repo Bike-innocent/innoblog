@@ -52,11 +52,41 @@ Route::prefix('blog')->group(function () {
 
 });
 
+
+
+
+
+
+
+// Route::get('/categories', [CategoryController::class, 'index']);
+// Route::get('/categories/{categorySlug}/subcategories', [CategoryController::class, 'getSubcategories']);
+// Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
+
+
+// Display a listing of the categories
 Route::get('/categories', [CategoryController::class, 'index']);
 Route::get('/categories/{categorySlug}/subcategories', [CategoryController::class, 'getSubcategories']);
 Route::get('/categories/{categorySlug}/mixed-posts', [CategoryController::class, 'getMixedPosts']);
+Route::post('/categories', [CategoryController::class, 'store']);
+Route::get('/categories/{identifier}', [CategoryController::class, 'show']);
+Route::put('/categories/{id}', [CategoryController::class, 'update']);
+Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
+
+
+
+
+
+
+// Get all subcategories
+Route::get('/subcategories', [SubCategoryController::class, 'index']);
+Route::post('/subcategories', [SubCategoryController::class, 'store']);
+Route::get('/subcategories/{id}', [SubCategoryController::class, 'show']);
+Route::put('/subcategories/{id}', [SubCategoryController::class, 'update']);
+Route::delete('/subcategories/{id}', [SubCategoryController::class, 'destroy']);
 Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
+
+// Route::get('/subcategories/{subcategorySlug}/posts', [SubCategoryController::class, 'getPostsBySubcategory']);
 
 
 
@@ -141,14 +171,14 @@ Route::middleware('auth:sanctum')->group(function () {
     // Posts Index route
 
 
-    // Manage Category routes
-    Route::prefix('manage-category')->group(function () {
-        Route::get('/', [ManageCategoryController::class, 'index']);
-        Route::post('/category', [ManageCategoryController::class, 'storeCategory']);
-        Route::put('/category/{category}', [ManageCategoryController::class, 'updateCategory']);
-        Route::delete('/category/{category}', [ManageCategoryController::class, 'destroyCategory']);
-        // Define similar routes for sub-categories and tags
-    });
+    // // Manage Category routes
+    // Route::prefix('manage-category')->group(function () {
+    //     Route::get('/', [ManageCategoryController::class, 'index']);
+    //     Route::post('/category', [ManageCategoryController::class, 'storeCategory']);
+    //     Route::put('/category/{category}', [ManageCategoryController::class, 'updateCategory']);
+    //     Route::delete('/category/{category}', [ManageCategoryController::class, 'destroyCategory']);
+    //     // Define similar routes for sub-categories and tags
+    // });
 
 
 
