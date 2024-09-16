@@ -12,6 +12,7 @@
         "laravel/sanctum": "^3.3",
         "laravel/socialite": "^5.15",
         "laravel/tinker": "^2.8",
+        "spatie/laravel-backup": "^8.8",
         "spatie/laravel-permission": "^6.9",
         "spatie/laravel-sitemap": "^7.0"
     },

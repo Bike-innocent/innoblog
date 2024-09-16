@@ -43,19 +43,22 @@ class PostController extends Controller
 // }
 
 
-
 public function index(Request $request)
 {
     $limit = $request->query('limit', 12); // Default limit is 12
-    $cacheKey = 'random_posts_' . auth()->id(); // Unique cache key per user
-    $cacheDuration = 2 * 60; // Cache for 3 minutes (300 seconds)
+    $page = $request->query('page', 1); // Get the current page from the query
+    $cacheKey = 'random_posts_' . auth()->id() . '_page_' . $page; // Unique cache key per user and page
+    $cacheDuration = 3 * 60; // Cache for 3 minutes
 
     $user = auth()->user(); // Get the authenticated user, if available
 
-    // Check if cached posts exist, otherwise fetch and cache them
-    $posts = Cache::remember($cacheKey, $cacheDuration, function () use ($limit) {
+    // Check if cached posts for the current page exist, otherwise fetch and cache them
+    $posts = Cache::remember($cacheKey, $cacheDuration, function () use ($limit, $page) {
         // Fetch only published posts where status = 1 and randomize the order
-        return Post::with('user')->where('status', 1)->inRandomOrder()->paginate($limit);
+        return Post::with('user')
+            ->where('status', 1)
+            ->inRandomOrder()
+            ->paginate($limit, ['*'], 'page', $page);
     });
 
     // Transform posts to include full URL for images, user avatars, and is_saved status
