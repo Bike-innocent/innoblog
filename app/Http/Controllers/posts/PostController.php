@@ -172,26 +172,51 @@ public function removeSave($slug)
 
 
     // Method to fetch saved posts
+    // public function getSavedPosts(Request $request)
+    // {
+    //     $user = auth()->user();
+
+    //     // Fetch the saved posts with pagination
+    //     $savedPosts = $user->savedPosts()->with('user')->paginate($request->get('limit', 12));
+
+    //     // Transform the saved posts to include the full URL for images and user avatars
+    //     $savedPosts->getCollection()->transform(function ($post) {
+    //         $post->image = url('post-images/' . $post->image);
+    //         if ($post->user && $post->user->avatar) {
+    //             $post->user->avatar_url = url('avatars/' . $post->user->avatar);
+    //         } else {
+    //             $post->user->avatar_url = null;
+    //             $post->user->placeholder_color = $post->user->placeholder_color;
+    //         }
+    //         return $post;
+    //     });
+
+
+    //     return response()->json($savedPosts);
+    // }
     public function getSavedPosts(Request $request)
-    {
-        $user = auth()->user();
+{
+    $user = auth()->user();
 
-        // Fetch the saved posts with pagination
-        $savedPosts = $user->savedPosts()->with('user')->paginate($request->get('limit', 12));
+    // Fetch the saved posts with pagination and order them by the most recently created (descending order)
+    $savedPosts = $user->savedPosts()
+        ->with('user')
+        ->orderBy('created_at', 'desc') // Order by 'created_at' in descending order
+        ->paginate($request->get('limit', 12));
 
-        // Transform the saved posts to include the full URL for images and user avatars
-        $savedPosts->getCollection()->transform(function ($post) {
-            $post->image = url('post-images/' . $post->image);
-            if ($post->user && $post->user->avatar) {
-                $post->user->avatar_url = url('avatars/' . $post->user->avatar);
-            } else {
-                $post->user->avatar_url = null;
-                $post->user->placeholder_color = $post->user->placeholder_color;
-            }
-            return $post;
-        });
+    // Transform the saved posts to include the full URL for images and user avatars
+    $savedPosts->getCollection()->transform(function ($post) {
+        $post->image = url('post-images/' . $post->image);
+        if ($post->user && $post->user->avatar) {
+            $post->user->avatar_url = url('avatars/' . $post->user->avatar);
+        } else {
+            $post->user->avatar_url = null;
+            $post->user->placeholder_color = $post->user->placeholder_color;
+        }
+        return $post;
+    });
 
+    return response()->json($savedPosts);
+}
 
-        return response()->json($savedPosts);
-    }
 }
