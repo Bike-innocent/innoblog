@@ -43,26 +43,75 @@ class PostController extends Controller
 // }
 
 
+// public function index(Request $request)
+// {
+//     $limit = $request->query('limit', 12); // Default limit is 12
+//     $page = $request->query('page', 1); // Get the current page from the query
+//     $cacheKey = 'random_posts_' . auth()->id() . '_page_' . $page; // Unique cache key per user and page
+//     $cacheDuration = 1 * 60; // Cache for 3 minutes
+
+//     $user = auth()->user(); // Get the authenticated user, if available
+
+//     // Check if cached posts for the current page exist, otherwise fetch and cache them
+//     $posts = Cache::remember($cacheKey, $cacheDuration, function () use ($limit, $page) {
+//         // Fetch only published posts where status = 1 and randomize the order
+//         return Post::with('user')
+//             ->where('status', 1)
+//             ->inRandomOrder()
+//             ->paginate($limit, ['*'], 'page', $page);
+//     });
+
+//     // Transform posts to include full URL for images, user avatars, and is_saved status
+//     $posts->getCollection()->transform(function ($post) use ($user) {
+//         // Set the image URL
+//         $post->image = url('post-images/' . $post->image);
+
+//         // Set user avatar URL or placeholder color
+//         if ($post->user && $post->user->avatar) {
+//             $post->user->avatar_url = url('avatars/' . $post->user->avatar);
+//         } else {
+//             $post->user->avatar_url = null;
+//             $post->user->placeholder_color = $post->user->placeholder_color;
+//         }
+
+//         // Check if the authenticated user has saved this post
+//         $post->is_saved = $user ? $user->savedPosts()->where('post_id', $post->id)->exists() : false;
+
+//         return $post;
+//     });
+
+//     return response()->json($posts);
+// }
+
+
+
 public function index(Request $request)
 {
     $limit = $request->query('limit', 12); // Default limit is 12
-    $page = $request->query('page', 1); // Get the current page from the query
-    $cacheKey = 'random_posts_' . auth()->id() . '_page_' . $page; // Unique cache key per user and page
-    $cacheDuration = 3 * 60; // Cache for 3 minutes
+    $page = $request->query('page', 1); // Current page number
+    $user = auth()->user(); // Authenticated user
+    $cacheDuration = 4 * 60; // Cache duration in seconds (3 minutes)
 
-    $user = auth()->user(); // Get the authenticated user, if available
+    // Unique cache key based on user ID and total posts
+    $cacheKey = 'random_post_ids_' . auth()->id();
 
-    // Check if cached posts for the current page exist, otherwise fetch and cache them
-    $posts = Cache::remember($cacheKey, $cacheDuration, function () use ($limit, $page) {
-        // Fetch only published posts where status = 1 and randomize the order
-        return Post::with('user')
-            ->where('status', 1)
-            ->inRandomOrder()
-            ->paginate($limit, ['*'], 'page', $page);
+    // Check if the random order of post IDs is cached, else generate it
+    $postIds = Cache::remember($cacheKey, $cacheDuration, function () {
+        // Fetch all published posts where status = 1 and shuffle their IDs
+        return Post::where('status', 1)->pluck('id')->shuffle()->toArray();
     });
 
+    // Paginate the cached post IDs
+    $slicedPostIds = array_slice($postIds, ($page - 1) * $limit, $limit);
+
+    // Fetch the posts corresponding to the paginated IDs
+    $posts = Post::with('user')
+        ->whereIn('id', $slicedPostIds)
+        ->orderByRaw('FIELD(id, ' . implode(',', $slicedPostIds) . ')') // Preserve the random order
+        ->get();
+
     // Transform posts to include full URL for images, user avatars, and is_saved status
-    $posts->getCollection()->transform(function ($post) use ($user) {
+    $posts->transform(function ($post) use ($user) {
         // Set the image URL
         $post->image = url('post-images/' . $post->image);
 
@@ -80,8 +129,18 @@ public function index(Request $request)
         return $post;
     });
 
-    return response()->json($posts);
+    // Total number of pages
+    $totalPages = ceil(count($postIds) / $limit);
+
+    // Return the posts along with pagination data
+    return response()->json([
+        'posts' => $posts,
+        'current_page' => (int) $page,
+        'total_pages' => $totalPages,
+        'total_posts' => count($postIds),
+    ]);
 }
+
 
 
 

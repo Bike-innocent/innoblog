@@ -31,25 +31,6 @@ class ProfileController extends Controller
         return response()->json($user);
     }
 
-    // public function update(ProfileUpdateRequest $request)
-    // {
-    //     $user = Auth::user();
-    //     if (!$user) {
-    //         return response()->json(['message' => 'User not authenticated'], 401);
-    //     }
-
-    //     $request->validated();
-
-    //     $user->name = $request->name;
-    //     $user->email = $request->email;
-    //     if ($request->has('username')) {
-    //         $user->username = '@' . ltrim($request->username, '@'); // Ensure the username starts with "@" and avoid duplicate "@"
-    //     }
-    //     $user->save();
-
-    //     return response()->json(['message' => 'Profile updated successfully.'], 200);
-    // }
-
 
     public function update(ProfileUpdateRequest $request)
     {
@@ -63,8 +44,7 @@ class ProfileController extends Controller
 
         // Update user profile fields
         $user->name = $validatedData['name'];
-        $user->email = $validatedData['email'];
-
+       
         if ($request->has('username')) {
             // Ensure the "@" is prepended when saving to the database
             $username = '@' . ltrim($validatedData['username'], '@');

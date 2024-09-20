@@ -118,7 +118,6 @@ class SinglePostController extends Controller
 
 
 
-
 public function related($slug)
 {
     $post = Post::where('slug', $slug)->firstOrFail();
@@ -131,6 +130,7 @@ public function related($slug)
         return Post::with('user', 'category')
             ->where('category_id', $post->category_id)
             ->where('slug', '!=', $slug)
+            ->where('status', 1) // Fetch only published posts
             ->inRandomOrder() // Randomize the order
             ->limit(20) // Fetch the first 20 posts
             ->take(5) // Limit to 5 posts
