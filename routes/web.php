@@ -21,7 +21,9 @@ Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallb
 // routes/web.php
 
 
-Route::get('/posts/{slug}', [PostController::class, 'show2']);
+// Route::get('/posts/{slug}', [PostController::class, 'show2']);
 
-Route::get('/og-data/{slug}', [PostController::class, 'fetchOgData']);
+// Route::get('/og-data/{slug}', [PostController::class, 'fetchOgData']);
 
+// Route to serve Open Graph metadata
+Route::get('/posts/{slug}', [PostController::class, 'showOgTags']);

@@ -298,21 +298,20 @@ public function show2($slug)
     ]);
 }
 
-public function fetchOgData($slug)
+// In PostController.php
+
+public function showOgTags($slug)
 {
     // Fetch the post by slug
     $post = Post::where('slug', $slug)->firstOrFail();
 
-    // Prepare Open Graph data
-    $ogData = [
+    // Return a view with Open Graph meta tags
+    return view('post.show', [
         'title' => $post->title,
-        'description' => $post->description,
+        'description' => $post->excerpt, // You can use an excerpt or description
         'image' => url('post-images/' . $post->image), // Full image URL
         'url' => 'https://innoblog.com.ng/posts/' . $slug // Full frontend URL
-    ];
-
-    // Return the Open Graph data as JSON
-    return response()->json($ogData);
+    ]);
 }
 
 
