@@ -278,4 +278,43 @@ public function removeSave($slug)
     return response()->json($savedPosts);
 }
 
+
+
+
+public function show2($slug)
+{
+    // Fetch the post by slug
+    $post = Post::where('slug', $slug)->firstOrFail();
+
+    // Prepare the full URL for the image
+    $imageUrl = url('post-images/' . $post->image); // Assuming images are stored in 'public/post-images/'
+
+    // Pass post data to the view
+    return view('post.show', [
+        'title' => $post->title,
+        'description' =>  $post->content,
+        'image' => $imageUrl, // Full URL for the image
+        'slug' => $slug
+    ]);
+}
+
+public function fetchOgData($slug)
+{
+    // Fetch the post by slug
+    $post = Post::where('slug', $slug)->firstOrFail();
+
+    // Prepare Open Graph data
+    $ogData = [
+        'title' => $post->title,
+        'description' => $post->description,
+        'image' => url('post-images/' . $post->image), // Full image URL
+        'url' => 'https://innoblog.com.ng/posts/' . $slug // Full frontend URL
+    ];
+
+    // Return the Open Graph data as JSON
+    return response()->json($ogData);
+}
+
+
+
 }
