@@ -302,16 +302,34 @@ public function show2($slug)
 
 public function showOgTags($slug)
 {
-    // Fetch the post by slug
-    $post = Post::where('slug', $slug)->firstOrFail();
+    $userAgent = request()->header('User-Agent');
 
-    // Return a view with Open Graph meta tags
-    return view('post.show', [
-        'title' => $post->title,
-        'description' => $post->excerpt, // You can use an excerpt or description
-        'image' => url('post-images/' . $post->image), // Full image URL
-        'url' => 'https://innoblog.com.ng/posts/' . $slug // Full frontend URL
-    ]);
+    // List of known crawler user agents (you can expand this list)
+    $crawlers = [
+        'facebookexternalhit',
+        'Twitterbot',
+        'Pinterest',
+        'Slackbot',
+        'WhatsApp',
+    ];
+
+    foreach ($crawlers as $crawler) {
+        if (stripos($userAgent, $crawler) !== false) {
+            // Fetch the post by slug
+            $post = Post::where('slug', $slug)->firstOrFail();
+
+            // Serve OG meta tags to the crawler
+            return view('post.show', [
+                'title' => $post->title,
+                'description' => $post->excerpt ?? 'Read the full post to know more.',
+                'image' => url('post-images/' . $post->image),
+                'url' => 'https://innoblog.com.ng/posts/' . $slug,
+            ]);
+        }
+    }
+
+    // If it's not a crawler, redirect to the React app
+    return redirect("https://innoblog.com.ng/posts/{$slug}");
 }
 
 
