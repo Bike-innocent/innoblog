@@ -17,7 +17,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Innoblog'),
-    'frontend_url' => env('FRONTEND_URL', 'https://innoblog.com.ng'),
+    'frontend_url' => env('FRONTEND_URL', 'https://innoblog.chibuikeinnocent.tech'),
 
     /*
     |--------------------------------------------------------------------------
