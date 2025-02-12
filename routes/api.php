@@ -17,7 +17,7 @@ use App\Http\Controllers\profile\UpdatePasswordController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 use App\Http\Controllers\posts\ReportController;
-use App\Http\Controllers\Auth\GoogleController;
+
 use App\Http\Controllers\posts\ReportReasonController;
 use App\Http\Controllers\comment\CommentController;
 use App\Models\Post;
