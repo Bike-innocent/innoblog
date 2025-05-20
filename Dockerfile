@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install pdo pdo_mysql mbstring exif pcntl bcmath gd zip
 
 
-  
+
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
@@ -17,11 +17,26 @@ RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+
+
+
+
+
+
+
 # Set working directory
 WORKDIR /var/www/html
 
 # Copy project files to container
 COPY . .
+
+# Duplicate .env.example to .env
+RUN cp .env.example .env
+
+
+
+
+
 
 # Install Laravel dependencies
 RUN composer install --no-dev --optimize-autoloader
