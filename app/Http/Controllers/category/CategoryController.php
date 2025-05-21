@@ -108,7 +108,7 @@ class CategoryController extends Controller
         $category->delete();
         return response()->json(['message' => 'Category deleted successfully']);
     }
- 
+
 
     public function getMixedPosts($categorySlug)
 {
@@ -127,7 +127,8 @@ class CategoryController extends Controller
 
     // Add image URLs to each post
     foreach ($posts as $post) {
-        $post->image = url('post-images/' . $post->image);
+$post->image = config('image.url') . $post->image;
+
     }
 
     // Return the paginated posts as a JSON response

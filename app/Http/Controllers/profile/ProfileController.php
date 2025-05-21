@@ -44,7 +44,7 @@ class ProfileController extends Controller
 
         // Update user profile fields
         $user->name = $validatedData['name'];
-       
+
         if ($request->has('username')) {
             // Ensure the "@" is prepended when saving to the database
             $username = '@' . ltrim($validatedData['username'], '@');
@@ -132,7 +132,8 @@ class ProfileController extends Controller
 
     // Update image URLs
     foreach ($posts as $post) {
-        $post->image = url('post-images/' . $post->image);
+       $post->image = config('image.url') . $post->image;
+
     }
 
     // Return the posts as a JSON response

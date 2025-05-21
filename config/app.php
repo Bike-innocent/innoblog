@@ -18,6 +18,7 @@ return [
 
     'name' => env('APP_NAME', 'Innoblog'),
     'frontend_url' => env('FRONTEND_URL', 'https://innoblog.chibuikeinnocent.tech'),
+    'image_url' => env('IMAGE_URL', 'https://chibuikeinnocent.tech/post-images/'),
 
     /*
     |--------------------------------------------------------------------------
@@ -167,7 +168,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
-       // Laravel\Socialite\SocialiteServiceProvider::class,
+        // Laravel\Socialite\SocialiteServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
@@ -186,7 +187,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-       // 'Socialite' => Laravel\Socialite\Facades\Socialite::class,
+        // 'Socialite' => Laravel\Socialite\Facades\Socialite::class,
     ])->toArray(),
 
 ];

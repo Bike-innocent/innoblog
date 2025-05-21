@@ -62,7 +62,7 @@ class SubCategoryController extends Controller
 {
     // Find the subcategory by slug
     $subCategory = Subcategory::where('slug', $subcategorySlug)->first();
-    
+
     // If the subcategory doesn't exist, return a 404 error
     if (!$subCategory) {
         return response()->json(['error' => 'Subcategory not found'], 404);
@@ -77,12 +77,13 @@ class SubCategoryController extends Controller
 
     // Update the image URL for each post
     foreach ($posts as $post) {
-        $post->image = url('post-images/' . $post->image);
+     $post->image = config('image.url') . $post->image;
+
     }
 
     // Return the posts as JSON
     return response()->json(['data' => $posts]);
 }
 
-    
+
 }

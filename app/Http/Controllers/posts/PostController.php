@@ -113,7 +113,9 @@ public function index(Request $request)
     // Transform posts to include full URL for images, user avatars, and is_saved status
     $posts->transform(function ($post) use ($user) {
         // Set the image URL
-        $post->image = url('post-images/' . $post->image);
+        // $post->image = url('post-images/' . $post->image);
+       $post->image = config('image.url') . $post->image;
+
 
         // Set user avatar URL or placeholder color
         if ($post->user && $post->user->avatar) {
@@ -265,7 +267,8 @@ public function removeSave($slug)
 
     // Transform the saved posts to include the full URL for images and user avatars
     $savedPosts->getCollection()->transform(function ($post) {
-        $post->image = url('post-images/' . $post->image);
+$post->image = config('image.url') . $post->image;
+
         if ($post->user && $post->user->avatar) {
             $post->user->avatar_url = url('avatars/' . $post->user->avatar);
         } else {

@@ -46,7 +46,7 @@ class SinglePostController extends Controller
     $post = Post::with(['category', 'user', 'likes'])->where('slug', $slug)->firstOrFail();
 
     // Set the image URL
-    $post->image = url('post-images/' . $post->image);
+  $post->image = config('image.url') . $post->image;
 
     // Set the avatar URL if it exists
     if ($post->user->avatar) {
