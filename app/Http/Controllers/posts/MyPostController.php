@@ -10,6 +10,9 @@ use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
+
+
 class MyPostController extends Controller
 {
     // public function index()
@@ -56,11 +59,11 @@ class MyPostController extends Controller
     //         'category_id' => 'required|exists:categories,id',
     //         'sub_category_id' => 'nullable|exists:sub_categories,id',
     //     ]);
-    
+
     //     // Image upload
     //     $imageName = time() . '.' . $request->image->extension();
     //     $request->image->move(public_path('post-images'), $imageName);
-    
+
     //     // Store post data
     //     $post = new Post();
     //     $post->title = $request->title;
@@ -71,46 +74,85 @@ class MyPostController extends Controller
     //     $post->user_id = Auth::id();
     //     $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
     //     $post->save();
-    
+
     //     return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
     // }
 
 
-   
+
+
+// public function store(StorePostRequest $request)
+// {
+//     // The validated data is automatically available from the request object
+
+//     // Image upload
+//     $imageName = time() . '.' . $request->image->extension();
+//     $request->image->move(public_path('post-images'), $imageName);
+
+//     // Store post data
+//     $post = new Post();
+//     $post->title = $request->title;
+//     $post->content = $request->content;
+//     $post->image = $imageName;
+//     $post->category_id = $request->category_id;
+//     $post->sub_category_id = $request->sub_category_id;
+//     $post->user_id = Auth::id();
+//     $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
+//     $post->save();
+
+//     return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
+// }
+
+
+
+
 
 public function store(StorePostRequest $request)
 {
-    // The validated data is automatically available from the request object
-
-    // Image upload
-    $imageName = time() . '.' . $request->image->extension();
-    $request->image->move(public_path('post-images'), $imageName);
+    // Upload the image to Cloudinary
+    $uploadedImage = Cloudinary::upload($request->file('image')->getRealPath(), [
+        'folder' => 'post-images' // Optional folder name in Cloudinary
+    ]);
 
     // Store post data
     $post = new Post();
     $post->title = $request->title;
     $post->content = $request->content;
-    $post->image = $imageName;
+    $post->image = $uploadedImage->getSecurePath(); // Save the full secure URL
     $post->category_id = $request->category_id;
     $post->sub_category_id = $request->sub_category_id;
     $post->user_id = Auth::id();
-    $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
+    $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0;
     $post->save();
 
-    return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
+    return response()->json([
+        'message' => $post->status ? 'Post published successfully' : 'Post saved as draft'
+    ]);
 }
 
-    
-    
+
+
+
+
+    // public function show($slug)
+    // {
+    //     $post = Post::with(['category', 'subCategory'])->where('slug', $slug)->firstOrFail();
+
+    //     $post->image = url('post-images/' . $post->image);
+
+    //     return response()->json(['post' => $post]);
+    // }
+
+
 
     public function show($slug)
-    {
-        $post = Post::with(['category', 'subCategory'])->where('slug', $slug)->firstOrFail();
+{
+    $post = Post::with(['category', 'subCategory'])->where('slug', $slug)->firstOrFail();
 
-        $post->image = url('post-images/' . $post->image);
+    // No change needed for the image — it's already a Cloudinary URL
+    return response()->json(['post' => $post]);
+}
 
-        return response()->json(['post' => $post]);
-    }
 
 
     // public function update(Request $request, $slug)
@@ -150,7 +192,7 @@ public function store(StorePostRequest $request)
 
 
 
-    
+
 
 public function update(UpdatePostRequest $request, $slug)
 {
