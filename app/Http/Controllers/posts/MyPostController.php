@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\posts;
+
 use App\Http\Requests\StorePostRequest;
 use App\Http\Requests\UpdatePostRequest;
 use App\Http\Controllers\Controller;
@@ -9,9 +10,6 @@ use App\Models\Post;
 use App\Models\SubCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
-use CloudinaryLabs\CloudinaryLaravel\Facades\Cloudinary;
-
 
 class MyPostController extends Controller
 {
@@ -31,23 +29,23 @@ class MyPostController extends Controller
     // }
 
     public function index()
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    // Fetch user's posts, order by most recent, and eager load category and subcategory
-    $posts = Post::where('user_id', $user->id)
-                ->with('category', 'subCategory') // Eager load category and subcategory
-                ->orderBy('created_at', 'desc') // Order by most recent
-                ->paginate(12); // Paginate the results with a limit of 12 per page
+        // Fetch user's posts, order by most recent, and eager load category and subcategory
+        $posts = Post::where('user_id', $user->id)
+            ->with('category', 'subCategory') // Eager load category and subcategory
+            ->orderBy('created_at', 'desc') // Order by most recent
+            ->paginate(12); // Paginate the results with a limit of 12 per page
 
-    // Update image URLs
-    foreach ($posts as $post) {
-        $post->image = url('post-images/' . $post->image);
+        // Update image URLs
+        foreach ($posts as $post) {
+            $post->image = url('post-images/' . $post->image);
+        }
+
+        // Return the posts as a JSON response
+        return response()->json($posts);
     }
-
-    // Return the posts as a JSON response
-    return response()->json($posts);
-}
 
 
     // public function store(Request $request)
@@ -81,56 +79,68 @@ class MyPostController extends Controller
 
 
 
-// public function store(StorePostRequest $request)
-// {
-//     // The validated data is automatically available from the request object
+    // public function store(StorePostRequest $request)
+    // {
+    //     // The validated data is automatically available from the request object
 
-//     // Image upload
-//     $imageName = time() . '.' . $request->image->extension();
-//     $request->image->move(public_path('post-images'), $imageName);
+    //     // Image upload
+    //     $imageName = time() . '.' . $request->image->extension();
+    //     $request->image->move(public_path('post-images'), $imageName);
 
-//     // Store post data
-//     $post = new Post();
-//     $post->title = $request->title;
-//     $post->content = $request->content;
-//     $post->image = $imageName;
-//     $post->category_id = $request->category_id;
-//     $post->sub_category_id = $request->sub_category_id;
-//     $post->user_id = Auth::id();
-//     $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
-//     $post->save();
+    //     // Store post data
+    //     $post = new Post();
+    //     $post->title = $request->title;
+    //     $post->content = $request->content;
+    //     $post->image = $imageName;
+    //     $post->category_id = $request->category_id;
+    //     $post->sub_category_id = $request->sub_category_id;
+    //     $post->user_id = Auth::id();
+    //     $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
+    //     $post->save();
 
-//     return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
-// }
-
-
+    //     return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
+    // }
 
 
 
-public function store(StorePostRequest $request)
-{
-    // Upload the image to Cloudinary
-    $uploadedImage = Cloudinary::upload($request->file('image')->getRealPath(), [
-        'folder' => 'post-images' // Optional folder name in Cloudinary
-    ]);
-
-    // Store post data
-    $post = new Post();
-    $post->title = $request->title;
-    $post->content = $request->content;
-    $post->image = $uploadedImage->getSecurePath(); // Save the full secure URL
-    $post->category_id = $request->category_id;
-    $post->sub_category_id = $request->sub_category_id;
-    $post->user_id = Auth::id();
-    $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0;
-    $post->save();
-
-    return response()->json([
-        'message' => $post->status ? 'Post published successfully' : 'Post saved as draft'
-    ]);
-}
 
 
+    public function store(StorePostRequest $request)
+    {
+        $image = $request->file('image');
+        $imageName = time() . '.' . $image->getClientOriginalExtension();
+
+        // Upload to cPanel using Guzzle
+        $client = new \GuzzleHttp\Client();
+        $response = $client->post('https://chibuikeinnocent.tech/upload.php', [
+            'multipart' => [
+                [
+                    'name'     => 'image',
+                    'contents' => fopen($image->getPathname(), 'r'),
+                    'filename' => $imageName,
+                ],
+            ],
+        ]);
+
+        $responseData = json_decode($response->getBody(), true);
+
+        if (!$responseData['success']) {
+            return response()->json(['message' => 'Image upload failed'], 500);
+        }
+
+        // Store post data
+        $post = new Post();
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->image = $imageName; // just store image name, or you can store full URL
+        $post->category_id = $request->category_id;
+        $post->sub_category_id = $request->sub_category_id;
+        $post->user_id = Auth::id();
+        $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0;
+        $post->save();
+
+        return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
+    }
 
 
 
@@ -143,16 +153,15 @@ public function store(StorePostRequest $request)
     //     return response()->json(['post' => $post]);
     // }
 
-
-
     public function show($slug)
-{
-    $post = Post::with(['category', 'subCategory'])->where('slug', $slug)->firstOrFail();
+    {
+        $post = Post::with(['category', 'subCategory'])->where('slug', $slug)->firstOrFail();
 
-    // No change needed for the image — it's already a Cloudinary URL
-    return response()->json(['post' => $post]);
-}
+       $post->image = 'https://chibuikeinnocent.tech/post-images/' . $post->image;
 
+
+        return response()->json(['post' => $post]);
+    }
 
 
     // public function update(Request $request, $slug)
@@ -194,42 +203,42 @@ public function store(StorePostRequest $request)
 
 
 
-public function update(UpdatePostRequest $request, $slug)
-{
-    $post = Post::where('slug', $slug)->firstOrFail();
+    public function update(UpdatePostRequest $request, $slug)
+    {
+        $post = Post::where('slug', $slug)->firstOrFail();
 
-    // Handle image upload if a new image is provided
-    if ($request->hasFile('image')) {
-        // Delete old image
-        if (file_exists(public_path('post-images/' . $post->image))) {
-            unlink(public_path('post-images/' . $post->image));
+        // Handle image upload if a new image is provided
+        if ($request->hasFile('image')) {
+            // Delete old image
+            if (file_exists(public_path('post-images/' . $post->image))) {
+                unlink(public_path('post-images/' . $post->image));
+            }
+
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('post-images'), $imageName);
+            $post->image = $imageName;
         }
 
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('post-images'), $imageName);
-        $post->image = $imageName;
+        // Update post data
+        $post->title = $request->title;
+        $post->content = $request->content;
+        $post->category_id = $request->category_id;
+        $post->sub_category_id = $request->sub_category_id;
+        $post->save();
+
+        return response()->json(['message' => 'Post updated successfully.']);
     }
-
-    // Update post data
-    $post->title = $request->title;
-    $post->content = $request->content;
-    $post->category_id = $request->category_id;
-    $post->sub_category_id = $request->sub_category_id;
-    $post->save();
-
-    return response()->json(['message' => 'Post updated successfully.']);
-}
 
 
 
     public function destroy($slug)
-{
-    $post = Post::where('slug', $slug)->firstOrFail();
+    {
+        $post = Post::where('slug', $slug)->firstOrFail();
 
-    $post->delete();
+        $post->delete();
 
-    return response()->json(['message' => 'Post deleted successfully']);
-}
+        return response()->json(['message' => 'Post deleted successfully']);
+    }
 
 
     public function publish($slug)
