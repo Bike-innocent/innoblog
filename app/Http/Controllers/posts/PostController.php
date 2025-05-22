@@ -119,7 +119,7 @@ class PostController extends Controller
 
             // Set user avatar URL or placeholder color
             if ($post->user && $post->user->avatar) {
-                $post->user->avatar_url = url('avatars/' . $post->user->avatar);
+                          $post->user->avatar_url = $post->user->avatar_url; 
             } else {
                 $post->user->avatar_url = null;
                 $post->user->placeholder_color = $post->user->placeholder_color;
@@ -267,10 +267,10 @@ class PostController extends Controller
 
         // Transform the saved posts to include the full URL for images and user avatars
         $savedPosts->getCollection()->transform(function ($post) {
-    $post->image;
+            $post->image;
 
             if ($post->user && $post->user->avatar) {
-                $post->user->avatar_url = url('avatars/' . $post->user->avatar);
+                           $post->user->avatar_url = $post->user->avatar_url; 
             } else {
                 $post->user->avatar_url = null;
                 $post->user->placeholder_color = $post->user->placeholder_color;

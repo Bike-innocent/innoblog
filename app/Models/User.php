@@ -7,6 +7,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Str;
+
 
 class User extends Authenticatable
 {
@@ -29,7 +31,7 @@ class User extends Authenticatable
         'remember_token',
         'email',
 
-      
+
 
         'email_verified_at',
         'google_id',
@@ -61,14 +63,14 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
     public function likes()
-{
-    return $this->hasMany(Like::class);
-}
+    {
+        return $this->hasMany(Like::class);
+    }
 
-public function savedPosts()
-{
-    return $this->belongsToMany(Post::class, 'saves')->withTimestamps();
-}
+    public function savedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'saves')->withTimestamps();
+    }
 
 
 
@@ -110,15 +112,27 @@ public function savedPosts()
 
 
     // Accessor for the avatar URL
-    public function getAvatarUrlAttribute()
-    {
-        return $this->avatar ? url('avatars/' . $this->avatar) : null;
-    }
+    // public function getAvatarUrlAttribute()
+    // {
+    //     return $this->avatar ? url('avatars/' . $this->avatar) : null;
+    // }
 
     public function comments()
-{
-    return $this->hasMany(Comment::class);
-}
+    {
+        return $this->hasMany(Comment::class);
+    }
 
 
+    public function getAvatarUrlAttribute()
+    {
+        if (!$this->avatar) {
+            return null;
+        }
+
+        if (Str::startsWith($this->avatar, ['http://', 'https://'])) {
+            return $this->avatar;
+        }
+
+        return config('image.avatar_url') . $this->avatar;
+    }
 }
