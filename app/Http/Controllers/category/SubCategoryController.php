@@ -77,7 +77,7 @@ class SubCategoryController extends Controller
 
     // Update the image URL for each post
     foreach ($posts as $post) {
-     $post->image = config('image.url') . $post->image;
+$post->image;
 
     }
 

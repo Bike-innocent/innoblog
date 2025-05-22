@@ -46,7 +46,7 @@ class SinglePostController extends Controller
     $post = Post::with(['category', 'user', 'likes'])->where('slug', $slug)->firstOrFail();
 
     // Set the image URL
-  $post->image = config('image.url') . $post->image;
+$post->image;
 
     // Set the avatar URL if it exists
     if ($post->user->avatar) {
@@ -136,7 +136,12 @@ public function related($slug)
             ->take(5) // Limit to 5 posts
             ->get()
             ->each(function ($relatedPost) {
-                $relatedPost->image = url('post-images/' . $relatedPost->image);
+                // $relatedPost->image = url('post-images/' . $relatedPost->image);
+                //    $relatedPost->image = config('image.url') . $relatedPost->image;
+                   $relatedPost->image;
+
+
+
             });
     });
 

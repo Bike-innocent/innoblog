@@ -127,7 +127,7 @@ class CategoryController extends Controller
 
     // Add image URLs to each post
     foreach ($posts as $post) {
-$post->image = config('image.url') . $post->image;
+$post->image;
 
     }
 

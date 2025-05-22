@@ -13,7 +13,8 @@ class AllPostController extends Controller
         // Include full path for image URL
         foreach ($posts as $post) {
             // $post->image = url('post-images/'.$post->image);
-             $post->image = config('image.url') . $post->image;
+        $post->image;
+
 
         }
 

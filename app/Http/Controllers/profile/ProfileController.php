@@ -132,7 +132,9 @@ class ProfileController extends Controller
 
     // Update image URLs
     foreach ($posts as $post) {
-       $post->image = config('image.url') . $post->image;
+    //    $post->image = config('image.url') . $post->image;
+       $post->image;
+
 
     }
 
