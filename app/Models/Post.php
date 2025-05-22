@@ -30,15 +30,15 @@ class Post extends Model
 
 
 
-    // public function getImageAttribute($value)
-    // {
-    //     // If the value already contains "http" or the full domain, return it as-is
-    //     if (Str::startsWith($value, ['http://', 'https://'])) {
-    //         return $value;
-    //     }
+    public function getImageAttribute($value)
+    {
+        // If the value already contains "http" or the full domain, return it as-is
+        if (Str::startsWith($value, ['http://', 'https://'])) {
+            return $value;
+        }
 
-    //     return config('image.url') . $value;
-    // }
+        return config('image.url') . $value;
+    }
 
 
     public function user()
