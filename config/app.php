@@ -18,7 +18,7 @@ return [
 
     'name' => env('APP_NAME', 'Innoblog'),
     'frontend_url' => env('FRONTEND_URL', 'https://innoblog.chibuikeinnocent.tech'),
-    // 'image_url' => env('IMAGE_URL', 'https://chibuikeinnocent.tech/post-images/'),
+     'image_url' => env('IMAGE_URL', 'https://chibuikeinnocent.tech/post-images/'),
 
     /*
     |--------------------------------------------------------------------------
