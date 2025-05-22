@@ -50,7 +50,7 @@ $post->image;
 
     // Set the avatar URL if it exists
     if ($post->user->avatar) {
-        $post->user->avatar = url('avatars/' . $post->user->avatar);
+          $post->user->avatar_url = $post->user->avatar_url; 
     }
 
     // Add the likes count to the post

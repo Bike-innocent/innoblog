@@ -6,5 +6,5 @@
 // ];
 return [
     'avatar_url' => env('AVATAR_URL', 'https://chibuikeinnocent.tech/avatars/'),
-    'image_url' => env('IMAGE_URL', 'https://chibuikeinnocent.tech/post-images/'),
+     'url' => env('IMAGE_URL', 'https://chibuikeinnocent.tech/post-images/'),
 ];
