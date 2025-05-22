@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Post;
 use App\Models\SubCategory;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,8 +41,7 @@ class MyPostController extends Controller
 
         // Update image URLs
         foreach ($posts as $post) {
-$post->image;
-
+            $post->image;
         }
 
         // Return the posts as a JSON response
@@ -158,7 +158,7 @@ $post->image;
     {
         $post = Post::with(['category', 'subCategory'])->where('slug', $slug)->firstOrFail();
 
-$post->image;
+        $post->image;
 
         return response()->json(['post' => $post]);
     }
@@ -203,20 +203,80 @@ $post->image;
 
 
 
+    // public function update(UpdatePostRequest $request, $slug)
+    // {
+    //     $post = Post::where('slug', $slug)->firstOrFail();
+
+    //     // Handle image upload if a new image is provided
+    //     if ($request->hasFile('image')) {
+    //         // Delete old image
+    //         if (file_exists(public_path('post-images/' . $post->image))) {
+    //             unlink(public_path('post-images/' . $post->image));
+    //         }
+
+    //         $imageName = time() . '.' . $request->image->extension();
+    //         $request->image->move(public_path('post-images'), $imageName);
+    //         $post->image = $imageName;
+    //     }
+
+    //     // Update post data
+    //     $post->title = $request->title;
+    //     $post->content = $request->content;
+    //     $post->category_id = $request->category_id;
+    //     $post->sub_category_id = $request->sub_category_id;
+    //     $post->save();
+
+    //     return response()->json(['message' => 'Post updated successfully.']);
+    // }
+
+
+
+
+
+
+
     public function update(UpdatePostRequest $request, $slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 
         // Handle image upload if a new image is provided
         if ($request->hasFile('image')) {
-            // Delete old image
-            if (file_exists(public_path('post-images/' . $post->image))) {
-                unlink(public_path('post-images/' . $post->image));
-            }
+            $image = $request->file('image');
+            $imageName = time() . '.' . $image->getClientOriginalExtension();
 
-            $imageName = time() . '.' . $request->image->extension();
-            $request->image->move(public_path('post-images'), $imageName);
-            $post->image = $imageName;
+            try {
+                // Delete old image from server
+                if ($post->image) {
+                    $client = new Client();
+                    $client->post('https://chibuikeinnocent.tech/imageDelete.php', [
+                        'form_params' => [
+                            'image' => $post->image
+                        ]
+                    ]);
+                }
+
+                // Upload new image using Guzzle
+                $client = new Client();
+                $response = $client->post('https://chibuikeinnocent.tech/upload.php', [
+                    'multipart' => [
+                        [
+                            'name'     => 'image',
+                            'contents' => fopen($image->getPathname(), 'r'),
+                            'filename' => $imageName,
+                        ],
+                    ],
+                ]);
+
+                $responseData = json_decode($response->getBody(), true);
+
+                if (!$responseData['success']) {
+                    return response()->json(['message' => 'Image upload failed'], 500);
+                }
+
+                $post->image = $imageName;
+            } catch (\Exception $e) {
+                return response()->json(['message' => 'Image update failed: ' . $e->getMessage()], 500);
+            }
         }
 
         // Update post data
@@ -228,7 +288,6 @@ $post->image;
 
         return response()->json(['message' => 'Post updated successfully.']);
     }
-
 
 
     public function destroy($slug)
