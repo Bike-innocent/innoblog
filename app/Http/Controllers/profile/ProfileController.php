@@ -25,7 +25,8 @@ class ProfileController extends Controller
 
         // Construct the URL for the avatar if it exists
         if ($user->avatar) {
-            $user->avatar = url('avatars/' . $user->avatar);
+            // $user->avatar = url('avatars/' . $user->avatar);
+             $user->avatar_url = $user->avatar_url; 
         }
 
         return response()->json($user);
@@ -96,7 +97,8 @@ class ProfileController extends Controller
         }
 
         if ($user->avatar) {
-            $user->avatar = url('avatars/' . $user->avatar);
+            // $user->avatar = url('avatars/' . $user->avatar);
+            $user->avatar_url = $user->avatar_url; 
         }
 
         return response()->json($user);
