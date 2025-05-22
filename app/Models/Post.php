@@ -21,12 +21,12 @@ class Post extends Model
         });
     }
 
-    public function getImageAttribute($value)
-    {
-        if (!$value) return null;
+    // public function getImageAttribute($value)
+    // {
+    //     if (!$value) return null;
 
-        return config('image.url') . $value;
-    }
+    //     return config('image.url') . $value;
+    // }
 
 
     public function user()
