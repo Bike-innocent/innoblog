@@ -1,7 +1,7 @@
 <?php
-
-
+// config/imae.php
+// config/image.php
 return [
-    'url' => env('IMAGE_URL'),
-    'avatar_url' => env('AVATAR_URL'),
+    'url' => env('IMAGE_URL', 'https://chibuikeinnocent.tech/post-images/'),
+    'avatar_url' => env('AVATAR_URL', 'https://chibuikeinnocent.tech/user-avatar/'),
 ];
