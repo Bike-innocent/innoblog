@@ -49,99 +49,34 @@ class MyPostController extends Controller
     }
 
 
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'title' => 'required|max:255',
-    //         'content' => 'required',
-    //         'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
-    //         'category_id' => 'required|exists:categories,id',
-    //         'sub_category_id' => 'nullable|exists:sub_categories,id',
-    //     ]);
-
-    //     // Image upload
-    //     $imageName = time() . '.' . $request->image->extension();
-    //     $request->image->move(public_path('post-images'), $imageName);
-
-    //     // Store post data
-    //     $post = new Post();
-    //     $post->title = $request->title;
-    //     $post->content = $request->content;
-    //     $post->image = $imageName;
-    //     $post->category_id = $request->category_id;
-    //     $post->sub_category_id = $request->sub_category_id;
-    //     $post->user_id = Auth::id();
-    //     $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
-    //     $post->save();
-
-    //     return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
-    // }
-
-
-
-
-    // public function store(StorePostRequest $request)
-    // {
-    //     // The validated data is automatically available from the request object
-
-    //     // Image upload
-    //     $imageName = time() . '.' . $request->image->extension();
-    //     $request->image->move(public_path('post-images'), $imageName);
-
-    //     // Store post data
-    //     $post = new Post();
-    //     $post->title = $request->title;
-    //     $post->content = $request->content;
-    //     $post->image = $imageName;
-    //     $post->category_id = $request->category_id;
-    //     $post->sub_category_id = $request->sub_category_id;
-    //     $post->user_id = Auth::id();
-    //     $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
-    //     $post->save();
-
-    //     return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
-    // }
-
-
-
-
-
-    public function store(StorePostRequest $request)
+    public function store(Request $request)
     {
-        $image = $request->file('image');
-        $imageName = time() . '.' . $image->getClientOriginalExtension();
-
-        // Upload to cPanel using Guzzle
-        $client = new \GuzzleHttp\Client();
-        $response = $client->post('https://chibuikeinnocent.tech/upload.php', [
-            'multipart' => [
-                [
-                    'name'     => 'image',
-                    'contents' => fopen($image->getPathname(), 'r'),
-                    'filename' => $imageName,
-                ],
-            ],
+        $request->validate([
+            'title' => 'required|max:255',
+            'content' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,jpg,svg|max:2048',
+            'category_id' => 'required|exists:categories,id',
+            'sub_category_id' => 'nullable|exists:sub_categories,id',
         ]);
 
-        $responseData = json_decode($response->getBody(), true);
-
-        if (!$responseData['success']) {
-            return response()->json(['message' => 'Image upload failed'], 500);
-        }
+        // Image upload
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('post-images'), $imageName);
 
         // Store post data
         $post = new Post();
         $post->title = $request->title;
         $post->content = $request->content;
-        $post->image = $imageName; // just store image name, or you can store full URL
+        $post->image = $imageName;
         $post->category_id = $request->category_id;
         $post->sub_category_id = $request->sub_category_id;
         $post->user_id = Auth::id();
-        $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0;
+        $post->status = $request->has('is_publish') && $request->is_publish ? 1 : 0; // 0 for draft, 1 for published
         $post->save();
 
         return response()->json(['message' => $post->status ? 'Post published successfully' : 'Post saved as draft']);
     }
+
 
 
 
@@ -203,80 +138,20 @@ class MyPostController extends Controller
 
 
 
-    // public function update(UpdatePostRequest $request, $slug)
-    // {
-    //     $post = Post::where('slug', $slug)->firstOrFail();
-
-    //     // Handle image upload if a new image is provided
-    //     if ($request->hasFile('image')) {
-    //         // Delete old image
-    //         if (file_exists(public_path('post-images/' . $post->image))) {
-    //             unlink(public_path('post-images/' . $post->image));
-    //         }
-
-    //         $imageName = time() . '.' . $request->image->extension();
-    //         $request->image->move(public_path('post-images'), $imageName);
-    //         $post->image = $imageName;
-    //     }
-
-    //     // Update post data
-    //     $post->title = $request->title;
-    //     $post->content = $request->content;
-    //     $post->category_id = $request->category_id;
-    //     $post->sub_category_id = $request->sub_category_id;
-    //     $post->save();
-
-    //     return response()->json(['message' => 'Post updated successfully.']);
-    // }
-
-
-
-
-
-
-
     public function update(UpdatePostRequest $request, $slug)
     {
         $post = Post::where('slug', $slug)->firstOrFail();
 
         // Handle image upload if a new image is provided
         if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
-
-            try {
-                // Delete old image from server
-                if ($post->image) {
-                    $client = new Client();
-                    $client->post('https://chibuikeinnocent.tech/imageDelete.php', [
-                        'form_params' => [
-                            'image' => $post->image
-                        ]
-                    ]);
-                }
-
-                // Upload new image using Guzzle
-                $client = new Client();
-                $response = $client->post('https://chibuikeinnocent.tech/upload.php', [
-                    'multipart' => [
-                        [
-                            'name'     => 'image',
-                            'contents' => fopen($image->getPathname(), 'r'),
-                            'filename' => $imageName,
-                        ],
-                    ],
-                ]);
-
-                $responseData = json_decode($response->getBody(), true);
-
-                if (!$responseData['success']) {
-                    return response()->json(['message' => 'Image upload failed'], 500);
-                }
-
-                $post->image = $imageName;
-            } catch (\Exception $e) {
-                return response()->json(['message' => 'Image update failed: ' . $e->getMessage()], 500);
+            // Delete old image
+            if (file_exists(public_path('post-images/' . $post->image))) {
+                unlink(public_path('post-images/' . $post->image));
             }
+
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('post-images'), $imageName);
+            $post->image = $imageName;
         }
 
         // Update post data
@@ -288,6 +163,12 @@ class MyPostController extends Controller
 
         return response()->json(['message' => 'Post updated successfully.']);
     }
+
+
+
+
+
+
 
 
     public function destroy($slug)

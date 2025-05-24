@@ -18,9 +18,7 @@ return [
 
     'name' => env('APP_NAME', 'Innoblog'),
     'frontend_url' => env('FRONTEND_URL', 'https://innoblog.chibuikeinnocent.tech'),
-     'image_url' => env('IMAGE_URL', 'https://chibuikeinnocent.tech/post-images/'),
-     'avatar_url' => env('AVATAR_URL', 'https://chibuikeinnocent.tech/avatars/'),
-
+   
     /*
     |--------------------------------------------------------------------------
     | Application Environment
