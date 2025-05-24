@@ -84,7 +84,7 @@ class HomePageController extends Controller
     // Add the full image URL, user avatar URL, and is_saved status for each post
     $results->getCollection()->transform(function ($post) use ($user) {
         // Set the image URL
- $post->image;
+$post->image = url('post-images/'.$post->image);
 
         // Set user avatar URL or placeholder color
         if ($post->user && $post->user->avatar) {

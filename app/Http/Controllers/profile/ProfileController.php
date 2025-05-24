@@ -26,7 +26,7 @@ class ProfileController extends Controller
         // Construct the URL for the avatar if it exists
         if ($user->avatar) {
             // $user->avatar = url('avatars/' . $user->avatar);
-             $user->avatar_url = $user->avatar_url; 
+            $user->avatar_url = $user->avatar_url;
         }
 
         return response()->json($user);
@@ -98,7 +98,7 @@ class ProfileController extends Controller
 
         if ($user->avatar) {
             // $user->avatar = url('avatars/' . $user->avatar);
-            $user->avatar_url = $user->avatar_url; 
+            $user->avatar_url = $user->avatar_url;
         }
 
         return response()->json($user);
@@ -120,28 +120,25 @@ class ProfileController extends Controller
     // }
 
     public function getPostsByUsername($username)
-{
-    $user = User::where('username', $username)->firstOrFail();
+    {
+        $user = User::where('username', $username)->firstOrFail();
 
-    if (!$user) {
-        return response()->json(['message' => 'User not found'], 404);
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Fetch user's posts, order by most recent, and paginate
+        $posts = Post::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc') // Order by most recent
+            ->paginate(12);
+
+        // Update image URLs
+        foreach ($posts as $post) {
+            //    $post->image = config('image.url') . $post->image;
+            $post->image = url('post-images/' . $post->image);
+        }
+
+        // Return the posts as a JSON response
+        return response()->json($posts);
     }
-
-    // Fetch user's posts, order by most recent, and paginate
-    $posts = Post::where('user_id', $user->id)
-                ->orderBy('created_at', 'desc') // Order by most recent
-                ->paginate(12);
-
-    // Update image URLs
-    foreach ($posts as $post) {
-    //    $post->image = config('image.url') . $post->image;
-       $post->image;
-
-
-    }
-
-    // Return the posts as a JSON response
-    return response()->json($posts);
-}
-
 }

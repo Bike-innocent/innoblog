@@ -41,7 +41,7 @@ class MyPostController extends Controller
 
         // Update image URLs
         foreach ($posts as $post) {
-            $post->image;
+          $post->image = url('post-images/'.$post->image);
         }
 
         // Return the posts as a JSON response
@@ -158,7 +158,7 @@ class MyPostController extends Controller
     {
         $post = Post::with(['category', 'subCategory'])->where('slug', $slug)->firstOrFail();
 
-        $post->image;
+        $post->image = url('post-images/'.$post->image);
 
         return response()->json(['post' => $post]);
     }
