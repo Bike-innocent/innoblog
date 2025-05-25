@@ -112,10 +112,10 @@ class User extends Authenticatable
 
 
     // Accessor for the avatar URL
-    // public function getAvatarUrlAttribute()
-    // {
-    //     return $this->avatar ? url('avatars/' . $this->avatar) : null;
-    // }
+    public function getAvatarUrlAttribute()
+    {
+        return $this->avatar ? url('avatars/' . $this->avatar) : null;
+    }
 
     public function comments()
     {
@@ -123,16 +123,5 @@ class User extends Authenticatable
     }
 
 
-    public function getAvatarUrlAttribute()
-    {
-        if (!$this->avatar) {
-            return null;
-        }
 
-        if (Str::startsWith($this->avatar, ['http://', 'https://'])) {
-            return $this->avatar;
-        }
-
-        return config('image.avatar_url') . $this->avatar;
-    }
 }
